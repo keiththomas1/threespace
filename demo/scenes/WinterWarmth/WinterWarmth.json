@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "sceneProperties": {
+    "componentType": "SETTINGS",
+    "backgroundColorType": "GRADIENT",
+    "colorOne": {
+      "r": 0,
+      "g": 1,
+      "b": 1
+    },
+    "colorTwo": {
+      "r": 0.5019607843137255,
+      "g": 0,
+      "b": 0.5019607843137255
+    }
+  },
+  "components": [
+    {
+      "componentName": "",
+      "componentType": "CAMERA",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.7071067811865475,
+        -0.7071067811865477,
+        0,
+        0,
+        0.7071067811865477,
+        0.7071067811865475,
+        0,
+        0,
+        5,
+        5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "target": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "type": "Perspective",
+      "fov": 75
+    },
+    {
+      "componentName": "",
+      "componentType": "LIGHT",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        7.5,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "type": "Ambient",
+      "intensity": 1,
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      }
+    },
+    {
+      "componentName": "",
+      "componentType": "LIGHT",
+      "transformMatrix": [
+        0.7071067811865472,
+        -1.6653345369377348e-16,
+        0.7071067811865477,
+        0,
+        -0.577350269189626,
+        0.5773502691896255,
+        0.577350269189626,
+        0,
+        -0.408248290463863,
+        -0.8164965809277261,
+        0.4082482904638625,
+        0,
+        5,
+        10,
+        -5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "type": "Directional",
+      "intensity": 1,
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      }
+    },
+    {
+      "componentName": "",
+      "componentType": "VFX",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "type": "BASIC",
+      "textureSrc": "",
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      },
+      "speed": 0.1,
+      "size": 0.7,
+      "count": 60,
+      "lifetimeMin": 7,
+      "lifetimeMax": 9
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+import * as THREE from "three";
+import { Color } from "three";
+import { ComponentFactory } from "../../player/components/componentFactory";
+import { ComponentType, FontType, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
+import PlayerUtils from "../../player/utils/playerUtils";
+import { ComponentProperty, DEFAULT_ACTION, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
+import ThreeUtilities from "../utils/threeUtilities";
+import BaseComponent from "./baseComponent";
+
+export default class Text3DComponent extends BaseComponent {
+  private readonly DISPLAY_NAME = "Text";
+  private readonly FRONT_COLOR = "Face Color";
+  private readonly BACK_COLOR = "Side Color";
+  private readonly FONT_SIZE = "Font Size";
+  private readonly FONT_THICKNESS = "Font Thickness";
+  private readonly FONT_FAMILY = "Font Family";
+
+  private static readonly DEFAULT_FONT = FontType.NOTO_SANS;
+  private static readonly DEFAULT_FONT_SIZE = 32;
+  private static readonly DEFAULT_FONT_THICKNESS = 4;
+  private static readonly DEFAULT_FRONT_COLOR = new THREE.Color(0x00AAAA);
+  private static readonly DEFAULT_SIDE_COLOR = new THREE.Color(0x000000);
+
+  protected playerProperties: Text3DProperties = Text3DComponent.DefaultProperties;
+
+  private frontMaterial: THREE.MeshBasicMaterial | null = null;
+  private sideMaterial: THREE.MeshBasicMaterial | null = null;
+
+  private currentPromises: Promise<THREE.Mesh>[] = [];
+
+  constructor(textProperties: Text3DProperties, editorCamera: THREE.Camera) {
+    super("Text3DComponent", editorCamera, { hasActions: true, hasCredit: false, hasTransform: true});
+
+    this.componentType = ComponentType.Text3D;
+    this.assignProperties(textProperties);
+    this.setupEditorProperties();
+
+    this.loadTextMesh();
+  }
+
+
+  public static get DefaultProperties() : Text3DProperties {
+    const defaultproperties = this.BaseDefaultProperties as Text3DProperties;
+    defaultproperties.componentType = ComponentType.Text3D;
+    defaultproperties.text = "";
+    defaultproperties.type = this.DEFAULT_FONT;
+    defaultproperties.size = this.DEFAULT_FONT_SIZE;
+    defaultproperties.thickness = this.DEFAULT_FONT_THICKNESS;
+    defaultproperties.height = this.DEFAULT_FONT_THICKNESS;
+    defaultproperties.frontColor = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_FRONT_COLOR);
+    defaultproperties.sideColor = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_SIDE_COLOR);
+    return defaultproperties;
+  }
+
+  public get PlayerProperties(): Text3DProperties {
+    return this.playerProperties;
+  }
+
+  public propertyChanged(propertyName: string, property: ComponentProperty) {
+    super.propertyChanged(propertyName, property);
+
+    switch (propertyName) {
+      case this.DISPLAY_NAME:
+        this.playerProperties.text = property.value;
+        this.reloadTextMesh();
+        break;
+      case this.FRONT_COLOR:
+        if (this.frontMaterial) this.frontMaterial.color = property.value as THREE.Color;
+        this.playerProperties.frontColor = new Color(property.value.r, property.value.g, property.value.b);
+        break;
+      case this.BACK_COLOR:
+        if (this.sideMaterial) this.sideMaterial.color = property.value as THREE.Color;
+        this.playerProperties.sideColor = new Color(property.value.r, property.value.g, property.value.b);
+        break;
+      case this.FONT_SIZE:
+        this.playerProperties.size = property.value;
+        this.reloadTextMesh();
+        break;
+      case this.FONT_THICKNESS:
+        this.playerProperties.height = property.value;
+        this.reloadTextMesh();
+        break;
+      case this.FONT_FAMILY:
+        this.playerProperties.type = property.value;
+        this.reloadTextMesh();
+        break;
+    }
+  }
+
+  protected setupEditorProperties() {
+    super.setupEditorProperties(() => {
+      this.editorProperties[this.DISPLAY_NAME] = { value: this.playerProperties.text, type: "String" };
+      this.editorProperties[this.FONT_FAMILY] = { value: this.playerProperties.type, type: "Enum", enumType: FontType };
+      this.editorProperties[this.FONT_SIZE] = { value: this.playerProperties.size, type: "Number", min: 2, max: 128 };
+      this.editorProperties[this.FONT_THICKNESS] = { value: this.playerProperties.thickness, type: "Number", min: 0, max: 16 };
+      this.editorProperties[this.FRONT_COLOR] = { value: this.playerProperties.frontColor, type: "Color" };
+      this.editorProperties[this.BACK_COLOR] = { value: this.playerProperties.sideColor, type: "Color" };
+    });
+  }
+
+  private loadTextMesh() {
+    const promise = ComponentFactory.create3DTextMesh(this.playerProperties, this);
+    promise.then(
+      (textMesh: THREE.Mesh) => {
+        this.mesh = textMesh;
+        textMesh.layers.set(PREVIEW_LAYER);
+
+        const materials = textMesh.material as THREE.MeshBasicMaterial[];
+        for (let i = 0; i < materials.length; i++) {
+          if (materials[i].name === TEXT3D_FRONT_MAT_NAME) {
+            this.frontMaterial = materials[i];
+          } else if (materials[i].name === TEXT3D_SIDE_MAT_NAME) {
+            this.sideMaterial = materials[i];
+          }
+        }
+      }
+    );
+
+    this.currentPromises.push(promise);
+  }
+
+  private reloadTextMesh() {
+    if (this.mesh) {
+      this.remove(this.mesh);
+      ThreeUtilities.disposeAllChildren(this.mesh, true);
+    }
+
+    for (let i = 0; i < this.currentPromises.length; i++) {
+      this.currentPromises[i].then(
+        (textMesh: THREE.Mesh) => {
+          this.remove(textMesh);
+          ThreeUtilities.disposeAllChildren(textMesh, true);
+        }
+      );
+    }
+
+    this.loadTextMesh();
+  }
+}

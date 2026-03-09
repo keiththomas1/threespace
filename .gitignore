@@ -1,0 +1,8 @@
+*.blend
+*.log
+
+*/node_modules
+*/.next
+*/.claude
+*/dist
+./PR

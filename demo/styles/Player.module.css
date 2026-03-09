@@ -1,0 +1,56 @@
+#playerParent {
+  width: 100%;
+  height: 100%;
+  pointer-events: all;
+}
+
+#playerCanvas {
+  width: 100%;
+  height: 100%;
+  pointer-events: all;
+}
+
+#muteButton, #unmuteButton {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  z-index: 900;
+}
+
+#muteButton {
+  visibility: visible;
+}
+#unmuteButton {
+  visibility: hidden;
+}
+
+#referenceSection {
+  visibility: hidden;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  z-index: 900;
+
+  display: flex;
+  align-items: right;
+  justify-content: right;
+  flex-direction: column;
+}
+
+#referencePieceName, #referenceSiteName {
+  background-color: rgb(30, 38, 61);
+}
+
+#referenceAuthorName, #referenceLicenseName {
+  background-color: rgb(55, 66, 101);
+}
+
+.referenceLine {
+  padding-left: 10px;
+  padding-right: 10px;
+  opacity: 40%;
+  margin-top: auto;
+  margin-bottom: auto;
+  align-self: flex-end;
+}

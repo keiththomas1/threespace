@@ -1,0 +1,364 @@
+/* ThreeSpace Editor — plain CSS, no modules. Injected as a <style> tag at mount time. */
+
+#ts-editor-parent {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#ts-canvas-parent {
+  position: absolute;
+}
+
+.ts-orbit-gizmo {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+/* ── Z-depth layers ─────────────────────────────────── */
+.ts-z1  { z-index: 10;  }
+.ts-z2  { z-index: 20;  }
+.ts-z3  { z-index: 30;  }
+.ts-z9  { z-index: 90;  }
+.ts-z10 { z-index: 100; }
+
+.ts-clickable { pointer-events: all; }
+
+/* ── Tooltip ─────────────────────────────────────────── */
+.ts-tooltip-btn {
+  pointer-events: all;
+  position: relative;
+  display: inline-block;
+}
+
+.ts-tooltip {
+  visibility: hidden;
+  background-color: rgb(35, 35, 35);
+  color: rgb(255, 255, 255);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  pointer-events: none;
+}
+
+.ts-tooltip-bottom {
+  width: 120px;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.ts-tooltip-left {
+  width: 120px;
+  position: absolute;
+  left: 0%;
+  margin-right: -60px;
+}
+
+.ts-tooltip-btn:hover .ts-tooltip {
+  visibility: visible;
+}
+
+/* ── Modal ───────────────────────────────────────────── */
+.ts-modal-parent {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  visibility: hidden;
+  pointer-events: all;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-modal-ui {
+  background-color: rgba(53, 53, 53, 0.445);
+  width: 250px;
+  height: 150px;
+}
+
+.ts-modal-vert {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* ── Bottom bar ──────────────────────────────────────── */
+#ts-bottom-bar-ui {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  flex-direction: row;
+}
+
+/* ── Object toolbar ──────────────────────────────────── */
+#ts-bottom-center-flexbox-parent {
+  position: absolute;
+  pointer-events: none;
+  left: 0; right: 0;
+  bottom: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ts-object-toolbar {
+  opacity: 0;
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+/* ── Import toolbar ──────────────────────────────────── */
+#ts-import-toolbar {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.ts-toolbar-btn {
+  height: 40px;
+  width: 120px;
+  left: 0;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: left;
+  pointer-events: all;
+  position: relative;
+  z-index: 1;
+}
+
+.ts-toolbar-btn:hover {
+  z-index: 100;
+}
+
+.ts-toolbar-popout {
+  position: absolute;
+  visibility: hidden;
+  left: 112px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: left;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.ts-toolbar-popout-btn {
+  height: 40px;
+  width: 110px;
+}
+
+/* ── Player preview ──────────────────────────────────── */
+#ts-player-preview-parent {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 90;
+}
+
+/* ── Properties window ───────────────────────────────── */
+#ts-properties-window-parent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#ts-properties-window {
+  background-color: rgb(44, 42, 42);
+  transform: translateX(100%);
+  position: absolute;
+  min-width: 220px;
+  width: 25%;
+  right: 0;
+  top: 2%;
+  bottom: 2%;
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  overflow: auto;
+  z-index: 10;
+}
+
+#ts-properties-window-header-text {
+  font-size: 26px;
+  text-decoration: underline;
+  margin: 15px;
+}
+
+.ts-property-row {
+  width: 100%;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* ── Sliders ─────────────────────────────────────────── */
+.ts-slider-parent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.ts-slider-number { min-width: 30px; }
+
+.ts-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+.ts-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 25px; height: 25px;
+  border-radius: 50%;
+  background: #04AA6D;
+  cursor: pointer;
+}
+.ts-slider::-moz-range-thumb {
+  width: 25px; height: 25px;
+  border-radius: 50%;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+/* ── Buttons ─────────────────────────────────────────── */
+#ts-preview-button {
+  background-color: #052a54;
+  font-size: 16px;
+  width: 80px; height: 50px;
+  margin: 2px;
+  pointer-events: all;
+}
+#ts-preview-button:hover { background-color: #0b4d9a; }
+
+#ts-preview-back-button {
+  visibility: hidden;
+  pointer-events: all;
+  position: absolute;
+  font-size: 16px;
+  height: 50px;
+}
+
+#ts-live-site-button {
+  background-color: #541d05;
+  font-size: 16px;
+  width: 90px; height: 50px;
+  margin: 2px;
+  pointer-events: all;
+}
+#ts-live-site-button:hover { background-color: #9a360b; }
+
+#ts-save-button {
+  background-color: #05544b;
+  font-size: 20px;
+  font-weight: bold;
+  width: 90px; height: 50px;
+  margin: 2px;
+  pointer-events: all;
+}
+#ts-save-button:hover { background-color: #0a9383; }
+
+#ts-scene-settings-button { background-color: #424d4d; }
+
+/* ── VFX selection ───────────────────────────────────── */
+#ts-vfx-selection  { visibility: hidden; }
+#ts-vfx-selection-box { width: 300px; height: 200px; }
+
+/* ── Save feedback ───────────────────────────────────── */
+#ts-saving-text, #ts-saved-text {
+  position: absolute;
+  bottom: 60px;
+  left: 130px;
+  padding: 5px 10px;
+  opacity: 0;
+  color: rgb(0, 211, 0);
+}
+#ts-saving-text { background-color: gray; }
+#ts-saved-text  { background-color: rgb(47, 47, 47); font-weight: bold; }
+
+/* ── Save popup ──────────────────────────────────────── */
+.ts-save-popup {
+  background-color: rgba(40, 40, 40, 0.97);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 560px;
+  max-width: 90vw;
+}
+
+#ts-save-popup-textarea {
+  width: 100%;
+  height: 320px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: vertical;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border: 1px solid #555;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.ts-save-popup-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.ts-save-popup-buttons button {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#ts-save-popup-download-button {
+  background-color: #05544b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+#ts-save-popup-download-button:hover { background-color: #0a9383; }
+
+#ts-save-popup-back-button {
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+#ts-save-popup-back-button:hover { background-color: #666; }
+
+/* ── Color picker ────────────────────────────────────── */
+#ts-color-picker { width: 230px; }

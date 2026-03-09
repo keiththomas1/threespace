@@ -1,0 +1,58 @@
+{
+  "name": "threespace",
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./player": {
+      "types": "./dist/player/index.d.ts",
+      "import": "./dist/player/index.js",
+      "require": "./dist/player/index.cjs"
+    },
+    "./editor": {
+      "types": "./dist/editor/index.d.ts",
+      "import": "./dist/editor/index.js",
+      "require": "./dist/editor/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "player": ["./dist/player/index.d.ts"],
+      "editor": ["./dist/editor/index.d.ts"]
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "animejs": "^3.2.1",
+    "three": "^0.146.0"
+  },
+  "peerDependencies": {
+    "a-color-picker": "^1.2.1",
+    "dom-to-image": "^2.6.0"
+  },
+  "peerDependenciesMeta": {
+    "a-color-picker": { "optional": true },
+    "dom-to-image": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/dom-to-image": "^2.6.4",
+    "@types/three": "^0.144.0",
+    "glslify-loader": "^2.0.0",
+    "raw-loader": "^4.0.2",
+    "tsup": "^8.5.1",
+    "typescript": "4.8.4"
+  }
+}

@@ -1,0 +1,422 @@
+@font-face {
+  font-family: "ThreeSpace";
+  src: url("../../public/fonts/Audiowide/Audiowide.ttf") format("truetype");
+}
+
+#editorParent {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#canvasParent {
+  position: absolute;
+}
+
+.obitControlsGizmo {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+#threeSpaceLogo {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Start Tooltip */
+
+.tooltipButton {
+  pointer-events: all;
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: rgb(35, 35, 35);
+  color: rgb(255, 255, 255);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+}
+
+.tooltiptextBottom {
+  width: 120px;
+
+  /* Position the tooltip */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltiptextLeft {
+  width: 120px;
+
+  /* Position the tooltip */
+  position: absolute;
+  left: 0%;
+  margin-right: -60px;
+}
+
+.tooltipButton:hover .tooltiptextBottom .tooltiptextLeft {
+  visibility: visible;
+}
+
+/* End Tooltip */
+
+/* Start UI */
+
+#signedOutOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #00000073;
+  z-index: 50;
+}
+
+.firstUIDepth {
+  z-index: 10;
+}
+.secondUIDepth {
+  z-index: 20;
+}
+.thirdUIDepth {
+  z-index: 30;
+}
+.fourthUIDepth {
+  z-index: 90;
+}
+.fifthUIDepth {
+  z-index: 100;
+}
+
+.clickableUI {
+  pointer-events: all;
+}
+
+#bottomBarUI {
+  position: absolute;
+  bottom: 0;
+  left: 130px;
+
+  display: flex;
+  align-items: right;
+  justify-content: right;
+  pointer-events: none;
+  flex-direction: row;
+}
+
+/* Start Modal UI */
+
+.modalUIParent {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  visibility: hidden;
+  pointer-events: all;
+
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalUI {
+  background-color: rgba(53, 53, 53, 0.445);
+  left: 50%;
+  right: 50%;
+  top: 50%;
+  bottom: 50%;
+  width: 250px;
+  height: 150px;
+}
+
+.modalUIVerticalLayout {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* End Modal UI */
+
+/* Start Animations */
+
+/* End Animations */
+
+#vfxSelection {
+  visibility: hidden;
+}
+#vfxSelectionBox {
+  width: 300px;
+  height: 200px;
+}
+#vfxBasicButton {}
+#vfxDustButton {}
+#vfxSnowButton {}
+#vfxRainButton {}
+#vfxFishButton {}
+
+#colorPicker {
+  width: 230px;
+}
+
+#importImageButton {
+  pointer-events: all;
+  height: 50px;
+  top: -10px;
+}
+
+#previewButton {
+  background-color: #052a54;
+  font-size: 16px;
+  width: 80px;
+  height: 50px;
+  margin: 2px;
+}
+#previewButton:hover {
+  background-color: #0b4d9a;
+}
+
+#previewBackButton {
+  visibility: hidden;
+  pointer-events: all;
+  position: absolute;
+  font-size: 16px;
+  height: 50px;
+}
+
+#liveSiteButton {
+  background-color: #541d05;
+  font-size: 16px;
+  width: 90px;
+  height: 50px;
+  margin: 2px;
+}
+#liveSiteButton:hover {
+  background-color: #9a360b;
+}
+
+#savingText, #savedText {
+  position: absolute;
+  bottom: 60px;
+  left: 315px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  opacity: 0;
+
+  color: rgb(0, 211, 0);
+}
+
+#savingText {
+  background-color: gray;
+}
+#savedText {
+  background-color: rgb(47, 47, 47);
+  font-weight: bold;
+}
+
+#saveButton {
+  background-color: #05544b;
+  font-size: 20px;
+  font-weight: bold;
+  width: 90px;
+  height: 50px;
+  margin: 2px;
+}
+#saveButton:hover {
+  background-color: #0a9383;
+}
+
+.sliderParent {
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.sliderNumber {
+  min-width: 30px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #04AA6D;
+  cursor: pointer;
+}
+
+.propertyCheckbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+#bottomCenterFlexboxParent {
+  position: absolute;
+  pointer-events: none;
+
+  left: 0;
+  right: 0;
+  bottom: 5%;
+
+  display: flex;
+  align-items:center;
+  justify-content: center;
+}
+
+#objectToolbar {
+  opacity: 0;
+  pointer-events: all;
+
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+#objectToolbarButtonLabel {
+  padding: 0;
+  margin: 2px;
+  text-align: center;
+}
+
+#importToolbar {
+  position: absolute;
+
+  left: 0;
+  top: 20%;
+
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  flex-direction: column;
+}
+
+#playerPreviewParent {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.inlineButtonImage {
+  padding: 5px;
+}
+
+#propertiesWindowParent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#propertiesWindow {
+  background-color: rgb(44, 42, 42);
+  transform: translateX(100%);
+  position: absolute;
+  min-width: 220px;
+  width: 25%;
+  right: 0;
+  top: 2%;
+  bottom: 2%;
+  pointer-events: all;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  overflow: auto;
+}
+
+#propertiesWindowHeader {
+  font-size: 26px;
+  text-decoration: underline;
+  margin: 15px;
+}
+
+#propertiesWindowHeaderText {
+  font-size: 26px;
+  text-decoration: underline;
+  margin: 15px;
+}
+
+.propertyRow {
+  width: 100%;
+  padding-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#objectSelectButton {}
+#objectMoveButton {}
+#objectRotateButton {}
+#objectScaleButton {}
+
+#addImageButton {}
+#addVideoButton {}
+#addTextButton {}
+#addLightButton {}
+#addModelButton {}
+#add2DPageButton {}
+#addMusicButton {}
+#addVFXButton {}
+#addDebugComponentsButton {}
+#sceneSettingsButton {
+  background-color: #424d4d;
+}
+
+#textInputPopupParent {}
+#textInputPopupForm {}
+#textInputPopupInput {}
+#colorPickerParent {}
+
+#resetScenePopupParent {}
+#resetSceneYesButton {}
+#resetSceneNoButton {}
+
+
+/* End UI */

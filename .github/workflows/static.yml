@@ -36,6 +36,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Build app
+        working-directory: app
+        run: npm install && npm run build
+
       - name: Build demo
         working-directory: demo
         run: npm install && npm run build

@@ -15,6 +15,19 @@ const glslPlugin: Plugin = {
   },
 };
 
+const cssPlugin: Plugin = {
+  name: 'css-inline',
+  setup(build) {
+    build.onLoad({ filter: /\.css$/ }, (args) => {
+      const source = readFileSync(args.path, 'utf8');
+      return {
+        contents: `export default ${JSON.stringify(source)}`,
+        loader: 'js',
+      };
+    });
+  },
+};
+
 export default defineConfig({
   entry: ['scripts/index.ts', 'scripts/player/index.ts', 'scripts/editor/index.ts'],
   format: ['esm', 'cjs'],
@@ -23,7 +36,7 @@ export default defineConfig({
   tsconfig: './tsconfig.build.json',
   sourcemap: true,
   outDir: 'dist',
-  esbuildPlugins: [glslPlugin],
+  esbuildPlugins: [glslPlugin, cssPlugin],
   // Keep runtime deps external — consumers supply their own copies.
   external: ['three', 'animejs', 'a-color-picker', 'dom-to-image'],
 });

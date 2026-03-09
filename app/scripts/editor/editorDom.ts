@@ -6,6 +6,7 @@
  */
 
 import { EditorIds, EditorClasses } from './editorIds';
+import editorCss from './editor.css';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -51,17 +52,9 @@ function injectStyles() {
   if (cssInjected || typeof document === 'undefined') return;
   cssInjected = true;
 
-  // Inline the CSS rather than importing via bundler so the library is
-  // self-contained regardless of the consumer's build tooling.
-  // The CSS lives in editor.css — its content is inlined at build time.
-  // For development the consumer can also import the CSS file directly.
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  // Resolve relative to this script's location at runtime is not possible in
-  // all environments, so we rely on the consumer importing editor.css if they
-  // prefer that approach. The style tag path below works when the library is
-  // served from the same origin.
-  document.head.appendChild(link);
+  const style = document.createElement('style');
+  style.textContent = editorCss;
+  document.head.appendChild(style);
 }
 
 // ---------------------------------------------------------------------------

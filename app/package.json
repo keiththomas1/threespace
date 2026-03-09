@@ -1,7 +1,19 @@
 {
   "name": "threespace",
-  "version": "1.0.0",
+  "version": "1.0.2",
+  "author": "Keith Thomas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/keiththomas1/threespace/issues"
+  },
+  "homepage": "https://github.com/keiththomas1/threespace#readme",
   "type": "module",
+  "keywords": [
+    "threejs",
+    "three",
+    "editor",
+    "player"
+  ],
   "files": [
     "dist"
   ],

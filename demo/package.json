@@ -11,7 +11,7 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "threespace": "file:../app",
+    "threespace": "1.0.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

@@ -23,55 +23,43 @@ import VRButton from './vrButton';
  * Also handles user interactions and component actions.
  */
 export class ThreeSpacePlayer {
-  private renderer: THREE.WebGLRenderer;
-  private scene: THREE.Scene;
-  private camera: THREE.Camera | null = null;
-
-  private controls: OrbitControls | null = null;
-  private clock: THREE.Clock;
-
+  /* Managers and core objects */
   private canvas: HTMLCanvasElement;
+  private canvasParent: HTMLElement;
+  private controls: OrbitControls | null = null;
+  private loadingManager: THREE.LoadingManager;
   private modelLoader: ModelLoader;
   private postProcessingManager: PostProcessingManager | null = null;
   private actionManager: ActionManager;
-  private skybox: SkyBox;
-
-  private canvasParent: HTMLElement;
   private resizeObserver: ResizeObserver | null = null;
 
-  private clickTimer: number = 0;
-  private components: PlayerComponent[] = [];
-  private componentSelected: (eventName: string) => any = () => {};
-  private sceneLoaded: () => any = () => {};
-  private setCreditInfo: (piece: string, author: string, site: string, license: string) => any = () => {};
+  /* 3D Scene objects */
+  private scene: THREE.Scene;
+  private renderer: THREE.WebGLRenderer;
+  private camera: THREE.Camera | null = null;
+  private skybox: SkyBox;
 
-  private previousCameraPosition: THREE.Vector3 = new THREE.Vector3();
-  private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
-  private inViewMode: boolean = false;
-  private startDrag: THREE.Vector2 = new THREE.Vector2();
-
-  private loadingManager: THREE.LoadingManager;
+  /* UI and Utils */
   private raycaster: THREE.Raycaster = new THREE.Raycaster();
+  private clock: THREE.Clock;
+
+  /* State */
   private raycastResults: THREE.Intersection<THREE.Object3D<THREE.Event>>[] = [];
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
   private outlineObjects: THREE.Object3D[] = [];
   private animationMixers: THREE.AnimationMixer[] = [];
   private sounds: THREE.Audio[] = [];
+  private clickTimer: number = 0;
+  private components: PlayerComponent[] = [];
+  private previousCameraPosition: THREE.Vector3 = new THREE.Vector3();
+  private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
+  private inViewMode: boolean = false;
+  private startDrag: THREE.Vector2 = new THREE.Vector2();
 
-  /** Sets the callback function to be called when a component is selected. */
-  public set onComponentSelected(callback: (eventName: string) => any) {
-    this.componentSelected = callback;
-  }
-
-  /** Sets the callback function to be called when the scene is loaded. */
-  public set onSceneLoaded(callback: () => any) {
-    this.sceneLoaded = callback;
-  }
-
-  /** Sets the callback function to be called when credit information is to be displayed. */
-  public set onSetCreditInfo(callback: (piece: string, author: string, site: string, license: string) => any) {
-    this.setCreditInfo = callback;
-  }
+  /* Callbacks */
+  private componentSelected: (eventName: string) => any = () => {};
+  private sceneLoaded: () => any = () => {};
+  private setCreditInfo: (piece: string, author: string, site: string, license: string) => any = () => {};
 
   /**
    * @param canvasParent The parent element that the player's canvas will be added to. The canvas will be sized to fill this parent element.
@@ -138,19 +126,28 @@ export class ThreeSpacePlayer {
     this.resize();
     this.update();
   }
+  
+  /** Sets the callback function to be called when a component is selected. */
+  public set onComponentSelected(callback: (eventName: string) => any) {
+    this.componentSelected = callback;
+  }
 
-  public get Canvas() {
+  /** Sets the callback function to be called when the scene is loaded. */
+  public set onSceneLoaded(callback: () => any) {
+    this.sceneLoaded = callback;
+  }
+
+  /** Sets the callback function to be called when credit information is to be displayed. */
+  public set onSetCreditInfo(callback: (piece: string, author: string, site: string, license: string) => any) {
+    this.setCreditInfo = callback;
+  }
+
+  /** The underlying WebGL canvas element. Style or reposition it as needed. */
+  public get Canvas(): HTMLCanvasElement {
     return this.canvas;
   }
 
-  public static getDefaultSpaceProperties(): PlayerProperties {
-    return {
-      schemaVersion: SCHEMA_VERSION,
-      sceneProperties: DEFAULT_SCENE_PROPERTIES,
-      components: []
-    };
-  }
-
+  /** Sets whether the player is muted. */
   public set Muted(muted: boolean) {
     for (let i = 0; i < this.sounds.length; i++) {
       this.sounds[i].setVolume(muted ? 0 : 1);

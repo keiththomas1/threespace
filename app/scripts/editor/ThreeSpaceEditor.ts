@@ -34,6 +34,7 @@ import VFXRain from "../editor/vfx/VFXRain";
 import VFXFish from "../editor/vfx/VFXFish";
 import VFXComponent from "./vfx/VFXComponent";
 import { BasicVfxData } from "../player/utils/vfxInfo";
+import { SharedData } from "../shared/sharedData.js";
 
 export interface EditorConfig {
   playerProperties?:         PlayerProperties;
@@ -47,19 +48,15 @@ export interface EditorConfig {
 export class ThreeSpaceEditor {
   /* Managers and core objects */
   private scene: THREE.Scene;
-  private renderer: THREE.WebGLRenderer;
+  private editorParent: HTMLElement;
   private controls: OrbitControls;
   private gridRenderer: GridRenderer;
   private uiController: UiController;
   private componentManager: ComponentManager;
   private postProcessingManager: PostProcessingManager;
-  
-  /** Initialization */
-  private editorParent: HTMLElement;
-  private config: EditorConfig;
-  private assetBasePath?: string;
 
   /* 3D Scene objects */
+  private renderer: THREE.WebGLRenderer;
   private roomGroup: THREE.Group;
   private editorCamera: THREE.PerspectiveCamera;
   private userCamera: CameraComponent | null = null;
@@ -76,6 +73,8 @@ export class ThreeSpaceEditor {
   private stats: any;
 
   /* State */
+  private config: EditorConfig;
+  private assetBasePath?: string;
   private inPreviewMode: boolean = false;
   private clickTimer: number = 0;
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
@@ -224,20 +223,22 @@ export class ThreeSpaceEditor {
   }
 
   /** The underlying WebGL canvas element. Style or reposition it as needed. */
-  public get canvas(): HTMLCanvasElement {
+  public get Canvas(): HTMLCanvasElement {
     return this.renderer.domElement;
   }
 
+  /** Sets the player properties for the editor (can change at runtime). */
   public set PlayerProperties(playerProperties: PlayerProperties) {
     if (playerProperties !== null) {
       this.clearScene();
-      this.addComponents(playerProperties.components);
+      this.AddComponents(playerProperties.components);
       this.setSceneSettings(playerProperties.sceneProperties);
       this.settingsComponent.SettingsProperties = playerProperties.sceneProperties;
     }
   }
 
-  public addComponents = (components: ComponentProperties[]) => {
+  /** Add new components to the editor scene */
+  public AddComponents = (components: ComponentProperties[]) => {
     for (let i = 0; i < components.length; i++) {
       this.addComponent(components[i]);
     }
@@ -469,7 +470,7 @@ export class ThreeSpaceEditor {
   }
 
   private getSceneProperties = () : PlayerProperties => {
-    const sceneProperties = ThreeSpacePlayer.getDefaultSpaceProperties();
+    const sceneProperties = SharedData.DefaultPlayerProperties;
 
     const components = this.componentManager.Components;
     for (let i = 0; i < components.length; i++) {

@@ -13,7 +13,7 @@ export default class PlayerUtils {
     return new THREE.Vector3(vector.x, vector.y, vector.z);
   }
 
-  public static isMobile(navigator: any) {
+  public static isMobile(navigator: Navigator) {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
@@ -54,7 +54,7 @@ export default class PlayerUtils {
   /**
    * Recursively finds all meshes within a GLTF parent.
    */
-  static getGltfMeshes(object3D: Object3D, meshes: THREE.Mesh[]) {
+  public static getGltfMeshes(object3D: Object3D, meshes: THREE.Mesh[]) {
     if (object3D instanceof THREE.Mesh) {
       meshes.push(object3D);
     }

@@ -28,7 +28,7 @@ export default class VFXComponent extends BaseComponent {
 
   protected particleCount: number;
 
-  protected playerProperties: VFXProperties = VFXComponent.DefaultProperties;
+  protected vfxProperties: VFXProperties = VFXComponent.DefaultProperties;
 
   private vfxObject: VFXObject;
 
@@ -41,7 +41,7 @@ export default class VFXComponent extends BaseComponent {
     this.assignProperties(vfxProperties);
     this.setupEditorProperties();
 
-    this.vfxObject = new VFXObject(this.playerProperties, vfxData);
+    this.vfxObject = new VFXObject(this.vfxProperties, vfxData);
     this.add(this.vfxObject);
 
     this.createModelRepresentation(assetPath);
@@ -61,6 +61,11 @@ export default class VFXComponent extends BaseComponent {
     return defaultproperties;
   }
 
+  /* Overridden player properties */
+  public get ComponentProperties(): VFXProperties { 
+    return this.vfxProperties; 
+  }
+
   public update = (deltaTime: number) => {
     this.vfxObject.update(deltaTime);
   }
@@ -70,31 +75,31 @@ export default class VFXComponent extends BaseComponent {
 
     switch (propertyName) {
       case this.TEXTURE_PROPERTY:
-        this.playerProperties.color = property.value;
+        this.vfxProperties.color = property.value;
         this.colorChanged(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
       case this.COLOR_PROPERTY:
-        this.playerProperties.color = property.value;
+        this.vfxProperties.color = property.value;
         this.colorChanged(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
       case this.SIZE_PROPERTY:
-        this.playerProperties.size = property.value / VFXComponent.SIZE_MULTIPLIER;
-        this.sizeChanged(this.playerProperties.size);
+        this.vfxProperties.size = property.value / VFXComponent.SIZE_MULTIPLIER;
+        this.sizeChanged(this.vfxProperties.size);
         break;
       case this.SPEED_PROPERTY:
-        this.playerProperties.speed = property.value;
+        this.vfxProperties.speed = property.value;
         this.speedChanged(property.value);
         break;
       case this.COUNT_PROPERTY:
-        this.playerProperties.count = property.value;
+        this.vfxProperties.count = property.value;
         this.countChanged(property.value);
         break;
       case this.LIFETIME_MIN_PROPERTY:
-        this.playerProperties.lifetimeMin = property.value;
+        this.vfxProperties.lifetimeMin = property.value;
         this.lifetimeMinChanged(property.value);
         break;
       case this.LIFETIME_MAX_PROPERTY:
-        this.playerProperties.lifetimeMax = property.value;
+        this.vfxProperties.lifetimeMax = property.value;
         this.lifetimeMaxChanged(property.value);
         break;
     }
@@ -102,13 +107,13 @@ export default class VFXComponent extends BaseComponent {
 
   protected setupEditorProperties() {
     super.setupEditorProperties(() => {
-      this.editorProperties[this.COLOR_PROPERTY] = { value: this.playerProperties.color, type: "Color" };
-      this.editorProperties[this.SPEED_PROPERTY] = { value: this.playerProperties.speed, type: "Number", min: -10, max: 10 };
+      this.editorProperties[this.COLOR_PROPERTY] = { value: this.vfxProperties.color, type: "Color" };
+      this.editorProperties[this.SPEED_PROPERTY] = { value: this.vfxProperties.speed, type: "Number", min: -10, max: 10 };
       this.editorProperties[this.SIZE_PROPERTY] =
-        { value: this.playerProperties.size * VFXComponent.SIZE_MULTIPLIER, type: "Number", min: 0, max: 10 * VFXComponent.SIZE_MULTIPLIER };
-      this.editorProperties[this.COUNT_PROPERTY] = { value: this.playerProperties.count, type: "Number", min: 1, max: 300 };
-      this.editorProperties[this.LIFETIME_MIN_PROPERTY] = { value: this.playerProperties.lifetimeMin, type: "Number", min: 0, max: 20 };
-      this.editorProperties[this.LIFETIME_MAX_PROPERTY] = { value: this.playerProperties.lifetimeMax, type: "Number", min: 0, max: 20 };
+        { value: this.vfxProperties.size * VFXComponent.SIZE_MULTIPLIER, type: "Number", min: 0, max: 10 * VFXComponent.SIZE_MULTIPLIER };
+      this.editorProperties[this.COUNT_PROPERTY] = { value: this.vfxProperties.count, type: "Number", min: 1, max: 300 };
+      this.editorProperties[this.LIFETIME_MIN_PROPERTY] = { value: this.vfxProperties.lifetimeMin, type: "Number", min: 0, max: 20 };
+      this.editorProperties[this.LIFETIME_MAX_PROPERTY] = { value: this.vfxProperties.lifetimeMax, type: "Number", min: 0, max: 20 };
     });
   }
 

@@ -4,16 +4,21 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { PlayerProperties } from 'threespace';
 
-import RainyHutJSON from '../../scenes/RainyHut/RainyHut.json';
-import RainyHutThumb from '../../scenes/RainyHut/RainyHut.jpg';
-import WinterWarmthJSON from '../../scenes/WinterWarmth/WinterWarmth.json';
-import WinterWarmthThumb from '../../scenes/WinterWarmth/WinterWarmth.jpg';
-import UnderwaterJSON from '../../scenes/Underwater/Underwater.json';
-import UnderwaterThumb from '../../scenes/Underwater/Underwater.jpg';
-import MoonLanderJSON from '../../scenes/MoonLander/MoonLander.json';
-import MoonLanderThumb from '../../scenes/MoonLander/MoonLander.jpg';
+import HomeJSON from '../../public/scenes/Home/Home.json';
+import HomeThumb from '../../public/scenes/Home/Home.jpg';
+import LabJSON from '../../public/scenes/Lab/Lab.json';
+import LabThumb from '../../public/scenes/Lab/Lab.jpg';
+import RainyHutJSON from '../../public/scenes/RainyHut/RainyHut.json';
+import RainyHutThumb from '../../public/scenes/RainyHut/RainyHut.jpg';
+import WinterWarmthJSON from '../../public/scenes/WinterWarmth/WinterWarmth.json';
+import WinterWarmthThumb from '../../public/scenes/WinterWarmth/WinterWarmth.jpg';
+import UnderwaterJSON from '../../public/scenes/Underwater/Underwater.json';
+import UnderwaterThumb from '../../public/scenes/Underwater/Underwater.jpg';
+import MoonLanderJSON from '../../public/scenes/MoonLander/MoonLander.json';
+import MoonLanderThumb from '../../public/scenes/MoonLander/MoonLander.jpg';
 
 export interface VisualCarouselData {
+  path: string,
   thumbnailURL: string,
   tooltip: string,
   value: string
@@ -26,29 +31,37 @@ interface SceneEntry {
 
 const SCENES: SceneEntry[] = [
   {
-    data: { thumbnailURL: RainyHutThumb.src, tooltip: 'Rainy Hut', value: 'RainyHut' },
+    data: { thumbnailURL: HomeThumb.src, path: '/scenes/Home', tooltip: 'Home Page', value: 'Home' },
+    properties: HomeJSON as PlayerProperties,
+  },
+  {
+    data: { thumbnailURL: LabThumb.src, path: '/scenes/Lab', tooltip: 'Lab', value: 'Lab' },
+    properties: LabJSON as PlayerProperties,
+  },
+  {
+    data: { thumbnailURL: RainyHutThumb.src, path: '/scenes/RainyHut', tooltip: 'Rainy Hut', value: 'RainyHut' },
     properties: RainyHutJSON as PlayerProperties,
   },
   {
-    data: { thumbnailURL: WinterWarmthThumb.src, tooltip: 'Winter Warmth', value: 'WinterWarmth' },
+    data: { thumbnailURL: WinterWarmthThumb.src, path: '/scenes/WinterWarmth', tooltip: 'Winter Warmth', value: 'WinterWarmth' },
     properties: WinterWarmthJSON as PlayerProperties,
   },
   {
-    data: { thumbnailURL: UnderwaterThumb.src, tooltip: 'Underwater', value: 'Underwater' },
+    data: { thumbnailURL: UnderwaterThumb.src, path: '/scenes/Underwater', tooltip: 'Underwater', value: 'Underwater' },
     properties: UnderwaterJSON as PlayerProperties,
   },
   {
-    data: { thumbnailURL: MoonLanderThumb.src, tooltip: 'Moon Lander', value: 'MoonLander' },
+    data: { thumbnailURL: MoonLanderThumb.src, path: '/scenes/MoonLander', tooltip: 'Moon Lander', value: 'MoonLander' },
     properties: MoonLanderJSON as PlayerProperties,
   },
 ];
 
-export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (properties: PlayerProperties) => void }) {
+export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: string, properties: PlayerProperties) => void }) {
   const [isOpen, setIsOpen] = useState(true);
 
   function handleItemSelected(value: string) {
     const scene = SCENES.find(s => s.data.value === value);
-    if (scene) onSceneSelected(scene.properties);
+    if (scene) onSceneSelected(scene.data.path, scene.properties);
   }
 
   function navigateLeft() {}

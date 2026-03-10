@@ -12,10 +12,9 @@ export default class ImageComponent extends BaseComponent {
 
   private readonly DEFAULT_COLOR = new THREE.Color(0xFFFFFF);
 
-  protected playerProperties: ImageProperties = ImageComponent.DefaultProperties;
+  protected imageProperties: ImageProperties = ImageComponent.DefaultProperties;
 
   private renderTarget: THREE.WebGLCubeRenderTarget | null;
-  private textureLoader: THREE.TextureLoader;
 
   constructor(
     imageProperties: ImageProperties,
@@ -29,13 +28,18 @@ export default class ImageComponent extends BaseComponent {
     this.assignProperties(imageProperties);
     this.setupEditorProperties();
 
-    this.createImageMesh(dataURL === "" ? this.playerProperties.url : dataURL);
+    this.createImageMesh(dataURL === "" ? this.imageProperties.url : dataURL);
   }
 
   public static get DefaultProperties() : ImageProperties {
     const defaultproperties = this.BaseDefaultProperties as ImageProperties;
     defaultproperties.componentType = ComponentType.Image;
     return defaultproperties;
+  }
+  
+  /* Overridden player properties */
+  public get ComponentProperties(): ImageProperties {
+    return this.imageProperties;
   }
 
   public propertyChanged(propertyName: string, property: ComponentProperty) {
@@ -59,7 +63,6 @@ export default class ImageComponent extends BaseComponent {
 
   protected setupEditorProperties(): void {
     super.setupEditorProperties(() => {
-      // this.editorProperties[this.DISPLAY_NAME] = { value: imageUrl, type: "String" };
       this.editorProperties[this.MATERIAL_REFLECTIVITY] = { value: 0, type: "Number", min: 0, max: 1 };
       this.editorProperties[this.MATERIAL_COLOR] = { value: this.DEFAULT_COLOR, type: "Color" };
     });

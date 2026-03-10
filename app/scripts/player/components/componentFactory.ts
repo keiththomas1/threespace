@@ -47,33 +47,20 @@ export class ComponentFactory {
   public static loadModelInfo = async (
     modelLoader: ModelLoader, modelProperties: ModelProperties): Promise<ModelInfo | null> => {
     return new Promise<ModelInfo | null> ((resolve) => {
-      this.loadAsset(
-        modelProperties.url,
-        (url: string) => {
-          modelLoader.loadGLTFFromURL(url, (modelInfo: ModelInfo) => { resolve(modelInfo); });
-        }
-      );
+      modelLoader.loadGLTFFromURL(modelProperties.url ?? modelProperties.filepath, (modelInfo: ModelInfo) => { resolve(modelInfo); });
     });
   }
 
   public static loadAudio = async (audioProperties: AudioProperties): Promise<string | null> => {
     return new Promise<string | null> ((resolve) => {
-      this.loadAsset(
-        audioProperties.url,
-        (url: string) => { resolve(url); }
-      );
+      resolve(audioProperties.url ?? audioProperties.filepath);
     });
-  }
-
-  public static loadAsset = (url: string, urlCallback: (url: string) => any) => {
-    urlCallback(url);
   }
 
   public static createImageMesh = (
     imageUrl: string,
     materialLoaded: (mat: THREE.MeshBasicMaterial)=>any = ()=>{}) : THREE.Mesh => {
     const textureLoader = new THREE.TextureLoader();
-    //this.textureLoader.crossOrigin = true;
     textureLoader.setCrossOrigin('anonymous');
     textureLoader.setRequestHeader(
       {
@@ -91,7 +78,6 @@ export class ComponentFactory {
         if (material.map) material.map.encoding = THREE.sRGBEncoding;
         material.color = new THREE.Color(0xffffff);
         material.transparent = true;
-        // material.metalness = 1;
 
         mesh.material = material;
         materialLoaded(material);

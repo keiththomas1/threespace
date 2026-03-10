@@ -1,4 +1,4 @@
-<img src="./public/images/FrontPageLogo.png" alt="ThreeSpace Logo" width=400 />
+ # ThreeSpace
 
 **A self-contained 3D scene editor and player built on [Three.js](https://threejs.org).**
 

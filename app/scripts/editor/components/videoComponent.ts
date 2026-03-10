@@ -8,7 +8,7 @@ import BaseComponent from "./baseComponent";
 export default class VideoComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
 
-  protected playerProperties: VideoProperties = VideoComponent.DefaultProperties;
+  protected videoProperties: VideoProperties = VideoComponent.DefaultProperties;
 
   constructor(videoProperties: VideoProperties, editorCamera: THREE.Camera, dataURL: string = "") {
     super("VideoComponent", editorCamera, { hasActions: false, hasCredit: true, hasTransform: true});
@@ -17,15 +17,20 @@ export default class VideoComponent extends BaseComponent {
     this.assignProperties(videoProperties);
     this.setupEditorProperties();
 
-    this.editorProperties[this.DISPLAY_NAME] = { value: this.playerProperties.url, type: "String" };
+    this.editorProperties[this.DISPLAY_NAME] = { value: this.videoProperties.url, type: "String" };
 
-    this.createVideoMesh(dataURL === "" ? this.playerProperties.url : dataURL);
+    this.createVideoMesh(dataURL === "" ? this.videoProperties.url : dataURL);
   }
 
   public static get DefaultProperties() : VideoProperties {
     const defaultproperties = this.BaseDefaultProperties as VideoProperties;
     defaultproperties.componentType = ComponentType.Video;
     return defaultproperties;
+  }
+  
+  /* Overridden player properties */
+  public get ComponentProperties(): VideoProperties {
+    return this.videoProperties;
   }
 
   public propertyChanged(propertyName: string, property: ComponentProperty) {

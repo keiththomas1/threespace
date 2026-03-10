@@ -46,12 +46,11 @@ export default class BaseComponent extends THREE.Object3D {
   protected editorOptions: ComponentEditorOptions;
 
   protected mesh: THREE.Object3D | null = null;
-  protected editorProperties: any = {};
-  protected playerProperties: any = {};
+  protected editorProperties: Record<string, unknown> = {};
   protected componentType: string = "";
   protected canDelete: boolean = true;
-  private onTransformChanged: (baseComponent: BaseComponent)=>any = null;
-  private cachedLocalMatrix: THREE.Matrix4 = null;
+  private onTransformChanged: (baseComponent: BaseComponent) => any = () => {};
+  private cachedLocalMatrix: THREE.Matrix4 | null = null;
   private dontUpdatePropertyWindow: boolean = false;
 
   constructor(componentName: string = BaseComponent.COMPONENT_NAME,
@@ -68,6 +67,7 @@ export default class BaseComponent extends THREE.Object3D {
 
   public static get BaseDefaultProperties() : ComponentProperties {
     return {
+      componentName: BaseComponent.COMPONENT_NAME,
       componentType: "",
       transformMatrix: DEFAULT_MATRIX_ARRAY,
       action: {
@@ -95,12 +95,15 @@ export default class BaseComponent extends THREE.Object3D {
     return this.canDelete;
   }
 
+  /** Contains all properties that the editor serializes for editing */
   public get EditorProperties(): any {
     return this.editorProperties;
   }
-
-  public get PlayerProperties(): any {
-    return this.playerProperties;
+  
+  /* Overridden in each class to provide properties derived from player properties */
+  public get ComponentProperties(): ComponentProperties {
+    console.warn("BaseComponent PlayerProperties getter should be overridden in child class");
+    return null;
   }
 
   public get ComponentType(): string {
@@ -132,28 +135,28 @@ export default class BaseComponent extends THREE.Object3D {
         this.dontUpdatePropertyWindow = true;
         break;
       case BaseComponent.ACTION_TYPE_NAME:
-        if (this.PlayerProperties.action) this.PlayerProperties.action.actionType = property.value;
+        if (this.ComponentProperties.action) this.ComponentProperties.action.actionType = property.value;
         break;
       case BaseComponent.ACTION_HYPERLINK_URL_NAME:
-        if (this.PlayerProperties.action) this.PlayerProperties.action.hyperlinkURL = property.value;
+        if (this.ComponentProperties.action) this.ComponentProperties.action.hyperlinkURL = property.value;
         break;
       case BaseComponent.ACTION_EVENT_NAME_NAME:
-        if (this.PlayerProperties.action) this.PlayerProperties.action.eventName = property.value;
+        if (this.ComponentProperties.action) this.ComponentProperties.action.eventName = property.value;
         break;
       case BaseComponent.CREDIT_PIECE_NAME:
-        if (this.PlayerProperties.credit) this.PlayerProperties.credit.pieceName = property.value;
+        if (this.ComponentProperties.credit) this.ComponentProperties.credit.pieceName = property.value;
         break;
       case BaseComponent.CREDIT_AUTHOR_NAME:
-        if (this.PlayerProperties.credit) this.PlayerProperties.credit.authorName = property.value;
+        if (this.ComponentProperties.credit) this.ComponentProperties.credit.authorName = property.value;
         break;
       case BaseComponent.CREDIT_WEBSITE_NAME:
-        if (this.PlayerProperties.credit) this.PlayerProperties.credit.websiteName = property.value;
+        if (this.ComponentProperties.credit) this.ComponentProperties.credit.websiteName = property.value;
         break;
       case BaseComponent.CREDIT_LICENSE_NAME:
-        if (this.PlayerProperties.credit) this.PlayerProperties.credit.licenseName = property.value;
+        if (this.ComponentProperties.credit) this.ComponentProperties.credit.licenseName = property.value;
         break;
       case BaseComponent.CREDIT_LOCKED_NAME:
-        if (this.PlayerProperties.credit) this.PlayerProperties.credit.locked = property.value;
+        if (this.ComponentProperties.credit) this.ComponentProperties.credit.locked = property.value;
         break;
     }
   }
@@ -182,7 +185,7 @@ export default class BaseComponent extends THREE.Object3D {
   }
 
   protected setupEditorProperties(insertAfterName: ()=>any = ()=>{}) {
-    this.editorProperties[this.NAME_PROPERTY] = { value: this.PlayerProperties.componentName, type: "String" };
+    this.editorProperties[this.NAME_PROPERTY] = { value: this.ComponentProperties.componentName, type: "String" };
 
     insertAfterName();
 
@@ -190,10 +193,10 @@ export default class BaseComponent extends THREE.Object3D {
       this.createTransformProperty();
     }
     if (this.editorOptions.hasActions) {
-      this.createActionsProperty(this.PlayerProperties.action);
+      this.createActionsProperty(this.ComponentProperties.action);
     }
     if (this.editorOptions.hasCredit) {
-      this.createCreditProperty(this.PlayerProperties.credit);
+      this.createCreditProperty(this.ComponentProperties.credit);
     }
   }
 
@@ -239,14 +242,15 @@ export default class BaseComponent extends THREE.Object3D {
 
   private handleZoomCameraMatrixSet = () => {
     const json = this.editorCamera.toJSON();
-    this.PlayerProperties.action.zoomCameraMatrix = json.object.matrix;
+    this.ComponentProperties.action.zoomCameraMatrix = json.object.matrix;
   }
 
   protected assignProperties(properties: ComponentProperties) {
     const propertyEntries = Object.entries(properties);
+
     for (let i = 0; i < propertyEntries.length; i++) {
       if (propertyEntries[i][1] !== null) {
-        this.PlayerProperties[propertyEntries[i][0]] = propertyEntries[i][1];
+        this.ComponentProperties[propertyEntries[i][0]] = propertyEntries[i][1];
       }
     }
   }

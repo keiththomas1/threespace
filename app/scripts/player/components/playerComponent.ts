@@ -7,7 +7,7 @@ export default class PlayerComponent extends THREE.Object3D {
   private creditInfo: CreditInfo;
 
   private onClickCallbacks: (()=>any)[] = [];
-  private updateCallback: (deltaTime: number)=>any;
+  private updateCallback: (deltaTime: number) => any = () => {};
 
   constructor(object: Object3D, componentProperties: ComponentProperties) {
     super();

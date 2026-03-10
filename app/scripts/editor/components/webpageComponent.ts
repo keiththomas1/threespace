@@ -8,7 +8,7 @@ import { ComponentType, WebpageProperties } from "../../player/utils/playerDefin
 export default class WebpageComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
 
-  protected playerProperties: WebpageProperties = WebpageComponent.DefaultProperties;
+  protected webpageProperties: WebpageProperties = WebpageComponent.DefaultProperties;
 
   private textureLoader: THREE.TextureLoader;
 
@@ -33,6 +33,11 @@ export default class WebpageComponent extends BaseComponent {
     const defaultproperties = this.BaseDefaultProperties as WebpageProperties;
     defaultproperties.componentType = ComponentType.Webpage;
     return defaultproperties;
+  }
+
+  /* Overridden player properties */
+  public get ComponentProperties(): WebpageProperties {
+    return this.webpageProperties;
   }
 
   public propertyChanged(propertyName: string, property: ComponentProperty) {

@@ -117,7 +117,7 @@ Add new helpers to the appropriate existing utility class. If no fitting class e
 | Private methods (arrow fn) | camelCase with `private` | `private loadModel = () => {}` |
 | Public getters/setters | PascalCase | `get Canvas()`, `set Muted()` |
 | Constants (module-level) | UPPER_SNAKE_CASE | `SCHEMA_VERSION`, `DEFAULT_MATRIX_ARRAY` |
-| Enums | PascalCase type, UPPER_SNAKE_CASE members | `ComponentType.AMBIENT_LIGHT` |
+| Enums | PascalCase type, PascalCase members | `ComponentType.AmbientLight` |
 | Interfaces | PascalCase, no `I` prefix | `PlayerProperties`, `SceneProperties` |
 
 ---

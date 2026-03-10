@@ -10,7 +10,7 @@ export default class SettingsComponent extends BaseComponent {
   private readonly FIRST_COLOR = "First Color";
   private readonly SECOND_TYPE = "Second Color";
 
-  protected playerProperties: SceneProperties = SettingsComponent.DefaultProperties;
+  protected settingsProperties: SceneProperties = SettingsComponent.DefaultProperties;
   protected editorProperties: any = {};
   protected componentType: string;
 
@@ -21,7 +21,7 @@ export default class SettingsComponent extends BaseComponent {
     super("Scene Settings", null, { hasActions: false, hasCredit: false, hasTransform: false});
 
     this.componentType = ComponentType.Settings;
-    Object.assign(this.playerProperties, sceneProperties);
+    Object.assign(this.settingsProperties, sceneProperties);
     this.canDelete = false;
 
     this.settingsChanged = settingsChanged;
@@ -41,35 +41,35 @@ export default class SettingsComponent extends BaseComponent {
     };
   }
 
-  public get PlayerProperties(): SceneProperties {
-    return this.playerProperties;
+  public get SettingsProperties(): SceneProperties {
+    return this.settingsProperties;
   }
 
-  public set PlayerProperties(sceneProperties: SceneProperties) {
-    this.playerProperties = SettingsComponent.DefaultProperties;
-    Object.assign(this.playerProperties, sceneProperties);
+  public set SettingsProperties(sceneProperties: SceneProperties) {
+    this.settingsProperties = SettingsComponent.DefaultProperties;
+    Object.assign(this.settingsProperties, sceneProperties);
 
     this.editorProperties[this.RESET_SCENE] = {
       value: this.resetScene,
       type: "Button",
       tooltip: "" };
     this.editorProperties[this.BACKGROUND_TYPE] =
-      { value: this.playerProperties.backgroundColorType, type: "Enum", enumType: BackgroundColorType };
-    this.editorProperties[this.FIRST_COLOR] = { value: this.playerProperties.colorOne, type: "Color" };
-    this.editorProperties[this.SECOND_TYPE] = { value: this.playerProperties.colorTwo, type: "Color" };
+      { value: this.settingsProperties.backgroundColorType, type: "Enum", enumType: BackgroundColorType };
+    this.editorProperties[this.FIRST_COLOR] = { value: this.settingsProperties.colorOne, type: "Color" };
+    this.editorProperties[this.SECOND_TYPE] = { value: this.settingsProperties.colorTwo, type: "Color" };
   }
 
   public propertyChanged(propertyName: string, property: ComponentProperty) {
     switch (propertyName) {
       case this.BACKGROUND_TYPE:
-        this.playerProperties.backgroundColorType = property.value;
+        this.settingsProperties.backgroundColorType = property.value;
         break;
       case this.FIRST_COLOR:
-        this.playerProperties.colorOne =
+        this.settingsProperties.colorOne =
           PlayerUtils.getSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
       case this.SECOND_TYPE:
-        this.playerProperties.colorTwo =
+        this.settingsProperties.colorTwo =
           PlayerUtils.getSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
     }

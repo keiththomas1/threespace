@@ -12,7 +12,7 @@ export default class ModelComponent extends BaseComponent {
   private animationMixer: THREE.AnimationMixer | null = null;
   private onLoaded: (component: ModelComponent) => any;
 
-  protected playerProperties: ModelProperties = ModelComponent.DefaultProperties;
+  protected modelProperties: ModelProperties = ModelComponent.DefaultProperties;
 
   constructor(
     modelProperties: ModelProperties, editorCamera: THREE.Camera,
@@ -30,30 +30,7 @@ export default class ModelComponent extends BaseComponent {
     if (dataURL !== "") {
       modelLoader.loadGLTFFromURL(dataURL, this.loadModelInfo);
     } else {
-      modelLoader.loadGLTFFromURL(this.playerProperties.url, this.loadModelInfo);
-    }
-  }
-
-  private loadModelInfo = (modelInfo: ModelInfo) => {
-    if (modelInfo) {
-      const model = modelInfo.object;
-      model.traverse( function( child ) { child.layers.set( PREVIEW_LAYER ) } );
-      this.add(model);
-
-      if (modelInfo.animations && modelInfo.animations.length > 0) {
-        const animationNames = [];
-        for (let i = 0; i < modelInfo.animations.length; i++) {
-            animationNames.push(modelInfo.animations[i].name.toLocaleLowerCase());
-        }
-        this.editorProperties[this.CURRENT_ANIMATION] = { value: animationNames, type: "List" };
-        this.editorProperties[this.ANIMATION_BEHAVIOR_TYPE] =
-          { value: this.playerProperties.animationBehaviorType, type: "Enum", enumType: AnimationBehaviorType };
-
-        this.setupAnimationMixer(model, modelInfo.animations);
-      }
-
-      this.mesh = model;
-      this.onLoaded(this);
+      modelLoader.loadGLTFFromURL(this.modelProperties.url, this.loadModelInfo);
     }
   }
 
@@ -65,8 +42,9 @@ export default class ModelComponent extends BaseComponent {
     return defaultproperties;
   }
 
-  public get PlayerProperties(): ModelProperties {
-    return this.playerProperties;
+  /* Overridden player properties */
+  public get ComponentProperties(): ModelProperties {
+    return this.modelProperties;
   }
 
   public propertyChanged(propertyName: string, property: ComponentProperty) {
@@ -74,11 +52,11 @@ export default class ModelComponent extends BaseComponent {
 
     switch (propertyName) {
       case this.CURRENT_ANIMATION:
-        this.playerProperties.currentAnimationName = property.value;
+        this.modelProperties.currentAnimationName = property.value;
         this.playAnimationName(property.value);
         break;
       case this.ANIMATION_BEHAVIOR_TYPE:
-        this.playerProperties.animationBehaviorType = property.value;
+        this.modelProperties.animationBehaviorType = property.value;
         break;
     }
   }
@@ -95,6 +73,29 @@ export default class ModelComponent extends BaseComponent {
     super.setupEditorProperties();
   }
 
+  private loadModelInfo = (modelInfo: ModelInfo) => {
+    if (modelInfo) {
+      const model = modelInfo.object;
+      model.traverse( function( child ) { child.layers.set( PREVIEW_LAYER ) } );
+      this.add(model);
+
+      if (modelInfo.animations && modelInfo.animations.length > 0) {
+        const animationNames = [];
+        for (let i = 0; i < modelInfo.animations.length; i++) {
+            animationNames.push(modelInfo.animations[i].name.toLocaleLowerCase());
+        }
+        this.editorProperties[this.CURRENT_ANIMATION] = { value: animationNames, type: "List" };
+        this.editorProperties[this.ANIMATION_BEHAVIOR_TYPE] =
+          { value: this.modelProperties.animationBehaviorType, type: "Enum", enumType: AnimationBehaviorType };
+
+        this.setupAnimationMixer(model, modelInfo.animations);
+      }
+
+      this.mesh = model;
+      this.onLoaded(this);
+    }
+  }
+
   private setupAnimationMixer(root: THREE.Object3D, animationClips: AnimationClip[]) {
     if (animationClips.length == 0) {
       return;
@@ -103,7 +104,7 @@ export default class ModelComponent extends BaseComponent {
     this.animationMixer = new THREE.AnimationMixer(root);
     this.animations = animationClips;
     this.playAnimationName(animationClips[0].name);
-    this.playerProperties.currentAnimationName = animationClips[0].name;
+    this.modelProperties.currentAnimationName = animationClips[0].name;
   }
 
   private playAnimationName = (animationName: string) => {

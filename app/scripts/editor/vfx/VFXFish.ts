@@ -13,7 +13,7 @@ export default class VFXFish extends BaseComponent {
 
   private readonly COLOR_PROPERTY = "Color";
 
-  protected playerProperties: VFXProperties = VFXFish.DefaultProperties;
+  protected vfxProperties: VFXProperties = VFXFish.DefaultProperties;
 
   private vfxFishObject: VFXFishObject;
 
@@ -38,6 +38,11 @@ export default class VFXFish extends BaseComponent {
     return defaultproperties;
   }
 
+  /* Overridden player properties */
+  public get ComponentProperties(): VFXProperties { 
+    return this.vfxProperties; 
+  }
+
   public update = (deltaTime: number) => {
     this.vfxFishObject.update(deltaTime);
   }
@@ -47,7 +52,7 @@ export default class VFXFish extends BaseComponent {
 
     switch (propertyName) {
       case this.COLOR_PROPERTY:
-        this.playerProperties.color = property.value;
+        this.vfxProperties.color = property.value;
         this.colorChanged(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
     }
@@ -55,7 +60,7 @@ export default class VFXFish extends BaseComponent {
 
   protected setupEditorProperties() {
     super.setupEditorProperties(() => {
-      this.editorProperties[this.COLOR_PROPERTY] = { value: this.playerProperties.color, type: "Color" };
+      this.editorProperties[this.COLOR_PROPERTY] = { value: this.vfxProperties.color, type: "Color" };
     });
   }
 

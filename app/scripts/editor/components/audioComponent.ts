@@ -12,7 +12,7 @@ export default class AudioComponent extends BaseComponent {
   private audioLoader: THREE.AudioLoader;
   private sound: THREE.Audio = null;
 
-  protected playerProperties: AudioProperties = AudioComponent.DefaultProperties;
+  protected audioProperties: AudioProperties = AudioComponent.DefaultProperties;
 
   constructor(audioProperties: AudioProperties, camera: THREE.Camera, dataURL: string = "", assetPath: string = "") {
     super("Audio", null, { hasActions: false, hasCredit: true, hasTransform: true});
@@ -26,7 +26,7 @@ export default class AudioComponent extends BaseComponent {
 
     this.audioLoader = new THREE.AudioLoader();
 
-    this.addMusic(dataURL === "" ? this.playerProperties.url : dataURL, 1);
+    this.addMusic(dataURL === "" ? this.audioProperties.url : dataURL, 1);
 
     this.createMusicModelRepresentation(assetPath);
   }

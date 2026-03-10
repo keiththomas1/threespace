@@ -237,16 +237,10 @@ export class ThreeSpacePlayer {
           this.components.push(playerComponent);
           break;
         case ComponentType.Video:
-          ComponentFactory.loadAsset(
-            componentProperties[i].url,
-            (url: string) => { this.createVideoComponent(url, componentProperties[i]); }
-          );
+          this.createVideoComponent(componentProperties[i].url ?? componentProperties[i].filepath, componentProperties[i]);
           break;
         case ComponentType.Image:
-          ComponentFactory.loadAsset(
-            componentProperties[i].url,
-            (url: string) => { this.createImageComponent(url, componentProperties[i]); }
-          );
+          this.createImageComponent(componentProperties[i].url ?? componentProperties[i].filepath, componentProperties[i]);
           break;
         case ComponentType.Model:
           const modelProperties = componentProperties[i] as ModelProperties;

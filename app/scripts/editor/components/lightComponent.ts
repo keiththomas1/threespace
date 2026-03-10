@@ -23,14 +23,14 @@ export default class LightComponent extends BaseComponent {
   private lightModelSrc: string = "";
   private lightModelScale: THREE.Vector3 = new THREE.Vector3();
 
-  constructor(lightProperties: LightProperties) {
+  constructor(lightProperties: LightProperties, assetPath: string = "") {
     super("LightComponent", null, { hasActions: false, hasCredit: false, hasTransform: true});
 
     this.componentType = ComponentType.Light;
     this.assignProperties(lightProperties);
     this.setupEditorProperties();
 
-    this.createLight(lightProperties.type);
+    this.createLight(lightProperties.type, assetPath);
     this.createLightModelRepresentation();
   }
 
@@ -94,7 +94,7 @@ export default class LightComponent extends BaseComponent {
     });
   }
 
-  private createLight(lightType: LightType) {
+  private createLight(lightType: LightType, assetPath: string = "") {
     const color = PlayerUtils.getColorFromSerializableColor(this.playerProperties.color);
     switch (lightType) {
       case LightType.AMBIENT:
@@ -102,7 +102,7 @@ export default class LightComponent extends BaseComponent {
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
-        this.lightModelSrc = "/models/lightbulb/lightbulb.glb";
+        this.lightModelSrc = `${assetPath}/models/lightbulb/lightbulb.glb`;
         this.lightModelScale.set(7, 7, 7);
         break;
       case LightType.DIRECTIONAL:
@@ -110,7 +110,7 @@ export default class LightComponent extends BaseComponent {
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
-        this.lightModelSrc = "/models/spotlight/spotlight.glb";
+        this.lightModelSrc = `${assetPath}/models/spotlight/spotlight.glb`;
         this.lightModelScale.set(10, 10, 5);
         break;
     }

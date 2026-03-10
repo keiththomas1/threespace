@@ -11,9 +11,9 @@ export default class VFXRain extends VFXComponent {
   protected static DEFAULT_LIFETIME_MAX = 2.5;
   protected static DEFAULT_COLOR = new THREE.Color(0x51ffeb);
 
-  constructor(vfxProperties: VFXProperties) {
+  constructor(vfxProperties: VFXProperties, assetPath: string = "") {
     vfxProperties.type = VFXType.Rain;
 
-    super(vfxProperties, RainVfxData);
+    super(vfxProperties, RainVfxData, assetPath);
   }
 }

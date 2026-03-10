@@ -77,11 +77,16 @@ export class ThreeSpacePlayer {
    * @param canvasParent The parent element that the player's canvas will be added to. The canvas will be sized to fill this parent element.
    * @param playerSettings The settings for the player, including scene properties and component properties. 
    * @param canvas An optional canvas element to use for rendering. If not provided, a new canvas element will be created and added to the canvasParent. 
+   * @param assetBasePath // Prepended to the filename when searching for assets such as models, videos, images, etc. in the player settings. 
+   *                        This is used when the asset paths in the player settings are relative paths.
+   *                        e.g. "/models/" → file "robot.glb" is imported as "/models/robot.glb". 
+   *                        If not set, will use the root as the base path.
    */
   public constructor(
     canvasParent: HTMLElement,
     playerSettings: PlayerProperties,
-    canvas: HTMLCanvasElement = null) {
+    canvas: HTMLCanvasElement = null,
+    assetBasePath?: string) {
     this.scene = new THREE.Scene();
 
     this.renderer = new THREE.WebGLRenderer();

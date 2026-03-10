@@ -18,7 +18,6 @@ export default class EditorPage extends Component {
     const container = this.container;
 
     const editorConfig: EditorConfig = {
-      assetBasePath: "/scenes/",
       playerProperties: playerSettingsJSON as PlayerProperties
     };
     this.editor = new ThreeSpaceEditor(container, editorConfig);

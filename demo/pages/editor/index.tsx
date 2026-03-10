@@ -18,10 +18,9 @@ export default class EditorPage extends Component {
     const container = this.container;
 
     const editorConfig: EditorConfig = {
-      publicBasePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '',
       playerProperties: playerSettingsJSON as PlayerProperties
     };
-    this.editor = new ThreeSpaceEditor(container, editorConfig);
+    this.editor = new ThreeSpaceEditor(container, editorConfig, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
   }
 
   handleSceneSelected = (properties: PlayerProperties) => {

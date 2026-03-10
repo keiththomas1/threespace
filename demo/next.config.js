@@ -1,4 +1,4 @@
-const isGithubPages = process.env.GITHUB_PAGES === 'true';
+const isGithubPages = process.env.DEPLOY_GITHUB_PAGES === 'true';
 
 const nextConfig = {
   output: 'export',

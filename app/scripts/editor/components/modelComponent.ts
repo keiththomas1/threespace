@@ -1,10 +1,8 @@
 import * as THREE from "three";
 import { AnimationClip } from "three";
-import { ComponentFactory } from "../../player/components/componentFactory";
 import { AnimationBehaviorType, ComponentType, ModelInfo, ModelProperties } from "../../player/utils/playerDefinitions";
 import ModelLoader from "../../player/modelLoader";
-import { ComponentProperty, DEFAULT_ACTION, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
-import ThreeUtilities from "../utils/threeUtilities";
+import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 
 export default class ModelComponent extends BaseComponent {

@@ -9,6 +9,14 @@ ThreeSpace provides you an editor for three.js scenes, and a player to load thos
 
 ---
 
+## Demos
+
+[Player](https://keiththomas1.github.io/threespace)
+
+[Editor](https://keiththomas1.github.io/threespace/editor)
+
+---
+
 ## Features
 
 - **Editor** — drag-and-drop scene builder with transform gizmos, a live properties panel, color picker, and real-time preview
@@ -29,7 +37,7 @@ npm install threespace three
 
 ---
 
-## Running the demo
+## Running the demo locally
 
 The `demo/` directory contains a Next.js app that exercises both the editor and player.
 

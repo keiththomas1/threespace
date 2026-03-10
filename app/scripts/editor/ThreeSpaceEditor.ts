@@ -39,15 +39,13 @@ export interface EditorConfig {
   playerProperties?:         PlayerProperties;
   onSave?:        (scene: PlayerProperties) => void;
   onLoad?:        () => Promise<PlayerProperties | null>;
-  /** Prepended to the filename when building the exported URL.
-   *  e.g. "/models/" → file "robot.glb" is exported as "/models/robot.glb". */
-  assetBasePath?: string;
 }
 
 /**
  * The ThreeSpace editor. Spins up a new scene and provides tools for creating and editing 3D content.
  */
 export class ThreeSpaceEditor {
+  /* Managers and core objects */
   private scene: THREE.Scene;
   private renderer: THREE.WebGLRenderer;
   private controls: OrbitControls;
@@ -55,34 +53,45 @@ export class ThreeSpaceEditor {
   private uiController: UiController;
   private componentManager: ComponentManager;
   private postProcessingManager: PostProcessingManager;
-
-  private clock: THREE.Clock;
+  
+  /** Initialization */
   private editorParent: HTMLElement;
-  private raycaster: THREE.Raycaster;
-  private raycastResults: THREE.Intersection<THREE.Object3D<THREE.Event>>[] = [];
-  private outlineObjects: THREE.Object3D[] = [];
-  private clickTimer: number = 0;
-  private mousePosition: THREE.Vector2 = new THREE.Vector2();
   private config: EditorConfig;
+  private assetBasePath?: string;
 
+  /* 3D Scene objects */
   private roomGroup: THREE.Group;
   private editorCamera: THREE.PerspectiveCamera;
   private userCamera: CameraComponent | null = null;
-  private inPreviewMode: boolean = false;
-  private previewPlayer: ThreeSpacePlayer | null = null;
   private cubeCamera: THREE.CubeCamera;
-  private stats: any;
+  private previewPlayer: ThreeSpacePlayer | null = null;
+  private outlineObjects: THREE.Object3D[] = [];
   private skybox: SkyBox;
-  private settingsComponent: SettingsComponent;
   private vfx: VFXDust[] = [];
+
+  /* UI and Utils */
+  private settingsComponent: SettingsComponent;
+  private clock: THREE.Clock;
+  private raycaster: THREE.Raycaster;
+  private stats: any;
+
+  /* State */
+  private inPreviewMode: boolean = false;
+  private clickTimer: number = 0;
+  private mousePosition: THREE.Vector2 = new THREE.Vector2();
+  private raycastResults: THREE.Intersection<THREE.Object3D<THREE.Event>>[] = [];
 
   /**
    * @param container // The HTMLElement that this will create it's scene within.
    * @param config // The config to start the editor up with.
+   * @param assetBasePath // Prepended to the filename when exporting or searching for assets such as models, videos, images, etc. in the player settings.
+   *                        e.g. "/models/" → file "robot.glb" is imported as "/models/robot.glb". 
+   *                        If not set, will use the root as the base path.
    */
-  public constructor(container: HTMLElement, config: EditorConfig = {}) {
+  public constructor(container: HTMLElement, config: EditorConfig = {}, assetBasePath?: string) {
     this.editorParent = container;
     this.config = config;
+    this.assetBasePath = assetBasePath;
 
     // Build editor DOM inside the container, get back the canvas mount point.
     const dom = buildEditorDom(container, {
@@ -295,7 +304,7 @@ export class ThreeSpaceEditor {
     let placed = 0;
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const defaultPath = (this.config.assetBasePath ?? '') + file.name;
+      const defaultPath = (this.assetBasePath ?? '') + file.name;
       const exportUrl = await this.showPathConfirmPopup(file.name, defaultPath);
       if (!exportUrl) continue;
 
@@ -343,13 +352,13 @@ export class ThreeSpaceEditor {
     this.uploadAndPlaceAsset(files, (dataURL, exportUrl) => {
       const p = AudioComponent.DefaultProperties;
       p.url = exportUrl;
-      return new AudioComponent(p, this.editorCamera, dataURL);
+      return new AudioComponent(p, this.editorCamera, dataURL, this.assetBasePath);
     });
   }
 
   public addLightComponent = () => {
     const lightProperties = LightComponent.DefaultProperties;
-    const lightComponent = new LightComponent(lightProperties);
+    const lightComponent = new LightComponent(lightProperties, this.assetBasePath);
     this.roomGroup.add(lightComponent);
     this.componentAdded(lightComponent);
   }
@@ -359,23 +368,23 @@ export class ThreeSpaceEditor {
     switch (type) {
       case VFXType.Basic:
         vfxProperties = VFXDust.DefaultProperties;
-        vfx = new VFXComponent(vfxProperties, BasicVfxData);
+        vfx = new VFXComponent(vfxProperties, BasicVfxData, this.assetBasePath);
         break;
       case VFXType.Dust:
         vfxProperties = VFXDust.DefaultProperties;
-        vfx = new VFXDust(vfxProperties);
+        vfx = new VFXDust(vfxProperties, this.assetBasePath);
         break;
       case VFXType.Snow:
         vfxProperties = VFXSnow.DefaultProperties;
-        vfx = new VFXSnow(vfxProperties);
+        vfx = new VFXSnow(vfxProperties, this.assetBasePath);
         break;
       case VFXType.Rain:
         vfxProperties = VFXRain.DefaultProperties;
-        vfx = new VFXRain(vfxProperties);
+        vfx = new VFXRain(vfxProperties, this.assetBasePath);
         break;
       case VFXType.Fish:
         vfxProperties = VFXFish.DefaultProperties;
-        vfx = new VFXFish(vfxProperties, this.renderer);
+        vfx = new VFXFish(vfxProperties, this.renderer, this.assetBasePath);
         break;
     }
 
@@ -496,11 +505,12 @@ export class ThreeSpaceEditor {
       case ComponentType.Camera:
         component = new CameraComponent(
           this.scene, componentProperties as CameraProperties,
-          this.editorCamera, this.alignUserCameraWithView);
+          this.editorCamera, this.alignUserCameraWithView,
+          this.assetBasePath);
         this.userCamera = component;
         break;
       case ComponentType.Light:
-        component = new LightComponent(componentProperties as LightProperties);
+        component = new LightComponent(componentProperties as LightProperties, this.assetBasePath);
         break;
       case ComponentType.Text3D:
         component = new Text3DComponent(componentProperties as Text3DProperties, this.editorCamera);
@@ -515,25 +525,25 @@ export class ThreeSpaceEditor {
         component = new ModelComponent(componentProperties as ModelProperties, this.editorCamera, ()=>{}, dataURL);
         break;
       case ComponentType.Audio:
-        component = new AudioComponent(componentProperties as AudioProperties, this.editorCamera, dataURL);
+        component = new AudioComponent(componentProperties as AudioProperties, this.editorCamera, dataURL, this.assetBasePath);
         break;
       case ComponentType.VFX:
         const vfxProperties = componentProperties as VFXProperties;
         switch (vfxProperties.type) {
           case VFXType.Basic:
-            component = new VFXComponent(vfxProperties, BasicVfxData);
+            component = new VFXComponent(vfxProperties, BasicVfxData, this.assetBasePath);
             break;
           case VFXType.Snow:
-            component = new VFXSnow(vfxProperties);
+            component = new VFXSnow(vfxProperties, this.assetBasePath);
             break;
           case VFXType.Dust:
-            component = new VFXDust(vfxProperties);
+            component = new VFXDust(vfxProperties, this.assetBasePath);
             break;
           case VFXType.Rain:
-            component = new VFXRain(vfxProperties);
+            component = new VFXRain(vfxProperties, this.assetBasePath);
             break;
           case VFXType.Fish:
-            component = new VFXFish(vfxProperties, this.renderer);
+            component = new VFXFish(vfxProperties, this.renderer, this.assetBasePath);
             break;
         }
         break;
@@ -660,7 +670,8 @@ export class ThreeSpaceEditor {
       this.scene,
       CameraComponent.DefaultProperties as CameraProperties,
       this.editorCamera,
-      this.alignUserCameraWithView);
+      this.alignUserCameraWithView,
+      this.assetBasePath);
     this.roomGroup.add(this.userCamera);
     this.userCamera.position.set(0, 5, 5);
     this.userCamera.lookAt(new THREE.Vector3(0, 10, 10));

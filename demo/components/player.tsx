@@ -42,7 +42,7 @@ export default class Player extends Component {
     if (this.player === null && playerSettings && document) {
       const playerParent = document.getElementById(styles.playerParent);
       if (playerParent) {
-        this.player = new ThreeSpacePlayer(playerParent, playerSettings);
+        this.player = new ThreeSpacePlayer(playerParent, playerSettings, null, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
         this.player.onSceneLoaded = this.sceneLoaded;
         this.player.onComponentSelected = this.playerComponentSelected;
       }

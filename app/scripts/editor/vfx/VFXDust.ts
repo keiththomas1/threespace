@@ -7,9 +7,9 @@ export default class VFXDust extends VFXComponent {
   protected static DEFAULT_SIZE = 14;
   protected static DEFAULT_COUNT = 60;
 
-  constructor(vfxProperties: VFXProperties) {
+  constructor(vfxProperties: VFXProperties, assetPath: string = "") {
     vfxProperties.type = VFXType.Dust;
 
-    super(vfxProperties, DustVfxData);
+    super(vfxProperties, DustVfxData, assetPath);
   }
 }

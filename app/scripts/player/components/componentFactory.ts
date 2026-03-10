@@ -20,7 +20,6 @@ import {
   VFXType} from "../utils/playerDefinitions";
 import { VFXObject } from "./VFXObject";
 import { BasicVfxData, DustVfxData, RainVfxData, SnowVfxData } from "../utils/vfxInfo";
-import { PREVIEW_LAYER } from "../utils/playerDefinitions";
 import VFXFishObject from "./vfxFishObject";
 import VFXBaseObject from "./vfxBaseObject";
 

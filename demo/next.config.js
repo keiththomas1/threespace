@@ -1,5 +1,7 @@
 const nextConfig = {
   output: 'export',
+  basePath: '/threespace',
+  assetPrefix: '/threespace/',
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: ['threespace'],

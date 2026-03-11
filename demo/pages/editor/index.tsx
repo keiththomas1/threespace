@@ -23,8 +23,11 @@ export default class EditorPage extends Component {
     this.editor = new ThreeSpaceEditor(container, editorConfig, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
   }
 
-  handleSceneSelected = (properties: PlayerProperties) => {
-    if (this.editor) this.editor.setPlayerProperties(properties);
+  handleSceneSelected = (path: string, properties: PlayerProperties) => {
+    if (this.editor) {
+       
+      this.editor.PlayerProperties = properties;
+    }
   }
 
   render() {

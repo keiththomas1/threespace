@@ -21,7 +21,7 @@ export default class Text3DComponent extends BaseComponent {
   private static readonly DEFAULT_FRONT_COLOR = new THREE.Color(0x00AAAA);
   private static readonly DEFAULT_SIDE_COLOR = new THREE.Color(0x000000);
 
-  protected playerProperties: Text3DProperties = Text3DComponent.DefaultProperties;
+  protected textProperties: Text3DProperties = Text3DComponent.DefaultProperties;
 
   private frontMaterial: THREE.MeshBasicMaterial | null = null;
   private sideMaterial: THREE.MeshBasicMaterial | null = null;
@@ -38,7 +38,6 @@ export default class Text3DComponent extends BaseComponent {
     this.loadTextMesh();
   }
 
-
   public static get DefaultProperties() : Text3DProperties {
     const defaultproperties = this.BaseDefaultProperties as Text3DProperties;
     defaultproperties.componentType = ComponentType.Text3D;
@@ -47,41 +46,42 @@ export default class Text3DComponent extends BaseComponent {
     defaultproperties.size = this.DEFAULT_FONT_SIZE;
     defaultproperties.thickness = this.DEFAULT_FONT_THICKNESS;
     defaultproperties.height = this.DEFAULT_FONT_THICKNESS;
-    defaultproperties.frontColor = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_FRONT_COLOR);
-    defaultproperties.sideColor = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_SIDE_COLOR);
+    defaultproperties.frontColor = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_FRONT_COLOR);
+    defaultproperties.sideColor = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_SIDE_COLOR);
     return defaultproperties;
   }
 
-  public get PlayerProperties(): Text3DProperties {
-    return this.playerProperties;
+  /* Overridden player properties */
+  public get ComponentProperties(): Text3DProperties {
+    return this.textProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.DISPLAY_NAME:
-        this.playerProperties.text = property.value;
+        this.textProperties.text = property.value;
         this.reloadTextMesh();
         break;
       case this.FRONT_COLOR:
         if (this.frontMaterial) this.frontMaterial.color = property.value as THREE.Color;
-        this.playerProperties.frontColor = new Color(property.value.r, property.value.g, property.value.b);
+        this.textProperties.frontColor = new Color(property.value.r, property.value.g, property.value.b);
         break;
       case this.BACK_COLOR:
         if (this.sideMaterial) this.sideMaterial.color = property.value as THREE.Color;
-        this.playerProperties.sideColor = new Color(property.value.r, property.value.g, property.value.b);
+        this.textProperties.sideColor = new Color(property.value.r, property.value.g, property.value.b);
         break;
       case this.FONT_SIZE:
-        this.playerProperties.size = property.value;
+        this.textProperties.size = property.value;
         this.reloadTextMesh();
         break;
       case this.FONT_THICKNESS:
-        this.playerProperties.height = property.value;
+        this.textProperties.height = property.value;
         this.reloadTextMesh();
         break;
       case this.FONT_FAMILY:
-        this.playerProperties.type = property.value;
+        this.textProperties.type = property.value;
         this.reloadTextMesh();
         break;
     }
@@ -89,17 +89,17 @@ export default class Text3DComponent extends BaseComponent {
 
   protected setupEditorProperties() {
     super.setupEditorProperties(() => {
-      this.editorProperties[this.DISPLAY_NAME] = { value: this.playerProperties.text, type: "String" };
-      this.editorProperties[this.FONT_FAMILY] = { value: this.playerProperties.type, type: "Enum", enumType: FontType };
-      this.editorProperties[this.FONT_SIZE] = { value: this.playerProperties.size, type: "Number", min: 2, max: 128 };
-      this.editorProperties[this.FONT_THICKNESS] = { value: this.playerProperties.thickness, type: "Number", min: 0, max: 16 };
-      this.editorProperties[this.FRONT_COLOR] = { value: this.playerProperties.frontColor, type: "Color" };
-      this.editorProperties[this.BACK_COLOR] = { value: this.playerProperties.sideColor, type: "Color" };
+      this.editorProperties[this.DISPLAY_NAME] = { value: this.textProperties.text, type: "String" };
+      this.editorProperties[this.FONT_FAMILY] = { value: this.textProperties.type, type: "Enum", enumType: FontType };
+      this.editorProperties[this.FONT_SIZE] = { value: this.textProperties.size, type: "Number", min: 2, max: 128 };
+      this.editorProperties[this.FONT_THICKNESS] = { value: this.textProperties.thickness, type: "Number", min: 0, max: 16 };
+      this.editorProperties[this.FRONT_COLOR] = { value: this.textProperties.frontColor, type: "Color" };
+      this.editorProperties[this.BACK_COLOR] = { value: this.textProperties.sideColor, type: "Color" };
     });
   }
 
   private loadTextMesh() {
-    const promise = ComponentFactory.create3DTextMesh(this.playerProperties, this);
+    const promise = ComponentFactory.Create3DTextMesh(this.textProperties, this);
     promise.then(
       (textMesh: THREE.Mesh) => {
         this.mesh = textMesh;

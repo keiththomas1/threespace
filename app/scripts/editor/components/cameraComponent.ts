@@ -15,7 +15,7 @@ export default class CameraComponent extends BaseComponent {
   private readonly CAMERA_VIEWPORT = "Always Show Viewport";
   private readonly CAMERA_ALIGN_WITH_VIEW = "Align with View";
 
-  protected playerProperties: CameraProperties = CameraComponent.DefaultProperties;
+  protected cameraProperties: CameraProperties = CameraComponent.DefaultProperties;
 
   private camera: THREE.Camera | null = null;
   private renderTarget: THREE.WebGLRenderTarget | null = null;
@@ -53,8 +53,9 @@ export default class CameraComponent extends BaseComponent {
     return defaultproperties;
   }
 
-  public get PlayerProperties(): CameraProperties {
-    return this.playerProperties;
+  /* Overridden player properties */
+  public get ComponentProperties(): CameraProperties {
+    return this.cameraProperties;
   }
 
   public get Camera() {
@@ -65,16 +66,16 @@ export default class CameraComponent extends BaseComponent {
     return this.renderTarget;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.CAMERA_FOV:
         if (this.camera && this.camera instanceof THREE.PerspectiveCamera) this.camera.fov = property.value;
-        this.playerProperties.fov = property.value;
+        this.cameraProperties.fov = property.value;
         break;
       case this.CAMERA_FOCUS:
-        this.playerProperties.target = property.value;
+        this.cameraProperties.target = property.value;
         break;
       case this.CAMERA_TYPE:
         if (this.camera) {
@@ -85,7 +86,7 @@ export default class CameraComponent extends BaseComponent {
           ThreeUtilities.disposeAllChildren(this.mesh, false);
         }
 
-        this.playerProperties.type = property.value;
+        this.cameraProperties.type = property.value;
         this.createCamera(property.value as CameraType);
         this.createCameraModelRepresentation();
         break;
@@ -117,7 +118,7 @@ export default class CameraComponent extends BaseComponent {
     this.editorProperties = {};
     this.editorProperties[this.DISPLAY_NAME] = { value: "Camera", type: "String" };
     this.editorProperties[this.CAMERA_TYPE] = { value: cameraType, type: "Enum", enumType: CameraType };
-    this.editorProperties[this.CAMERA_FOCUS] = { value: this.playerProperties.target, type: "Vector3" };
+    this.editorProperties[this.CAMERA_FOCUS] = { value: this.cameraProperties.target, type: "Vector3" };
     this.editorProperties[this.CAMERA_VIEWPORT] = { value: false, type: "Boolean" };
     this.editorProperties[this.CAMERA_ALIGN_WITH_VIEW] = {
       value: this.moveCameraToEditorCamera,
@@ -125,7 +126,7 @@ export default class CameraComponent extends BaseComponent {
       tooltip: "Moves this camera to same rotation and position as the current editor view." };
     switch (cameraType) {
       case CameraType.PERSPECTIVE:
-        this.editorProperties[this.CAMERA_FOV] = { value: this.playerProperties.fov, type: "Number", min: 5, max: 180 };
+        this.editorProperties[this.CAMERA_FOV] = { value: this.cameraProperties.fov, type: "Number", min: 5, max: 180 };
         break;
       case CameraType.ORTHOGRAPHIC:
         break;
@@ -135,7 +136,7 @@ export default class CameraComponent extends BaseComponent {
       this.createTransformProperty();
     }
 
-    this.camera = ComponentFactory.createPlayerCamera(this.playerProperties);
+    this.camera = ComponentFactory.CreatePlayerCamera(this.cameraProperties);
     this.camera.layers.set(PREVIEW_LAYER);
 
     this.add(this.camera);

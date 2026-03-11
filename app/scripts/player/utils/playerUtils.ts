@@ -3,28 +3,28 @@ import { Object3D } from "three";
 import { SerializableColor, SerializableVector3 } from "./playerDefinitions";
 
 export default class PlayerUtils {
-  public static getColorFromSerializableColor(color: SerializableColor) : THREE.Color {
+  public static GetColorFromSerializableColor(color: SerializableColor) : THREE.Color {
     return new THREE.Color(color.r, color.g, color.b);
   }
-  public static getSerializableColorFromColor(color: THREE.Color) : SerializableColor {
+  public static GetSerializableColorFromColor(color: THREE.Color) : SerializableColor {
     return {r: color.r, g: color.g, b: color.b};
   }
-  public static getVector3FromSerializableVector3(vector: SerializableVector3) : THREE.Vector3 {
+  public static GetVector3FromSerializableVector3(vector: SerializableVector3) : THREE.Vector3 {
     return new THREE.Vector3(vector.x, vector.y, vector.z);
   }
 
-  public static isMobile(navigator: any) {
+  public static IsMobile(navigator: Navigator) {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
-  public static createHitBoxForObject3D = (object3D: THREE.Object3D) => {
+  public static CreateHitBoxForObject3D = (object3D: THREE.Object3D) => {
     const largeBox = new THREE.Box3();
     const material = new THREE.MeshBasicMaterial( { color:0xFF0, transparent: true, opacity: 0 } );
     const hitboxGroup = new THREE.Group();
     hitboxGroup.name = "HitboxGroup";
 
     const meshes: THREE.Mesh[] = [];
-    PlayerUtils.getGltfMeshes(object3D, meshes);
+    PlayerUtils.GetGltfMeshes(object3D, meshes);
     for (let i = 0; i < meshes.length; i++) {
       meshes[i].geometry.computeBoundingBox();
 
@@ -54,13 +54,13 @@ export default class PlayerUtils {
   /**
    * Recursively finds all meshes within a GLTF parent.
    */
-  static getGltfMeshes(object3D: Object3D, meshes: THREE.Mesh[]) {
+  public static GetGltfMeshes(object3D: Object3D, meshes: THREE.Mesh[]) {
     if (object3D instanceof THREE.Mesh) {
       meshes.push(object3D);
     }
 
     for (let i = 0; i < object3D.children.length; i++) {
-      PlayerUtils.getGltfMeshes(object3D.children[i], meshes);
+      PlayerUtils.GetGltfMeshes(object3D.children[i], meshes);
     }
   }
 }

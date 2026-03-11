@@ -12,10 +12,9 @@ export default class ImageComponent extends BaseComponent {
 
   private readonly DEFAULT_COLOR = new THREE.Color(0xFFFFFF);
 
-  protected playerProperties: ImageProperties = ImageComponent.DefaultProperties;
+  protected imageProperties: ImageProperties = ImageComponent.DefaultProperties;
 
   private renderTarget: THREE.WebGLCubeRenderTarget | null;
-  private textureLoader: THREE.TextureLoader;
 
   constructor(
     imageProperties: ImageProperties,
@@ -29,7 +28,7 @@ export default class ImageComponent extends BaseComponent {
     this.assignProperties(imageProperties);
     this.setupEditorProperties();
 
-    this.createImageMesh(dataURL === "" ? this.playerProperties.url : dataURL);
+    this.createImageMesh(dataURL === "" ? this.imageProperties.url : dataURL);
   }
 
   public static get DefaultProperties() : ImageProperties {
@@ -37,9 +36,14 @@ export default class ImageComponent extends BaseComponent {
     defaultproperties.componentType = ComponentType.Image;
     return defaultproperties;
   }
+  
+  /* Overridden player properties */
+  public get ComponentProperties(): ImageProperties {
+    return this.imageProperties;
+  }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.DISPLAY_NAME:
@@ -59,7 +63,6 @@ export default class ImageComponent extends BaseComponent {
 
   protected setupEditorProperties(): void {
     super.setupEditorProperties(() => {
-      // this.editorProperties[this.DISPLAY_NAME] = { value: imageUrl, type: "String" };
       this.editorProperties[this.MATERIAL_REFLECTIVITY] = { value: 0, type: "Number", min: 0, max: 1 };
       this.editorProperties[this.MATERIAL_COLOR] = { value: this.DEFAULT_COLOR, type: "Color" };
     });
@@ -67,7 +70,7 @@ export default class ImageComponent extends BaseComponent {
 
   private createImageMesh = (imageUrl: string) => {
     const self = this;
-    this.mesh = ComponentFactory.createImageMesh(imageUrl, (mat: THREE.MeshBasicMaterial) => {
+    this.mesh = ComponentFactory.CreateImageMesh(imageUrl, (mat: THREE.MeshBasicMaterial) => {
       if (self.renderTarget) mat.envMap = self.renderTarget.texture;
     });
     this.mesh.layers.set(PREVIEW_LAYER);

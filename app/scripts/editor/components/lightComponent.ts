@@ -17,7 +17,8 @@ export default class LightComponent extends BaseComponent {
   private static readonly DEFAULT_COLOR = new THREE.Color(0xFFFFFF);
   private static readonly DEFAULT_INTENSITY = 1;
 
-  protected playerProperties: LightProperties = LightComponent.DefaultProperties;
+  protected lightProperties: LightProperties = LightComponent.DefaultProperties;
+  private assetBasePath: string = "";
 
   private light: THREE.Light | null = null;
   private lightModelSrc: string = "";
@@ -27,6 +28,8 @@ export default class LightComponent extends BaseComponent {
     super("LightComponent", null, { hasActions: false, hasCredit: false, hasTransform: true});
 
     this.componentType = ComponentType.Light;
+    this.assetBasePath = assetPath;
+
     this.assignProperties(lightProperties);
     this.setupEditorProperties();
 
@@ -39,7 +42,7 @@ export default class LightComponent extends BaseComponent {
     defaultproperties.componentType = ComponentType.Light;
     defaultproperties.type = LightType.AMBIENT;
     defaultproperties.intensity = LightComponent.DEFAULT_INTENSITY;
-    defaultproperties.color = PlayerUtils.getSerializableColorFromColor(LightComponent.DEFAULT_COLOR);
+    defaultproperties.color = PlayerUtils.GetSerializableColorFromColor(LightComponent.DEFAULT_COLOR);
     return defaultproperties;
   }
 
@@ -47,12 +50,13 @@ export default class LightComponent extends BaseComponent {
     return this.editorProperties;
   }
 
-  public get PlayerProperties(): LightProperties {
-    return this.playerProperties;
+  /* Overridden player properties */
+  public get ComponentProperties(): LightProperties {
+    return this.lightProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.LIGHT_TYPE:
@@ -65,17 +69,17 @@ export default class LightComponent extends BaseComponent {
           ThreeUtilities.disposeAllChildren(this.mesh, false);
         }
 
-        this.playerProperties.type = property.value;
-        this.createLight(property.value as LightType);
+        this.lightProperties.type = property.value;
+        this.createLight(property.value as LightType, this.assetBasePath);
         this.createLightModelRepresentation();
         break;
       case this.LIGHT_COLOR:
         if (this.light) this.light.color = property.value as THREE.Color;
-        this.playerProperties.color = property.value;
+        this.lightProperties.color = property.value;
         break;
       case this.LIGHT_INTENSITY:
-        this.playerProperties.intensity = property.value / this.INTENSITY_MULTIPLIER;
-        if (this.light) this.light.intensity = this.playerProperties.intensity;
+        this.lightProperties.intensity = property.value / this.INTENSITY_MULTIPLIER;
+        if (this.light) this.light.intensity = this.lightProperties.intensity;
         break;
     }
   }
@@ -87,18 +91,18 @@ export default class LightComponent extends BaseComponent {
   protected setupEditorProperties(): void {
     super.setupEditorProperties(() => {
       this.editorProperties[this.DISPLAY_NAME] = { value: "Light", type: "String" };
-      this.editorProperties[this.LIGHT_TYPE] = { value: this.playerProperties.type, type: "Enum", enumType: LightType };
+      this.editorProperties[this.LIGHT_TYPE] = { value: this.lightProperties.type, type: "Enum", enumType: LightType };
       this.editorProperties[this.LIGHT_INTENSITY] =
-        { value: this.playerProperties.intensity * this.INTENSITY_MULTIPLIER, type: "Number", min: 0, max: 5 * this.INTENSITY_MULTIPLIER };
-      this.editorProperties[this.LIGHT_COLOR] = { value: this.playerProperties.color, type: "Color" };
+        { value: this.lightProperties.intensity * this.INTENSITY_MULTIPLIER, type: "Number", min: 0, max: 5 * this.INTENSITY_MULTIPLIER };
+      this.editorProperties[this.LIGHT_COLOR] = { value: this.lightProperties.color, type: "Color" };
     });
   }
 
   private createLight(lightType: LightType, assetPath: string = "") {
-    const color = PlayerUtils.getColorFromSerializableColor(this.playerProperties.color);
+    const color = PlayerUtils.GetColorFromSerializableColor(this.lightProperties.color);
     switch (lightType) {
       case LightType.AMBIENT:
-        this.light = new THREE.AmbientLight(color, this.playerProperties.intensity);
+        this.light = new THREE.AmbientLight(color, this.lightProperties.intensity);
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
@@ -106,7 +110,7 @@ export default class LightComponent extends BaseComponent {
         this.lightModelScale.set(7, 7, 7);
         break;
       case LightType.DIRECTIONAL:
-        this.light = new THREE.DirectionalLight(color, this.playerProperties.intensity);
+        this.light = new THREE.DirectionalLight(color, this.lightProperties.intensity);
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);

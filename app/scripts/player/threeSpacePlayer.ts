@@ -23,55 +23,43 @@ import VRButton from './vrButton';
  * Also handles user interactions and component actions.
  */
 export class ThreeSpacePlayer {
-  private renderer: THREE.WebGLRenderer;
-  private scene: THREE.Scene;
-  private camera: THREE.Camera | null = null;
-
-  private controls: OrbitControls | null = null;
-  private clock: THREE.Clock;
-
+  /* Managers and core objects */
   private canvas: HTMLCanvasElement;
+  private canvasParent: HTMLElement;
+  private controls: OrbitControls | null = null;
+  private loadingManager: THREE.LoadingManager;
   private modelLoader: ModelLoader;
   private postProcessingManager: PostProcessingManager | null = null;
   private actionManager: ActionManager;
-  private skybox: SkyBox;
-
-  private canvasParent: HTMLElement;
   private resizeObserver: ResizeObserver | null = null;
 
-  private clickTimer: number = 0;
-  private components: PlayerComponent[] = [];
-  private componentSelected: (eventName: string) => any = () => {};
-  private sceneLoaded: () => any = () => {};
-  private setCreditInfo: (piece: string, author: string, site: string, license: string) => any = () => {};
+  /* 3D Scene objects */
+  private scene: THREE.Scene;
+  private renderer: THREE.WebGLRenderer;
+  private camera: THREE.Camera | null = null;
+  private skybox: SkyBox;
 
-  private previousCameraPosition: THREE.Vector3 = new THREE.Vector3();
-  private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
-  private inViewMode: boolean = false;
-  private startDrag: THREE.Vector2 = new THREE.Vector2();
-
-  private loadingManager: THREE.LoadingManager;
+  /* UI and Utils */
   private raycaster: THREE.Raycaster = new THREE.Raycaster();
+  private clock: THREE.Clock;
+
+  /* State */
   private raycastResults: THREE.Intersection<THREE.Object3D<THREE.Event>>[] = [];
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
   private outlineObjects: THREE.Object3D[] = [];
   private animationMixers: THREE.AnimationMixer[] = [];
   private sounds: THREE.Audio[] = [];
+  private clickTimer: number = 0;
+  private components: PlayerComponent[] = [];
+  private previousCameraPosition: THREE.Vector3 = new THREE.Vector3();
+  private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
+  private inViewMode: boolean = false;
+  private startDrag: THREE.Vector2 = new THREE.Vector2();
 
-  /** Sets the callback function to be called when a component is selected. */
-  public set onComponentSelected(callback: (eventName: string) => any) {
-    this.componentSelected = callback;
-  }
-
-  /** Sets the callback function to be called when the scene is loaded. */
-  public set onSceneLoaded(callback: () => any) {
-    this.sceneLoaded = callback;
-  }
-
-  /** Sets the callback function to be called when credit information is to be displayed. */
-  public set onSetCreditInfo(callback: (piece: string, author: string, site: string, license: string) => any) {
-    this.setCreditInfo = callback;
-  }
+  /* Callbacks */
+  private componentSelected: (eventName: string) => any = () => {};
+  private sceneLoaded: () => any = () => {};
+  private setCreditInfo: (piece: string, author: string, site: string, license: string) => any = () => {};
 
   /**
    * @param canvasParent The parent element that the player's canvas will be added to. The canvas will be sized to fill this parent element.
@@ -103,61 +91,70 @@ export class ThreeSpacePlayer {
     }
     this.canvasParent = canvasParent;
     canvasParent.appendChild(this.canvas);
-    canvasParent.onmousemove = this.canvasMouseMove;
-    canvasParent.onmousedown = this.canvasMouseDown;
-    canvasParent.onmouseup = this.canvasMouseUp;
+    canvasParent.onmousemove = this.CanvasMouseMove;
+    canvasParent.onmousedown = this.CanvasMouseDown;
+    canvasParent.onmouseup = this.CanvasMouseUp;
 
     this.clock = new THREE.Clock(true);
     this.loadingManager = new THREE.LoadingManager(() => {
       this.sceneLoaded();
     });
 
-    if (!PlayerUtils.isMobile(navigator)) {
-      window.addEventListener("resize", this.resize);
+    if (!PlayerUtils.IsMobile(navigator)) {
+      window.addEventListener("resize", this.Resize);
     }
 
     if (typeof ResizeObserver !== 'undefined') {
-      this.resizeObserver = new ResizeObserver(() => this.resize());
+      this.resizeObserver = new ResizeObserver(() => this.Resize());
       this.resizeObserver.observe(canvasParent);
     }
 
     this.skybox = new SkyBox(this.scene);
     this.modelLoader = new ModelLoader(this.loadingManager);
-    this.addComponents(playerSettings.components);
-    this.setSceneSettings(playerSettings.sceneProperties);
+    this.AddComponents(playerSettings.components);
+    this.SetSceneSettings(playerSettings.sceneProperties);
 
     if (this.camera) {
       this.postProcessingManager = new PostProcessingManager(
         this.renderer, this.scene, this.camera);
       const edgeStrength = 2;
-      this.postProcessingManager.setupOutline(edgeStrength);
+      this.postProcessingManager.SetupOutline(edgeStrength);
     }
-    this.actionManager = new ActionManager(this.componentSelected, this.enterViewMode);
+    this.actionManager = new ActionManager(this.componentSelected, this.EnterViewMode);
 
-    this.setupXR();
-    this.resize();
-    this.update();
+    this.SetupXR();
+    this.Resize();
+    this.Update();
+  }
+  
+  /** Sets the callback function to be called when a component is selected. */
+  public set OnComponentSelected(callback: (eventName: string) => any) {
+    this.componentSelected = callback;
   }
 
-  public get Canvas() {
+  /** Sets the callback function to be called when the scene is loaded. */
+  public set OnSceneLoaded(callback: () => any) {
+    this.sceneLoaded = callback;
+  }
+
+  /** Sets the callback function to be called when credit information is to be displayed. */
+  public set OnSetCreditInfo(callback: (piece: string, author: string, site: string, license: string) => any) {
+    this.setCreditInfo = callback;
+  }
+
+  /** The underlying WebGL canvas element. Style or reposition it as needed. */
+  public get Canvas(): HTMLCanvasElement {
     return this.canvas;
   }
 
-  public static getDefaultSpaceProperties(): PlayerProperties {
-    return {
-      schemaVersion: SCHEMA_VERSION,
-      sceneProperties: DEFAULT_SCENE_PROPERTIES,
-      components: []
-    };
-  }
-
+  /** Sets whether the player is muted. */
   public set Muted(muted: boolean) {
     for (let i = 0; i < this.sounds.length; i++) {
       this.sounds[i].setVolume(muted ? 0 : 1);
     }
   }
 
-  public dispose() {
+  public Dispose() {
     for (let i = 0; i < this.sounds.length; i++) {
       if (this.sounds[i].isPlaying) {
         this.sounds[i].stop();
@@ -173,12 +170,12 @@ export class ThreeSpacePlayer {
     this.Canvas.remove();
   }
 
-  private addComponents(componentProperties: ComponentProperties[]) {
+  private AddComponents(componentProperties: ComponentProperties[]) {
     for (let i = 0; i < componentProperties.length; i++) {
       switch (componentProperties[i].componentType) {
         case ComponentType.Camera:
           const cameraProperties = componentProperties[i] as CameraProperties;
-          this.camera = ComponentFactory.createPlayerCamera(cameraProperties);
+          this.camera = ComponentFactory.CreatePlayerCamera(cameraProperties);
 
           const matrix = new THREE.Matrix4().fromArray(componentProperties[i].transformMatrix);
           this.camera.applyMatrix4(matrix);
@@ -200,7 +197,7 @@ export class ThreeSpacePlayer {
           const lightProperties = componentProperties[i] as LightProperties;
 
           let light = null;
-          const color = PlayerUtils.getColorFromSerializableColor(lightProperties.color);
+          const color = PlayerUtils.GetColorFromSerializableColor(lightProperties.color);
           switch (lightProperties.type) {
             case LightType.AMBIENT:
               light = new THREE.AmbientLight(color, lightProperties.intensity);
@@ -218,42 +215,36 @@ export class ThreeSpacePlayer {
           }
           break;
         case ComponentType.Text3D:
-          ComponentFactory.create3DTextMesh(componentProperties[i] as Text3DProperties, this.scene).then(
+          ComponentFactory.Create3DTextMesh(componentProperties[i] as Text3DProperties, this.scene).then(
             (textMesh: THREE.Mesh) => {
-              const playerComponent = this.createPlayerComponent(textMesh, componentProperties[i]);
+              const playerComponent = this.CreatePlayerComponent(textMesh, componentProperties[i]);
 
               this.components.push(playerComponent);
             }
           );
           break;
         case ComponentType.VFX:
-          const vfxObject = ComponentFactory.createVFX(componentProperties[i] as VFXProperties, this.renderer);
+          const vfxObject = ComponentFactory.CreateVFX(componentProperties[i] as VFXProperties, this.renderer);
 
-          const playerComponent = this.createPlayerComponent(vfxObject, componentProperties[i]);
+          const playerComponent = this.CreatePlayerComponent(vfxObject, componentProperties[i]);
           playerComponent.UpdateCallback = (deltaTime: number) => {
-            vfxObject.update(deltaTime);
+            vfxObject.Update(deltaTime);
           };
 
           this.components.push(playerComponent);
           break;
         case ComponentType.Video:
-          ComponentFactory.loadAsset(
-            componentProperties[i].url,
-            (url: string) => { this.createVideoComponent(url, componentProperties[i]); }
-          );
+          this.CreateVideoComponent(componentProperties[i].url ?? componentProperties[i].filepath, componentProperties[i]);
           break;
         case ComponentType.Image:
-          ComponentFactory.loadAsset(
-            componentProperties[i].url,
-            (url: string) => { this.createImageComponent(url, componentProperties[i]); }
-          );
+          this.CreateImageComponent(componentProperties[i].url ?? componentProperties[i].filepath, componentProperties[i]);
           break;
         case ComponentType.Model:
           const modelProperties = componentProperties[i] as ModelProperties;
-          ComponentFactory.loadModelInfo(this.modelLoader, modelProperties).then(
+          ComponentFactory.LoadModelInfo(this.modelLoader, modelProperties).then(
             (modelInfo: ModelInfo | null) => {
               if (modelInfo) {
-                this.loadModel(modelInfo, modelProperties);
+                this.LoadModel(modelInfo, modelProperties);
               }
             }
           );
@@ -261,7 +252,7 @@ export class ThreeSpacePlayer {
         case ComponentType.Audio:
           const audioLoader = new THREE.AudioLoader();
           const audioProperties = componentProperties[i] as AudioProperties;
-          ComponentFactory.loadAudio(audioProperties).then((url: string) => {
+          ComponentFactory.LoadAudio(audioProperties).then((url: string) => {
             const listener = new THREE.AudioListener();
             this.camera.add( listener );
             const sound = new THREE.Audio( listener );
@@ -280,8 +271,8 @@ export class ThreeSpacePlayer {
     }
   }
 
-  private loadModel = (modelInfo: ModelInfo, componentProperties: ModelProperties) => {
-    const playerComponent = this.createPlayerComponent(modelInfo.object, componentProperties);
+  private LoadModel = (modelInfo: ModelInfo, componentProperties: ModelProperties) => {
+    const playerComponent = this.CreatePlayerComponent(modelInfo.object, componentProperties);
     playerComponent.CreditInfo = componentProperties.credit;
 
     if (modelInfo.animations && modelInfo.animations.length > 0) {
@@ -298,7 +289,7 @@ export class ThreeSpacePlayer {
 
       switch (componentProperties.animationBehaviorType) {
         case AnimationBehaviorType.PLAY_ON_CLICK:
-          playerComponent.addClickCallback(() => {
+          playerComponent.AddClickCallback(() => {
             if (action) {
               action.paused = !action.paused;
             }
@@ -317,8 +308,8 @@ export class ThreeSpacePlayer {
     this.components.push(playerComponent);
   }
 
-  private setupXR = () => {
-    const arButton = ARButton.createButton( this.renderer );
+  private SetupXR = () => {
+    const arButton = ARButton.CreateButton( this.renderer );
     if (arButton) document.body.appendChild(arButton);
 
     const vrButton = VRButton.createButton( this.renderer ) ;
@@ -331,7 +322,7 @@ export class ThreeSpacePlayer {
     });
   }
 
-  private createPlayerComponent = (
+  private CreatePlayerComponent = (
     object: THREE.Object3D, componentProperties: ComponentProperties): PlayerComponent => {
     const playerComponent = new PlayerComponent(object, componentProperties);
     this.scene.add(playerComponent);
@@ -342,22 +333,22 @@ export class ThreeSpacePlayer {
     return playerComponent;
   }
 
-  private createImageComponent = (url: string, imageProperties: ImageProperties) => {
-    const imageMesh = ComponentFactory.createImageMesh(url);
+  private CreateImageComponent = (url: string, imageProperties: ImageProperties) => {
+    const imageMesh = ComponentFactory.CreateImageMesh(url);
 
-    const playerComponent = this.createPlayerComponent(imageMesh, imageProperties);
+    const playerComponent = this.CreatePlayerComponent(imageMesh, imageProperties);
     this.components.push(playerComponent);
   }
 
-  private createVideoComponent = (url: string, videoProperties: VideoProperties) => {
-    const videoElement = ComponentFactory.createVideoElement(url);
-    const videoMesh = ComponentFactory.createVideoMesh(videoElement);
+  private CreateVideoComponent = (url: string, videoProperties: VideoProperties) => {
+    const videoElement = ComponentFactory.CreateVideoElement(url);
+    const videoMesh = ComponentFactory.CreateVideoMesh(videoElement);
 
-    const playerComponent = this.createPlayerComponent(videoMesh, videoProperties);
+    const playerComponent = this.CreatePlayerComponent(videoMesh, videoProperties);
     this.components.push(playerComponent);
   }
 
-  private canvasMouseMove = (e: MouseEvent) => {
+  private CanvasMouseMove = (e: MouseEvent) => {
     const scrollTop = (window.pageYOffset !== undefined) ?
       window.pageYOffset :
       (document.documentElement || document.body).scrollTop;
@@ -395,34 +386,34 @@ export class ThreeSpacePlayer {
         }
       }
 
-      this.postProcessingManager.setOutlineObjects(this.outlineObjects);
+      this.postProcessingManager.SetOutlineObjects(this.outlineObjects);
     }
   }
 
-  private canvasMouseDown = (e: MouseEvent) => {
+  private CanvasMouseDown = (e: MouseEvent) => {
     this.clickTimer = this.clock.getElapsedTime();
 
     this.startDrag.x = e.pageX;
     this.startDrag.y = e.pageY;
   }
 
-  private canvasMouseUp = (e: MouseEvent) => {
+  private CanvasMouseUp = (e: MouseEvent) => {
     if (this.clock.getElapsedTime() - this.clickTimer >= 0.3) {
       return;
     }
 
     if (this.raycastResults.length > 0) {
       const baseComponents: PlayerComponent[] = [];
-      this.getBaseComponentParent(this.raycastResults[0].object, baseComponents);
+      this.GetBaseComponentParent(this.raycastResults[0].object, baseComponents);
 
       if (baseComponents.length > 0) {
-        this.actionManager.handleAction(baseComponents[0]);
-        baseComponents[0].clicked();
+        this.actionManager.HandleAction(baseComponents[0]);
+        baseComponents[0].Clicked();
       }
     }
   }
 
-  private enterViewMode = (matrix: THREE.Matrix4) => {
+  private EnterViewMode = (matrix: THREE.Matrix4) => {
     if (!this.inViewMode) {
       const position = new THREE.Vector3();
       const rotation = new THREE.Quaternion();
@@ -432,14 +423,14 @@ export class ThreeSpacePlayer {
       this.previousCameraPosition.copy(this.camera.position);
       this.previousCameraRotation.copy(this.camera.quaternion);
 
-      this.animateCamera(position, rotation, () => {});
+      this.AnimateCamera(position, rotation, () => {});
 
       this.controls.enabled = false;
       this.inViewMode = true;
     }
   }
 
-  private animateCamera = (position: THREE.Vector3, rotation: THREE.Quaternion, onComplete: ()=>any) => {
+  private AnimateCamera = (position: THREE.Vector3, rotation: THREE.Quaternion, onComplete: ()=>any) => {
     const animation = anime({
       targets: this.camera.position,
       easing: 'linear',
@@ -462,41 +453,41 @@ export class ThreeSpacePlayer {
     });
   }
 
-  private setSceneSettings = (sceneProperties: SceneProperties) => {
-    const colorOne = PlayerUtils.getColorFromSerializableColor(sceneProperties.colorOne);
+  private SetSceneSettings = (sceneProperties: SceneProperties) => {
+    const colorOne = PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorOne);
     switch (sceneProperties.backgroundColorType) {
       case BackgroundColorType.Single:
-        this.setBackgroundColorSolid(colorOne);
+        this.BackgroundColorSolid = colorOne;
         break;
       case BackgroundColorType.Gradient:
-        this.setBackgroundColorGradient(
-          colorOne, PlayerUtils.getColorFromSerializableColor(sceneProperties.colorTwo));
+        this.SetBackgroundColorGradient(
+          colorOne, PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorTwo));
         break;
     }
   }
 
-  private setBackgroundColorSolid = (color: THREE.Color) => {
+  private set BackgroundColorSolid(color: THREE.Color) {
     this.scene.background = color;
     this.skybox.Enabled = false;
   }
 
-  private setBackgroundColorGradient = (colorOne: THREE.Color, colorTwo: THREE.Color) => {
+  private SetBackgroundColorGradient = (colorOne: THREE.Color, colorTwo: THREE.Color) => {
     this.skybox.Enabled = true;
     this.skybox.ColorOne = colorOne;
     this.skybox.ColorTwo = colorTwo;
   }
 
-  private getBaseComponentParent(object: THREE.Object3D, baseComponents: PlayerComponent[]) {
+  private GetBaseComponentParent = (object: THREE.Object3D, baseComponents: PlayerComponent[]) => {
     if (object instanceof PlayerComponent) {
       baseComponents.push(object);
       return;
     }
     if (object.parent) {
-      this.getBaseComponentParent(object.parent, baseComponents);
+      this.GetBaseComponentParent(object.parent, baseComponents);
     }
   }
 
-  private resize = () => {
+  private Resize = () => {
     const w = this.canvasParent.clientWidth;
     const h = this.canvasParent.clientHeight;
     if (this.camera && this.camera instanceof THREE.PerspectiveCamera) {
@@ -506,13 +497,13 @@ export class ThreeSpacePlayer {
     this.renderer.setSize(w, h, false);
 
     if (this.postProcessingManager) {
-      this.postProcessingManager.resize(w, h);
+      this.postProcessingManager.Resize(w, h);
     }
   }
 
-  private update = () => {
+  private Update = () => {
     const deltaTime = this.clock.getDelta();
-    requestAnimationFrame( this.update );
+    requestAnimationFrame( this.Update );
 
     if (this.animationMixers) {
       for (let i = 0; i < this.animationMixers.length; i++) {
@@ -521,7 +512,7 @@ export class ThreeSpacePlayer {
     }
 
     for (let i = 0; i < this.components.length; i++) {
-      this.components[i].update(deltaTime);
+      this.components[i].Update(deltaTime);
     }
 
     if (this.scene && this.renderer && this.camera) {
@@ -529,7 +520,7 @@ export class ThreeSpacePlayer {
     }
 
     if (this.postProcessingManager) {
-      this.postProcessingManager.update();
+      this.postProcessingManager.Update();
     }
   }
 }

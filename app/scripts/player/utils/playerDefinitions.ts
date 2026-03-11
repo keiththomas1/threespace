@@ -20,6 +20,7 @@ export interface SceneProperties {
  * Properties for a component in the scene such as a camera, light, model, etc. Each component has its own specific properties but they all share these common properties.
  */
 export interface ComponentProperties {
+  componentName: string, // The name of the component instance, used for display in the editor and for organizational purposes.
   componentType: string, // The type of the component such as "Camera", "Light", "Model", etc.
   transformMatrix: number[], // The 4x4 transformation matrix of the component serialized into an array (in column-major order).
   url?: string, // The source URL for components that require an external resource such as models, images, videos, etc.

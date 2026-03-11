@@ -13,7 +13,7 @@ export default class VFXFish extends BaseComponent {
 
   private readonly COLOR_PROPERTY = "Color";
 
-  protected playerProperties: VFXProperties = VFXFish.DefaultProperties;
+  protected vfxProperties: VFXProperties = VFXFish.DefaultProperties;
 
   private vfxFishObject: VFXFishObject;
 
@@ -34,20 +34,25 @@ export default class VFXFish extends BaseComponent {
   public static get DefaultProperties() : VFXProperties {
     const defaultproperties = this.BaseDefaultProperties as VFXProperties;
     defaultproperties.componentType = ComponentType.VFX;
-    defaultproperties.color = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_COLOR);
+    defaultproperties.color = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_COLOR);
     return defaultproperties;
   }
 
-  public update = (deltaTime: number) => {
-    this.vfxFishObject.update(deltaTime);
+  /* Overridden player properties */
+  public get ComponentProperties(): VFXProperties { 
+    return this.vfxProperties; 
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public update = (deltaTime: number) => {
+    this.vfxFishObject.Update(deltaTime);
+  }
+
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.COLOR_PROPERTY:
-        this.playerProperties.color = property.value;
+        this.vfxProperties.color = property.value;
         this.colorChanged(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
     }
@@ -55,7 +60,7 @@ export default class VFXFish extends BaseComponent {
 
   protected setupEditorProperties() {
     super.setupEditorProperties(() => {
-      this.editorProperties[this.COLOR_PROPERTY] = { value: this.playerProperties.color, type: "Color" };
+      this.editorProperties[this.COLOR_PROPERTY] = { value: this.vfxProperties.color, type: "Color" };
     });
   }
 

@@ -18,7 +18,6 @@ export default class UiController {
   private roomGroup: THREE.Group;
   private editorCamera: THREE.Camera;
   private colorPicker: AColorPicker.ACPController;
-  private currentComponent: BaseComponent = null;
 
   private componentAdded: (component: BaseComponent) => any;
   private togglePreviewMode: (inPreview: boolean) => any;
@@ -43,10 +42,6 @@ export default class UiController {
     this.sceneCleared = sceneCleared;
     this.sceneSaved = sceneSaved;
 
-    // For dragging models onto canvas
-    // canvasParent.ondrop = this.modelDraggedIn;
-    // canvasParent.ondragover = (e: Event) => { e.preventDefault(); };
-
     this.propertiesWindow = new PropertiesWindow(
       (component: BaseComponent) => {
         componentManager.removeComponent(component);
@@ -61,11 +56,11 @@ export default class UiController {
           componentProperty.value.b * 255];
         this.colorPicker.rgb = color;
 
-        this.showColorPicker();
+        this.ShowColorPicker();
         this.colorPickerChanged = (_: any, color: any) => {
           const rgb = color.match(/\d+/g);
           componentProperty.value = new THREE.Color(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
-          baseComponent.propertyChanged(propertyName, componentProperty);
+          baseComponent.PropertyChanged(propertyName, componentProperty);
         };
       }
     );
@@ -73,7 +68,7 @@ export default class UiController {
 
     this.colorPicker = AColorPicker.from('#' + EditorIds.colorPicker)[0];
     this.colorPickerChanged = (_: any, color: any) => {};
-    this.colorPicker.on('change', this.onColorPickerChanged);
+    this.colorPicker.on('change', this.OnColorPickerChanged);
 
     const objectSelectButton = document.getElementById(EditorIds.objectSelectButton);
     if (objectSelectButton) {
@@ -112,7 +107,7 @@ export default class UiController {
 
         const textInputPopupInput = document.getElementById(EditorIds.textInputPopupInput) as HTMLInputElement;
         if (textInputPopupInput) {
-          this.addTextComponent(textInputPopupInput.value);
+          this.AddTextComponent(textInputPopupInput.value);
         }
       });
     }
@@ -129,7 +124,7 @@ export default class UiController {
     const add2DPageButton = document.getElementById(EditorIds.add2DPageButton);
     if (add2DPageButton) {
       add2DPageButton.onclick = () => {
-        this.createWebpageComponent();
+        this.CreateWebpageComponent();
       };
     }
 
@@ -159,7 +154,7 @@ export default class UiController {
     }
     const resetSceneNoButton = document.getElementById(EditorIds.resetSceneNoButton);
     if (resetSceneNoButton) {
-      resetSceneNoButton.addEventListener("click", () => { this.setResetScenePopupVisibility("hidden"); });
+      resetSceneNoButton.addEventListener("click", () => { this.SetResetScenePopupVisibility("hidden"); });
     }
 
     const saveButton = document.getElementById(EditorIds.saveButton);
@@ -168,36 +163,28 @@ export default class UiController {
     }
   }
 
-  public update() {
-    if (this.currentComponent && this.currentComponent.EditorOptions.hasTransform) {
-      //this.propertiesWindow.
-    }
-  }
-
-  public resetUIState = () => {
+  public ResetUIState = () => {
     if (this.colorPickerParent) {
       this.colorPickerParent.style.visibility = "hidden";
     }
   }
 
-  public showPropertiesWindow = (baseComponent: BaseComponent) => {
+  public ShowPropertiesWindow = (baseComponent: BaseComponent) => {
       this.propertiesWindow.showPropertiesWindow(baseComponent);
-      this.currentComponent = baseComponent;
   }
 
-  public hidePropertiesWindow = () => {
+  public HidePropertiesWindow = () => {
     this.propertiesWindow.hidePropertiesWindow();
-    this.currentComponent = null;
   }
 
-  public show3DToolsWindow = () => {
+  public Show3DToolsWindow = () => {
     if (this.objectToolbar) {
       this.objectToolbar.classList.remove("fade-out-quick");
       this.objectToolbar.classList.add("fade-in");
     }
   }
 
-  public hide3DToolsWindow = () => {
+  public Hide3DToolsWindow = () => {
     if (this.objectToolbar) {
       if (this.objectToolbar.classList.contains("fade-in")) {
         this.objectToolbar.classList.remove("fade-in");
@@ -206,24 +193,24 @@ export default class UiController {
     }
   }
 
-  public setResetScenePopupVisibility = (visibility: string) => {
+  public SetResetScenePopupVisibility = (visibility: string) => {
     const resetScenePopupParent = document.getElementById(EditorIds.resetScenePopupParent);
     if (resetScenePopupParent) {
       resetScenePopupParent.style.visibility = visibility;
     }
   }
 
-  private showColorPicker() {
+  private ShowColorPicker() {
     if (this.colorPickerParent) {
       this.colorPickerParent.style.visibility = (this.colorPickerParent.style.visibility === "visible") ? "hidden" : "visible";
     }
   }
 
-  private onColorPickerChanged = (_: any, color: any) => {
+  private OnColorPickerChanged = (_: any, color: any) => {
     this.colorPickerChanged(_, color);
   }
 
-  private addTextComponent = (text: string) => {
+  private AddTextComponent = (text: string) => {
     const textProperties = Text3DComponent.DefaultProperties;
     textProperties.text = text;
     const textComponent = new Text3DComponent(textProperties, this.editorCamera);
@@ -232,23 +219,16 @@ export default class UiController {
     this.componentAdded(textComponent);
   }
 
-  private createWebpageComponent = () => {
+  private CreateWebpageComponent = () => {
     const properties = WebpageComponent.DefaultProperties;
     const webpageComponent = new WebpageComponent(properties, this.editorCamera);
     this.roomGroup.add(webpageComponent);
     this.componentAdded(webpageComponent);
   }
 
-  private modelDraggedIn = (e: any) => {
-    e.preventDefault();
-
-    const files = e.dataTransfer.files;
-    // this.importModel(files);
-  }
-
   private clearScene = () => {
     this.sceneCleared();
 
-    this.setResetScenePopupVisibility("hidden");
+    this.SetResetScenePopupVisibility("hidden");
   }
 }

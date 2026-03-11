@@ -3,8 +3,8 @@ import { ActionType } from "./utils/playerDefinitions";
 import PlayerComponent from "./components/playerComponent";
 
 export default class ActionManager {
-  componentSelected: (eventName: string) => {};
-  moveCameraTo: (matrix: THREE.Matrix4) => {};
+  private componentSelected: (eventName: string) => any;
+  private moveCameraTo: (matrix: THREE.Matrix4) => any;
 
   constructor(
     componentSelected: (eventName: string) => any,
@@ -13,7 +13,7 @@ export default class ActionManager {
     this.moveCameraTo = moveCameraTo;
   }
 
-  public handleAction(component: PlayerComponent) {
+  public HandleAction(component: PlayerComponent) {
     const action = component.ComponentProperties.action;
     if (action !== null) {
       switch (action.actionType) {

@@ -4,6 +4,7 @@
     "target": "es2018",
     "incremental": false,
     "noEmit": false,
+    "allowJs": false,
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "dist"

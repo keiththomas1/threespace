@@ -1,14 +1,13 @@
 import * as THREE from "three";
-import Stats from 'three/addons/libs/stats.module.js';
-import { OrbitControls } from "./external/OrbitControls.js";
-import { OrbitControlsGizmo } from  "./external/OrbitControlsGizmo.js";
+import Stats from 'three/addons/libs/stats.module';
+import { OrbitControls } from "./external/OrbitControls";
+import { OrbitControlsGizmo } from  "./external/OrbitControlsGizmo";
 import anime from 'animejs';
 import { DEFAULT_BACKGROUND_COLOR } from "./utils/constants";
 import { buildEditorDom } from "./editorDom";
 import { EditorClasses, EditorIds } from "./editorIds";
 import GridRenderer from "./gridRenderer";
 import UiController from "./uiController";
-import Particles from "./particles";
 import BaseComponent from "./components/baseComponent";
 import ComponentManager from "./componentManager";
 import { ThreeSpacePlayer } from "../player/threeSpacePlayer";
@@ -28,12 +27,13 @@ import SettingsComponent from "./components/settingsComponent";
 import VideoComponent from "./components/videoComponent";
 import AudioComponent from "./components/audioComponent";
 import { VFXType } from "../player/utils/playerDefinitions";
-import VFXSnow from "../editor/vfx/VFXSnow";
-import VFXDust from "../editor/vfx/VFXDust";
-import VFXRain from "../editor/vfx/VFXRain";
-import VFXFish from "../editor/vfx/VFXFish";
-import VFXComponent from "./vfx/VFXComponent";
+import VFXSnow from "./vfx/vfxSnow";
+import VFXDust from "./vfx/vfxDust";
+import VFXRain from "./vfx/vfxRain";
+import VFXFish from "./vfx/vfxFish";
+import VFXComponent from "./vfx/vfxComponent";
 import { BasicVfxData } from "../player/utils/vfxInfo";
+import { SharedData } from "../shared/sharedData";
 
 export interface EditorConfig {
   playerProperties?:         PlayerProperties;
@@ -47,19 +47,15 @@ export interface EditorConfig {
 export class ThreeSpaceEditor {
   /* Managers and core objects */
   private scene: THREE.Scene;
-  private renderer: THREE.WebGLRenderer;
+  private editorParent: HTMLElement;
   private controls: OrbitControls;
   private gridRenderer: GridRenderer;
   private uiController: UiController;
   private componentManager: ComponentManager;
   private postProcessingManager: PostProcessingManager;
-  
-  /** Initialization */
-  private editorParent: HTMLElement;
-  private config: EditorConfig;
-  private assetBasePath?: string;
 
   /* 3D Scene objects */
+  private renderer: THREE.WebGLRenderer;
   private roomGroup: THREE.Group;
   private editorCamera: THREE.PerspectiveCamera;
   private userCamera: CameraComponent | null = null;
@@ -76,6 +72,8 @@ export class ThreeSpaceEditor {
   private stats: any;
 
   /* State */
+  private config: EditorConfig;
+  private assetBasePath?: string;
   private inPreviewMode: boolean = false;
   private clickTimer: number = 0;
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
@@ -96,15 +94,15 @@ export class ThreeSpaceEditor {
     // Build editor DOM inside the container, get back the canvas mount point.
     const dom = buildEditorDom(container, {
       onUploadImage:      this.uploadImage,
-      onImportImageByUrl: this.addImageByURL,
+      onImportImageByUrl: this.importImage,
       onUploadVideo:      this.uploadVideo,
-      onImportVideoByUrl: (url) => { const p = VideoComponent.DefaultProperties; p.url = url; this.importVideo(p); },
-      onUploadModel:      this.uploadModels,
-      onImportModelByUrl: this.importModelByURL,
-      onAddLight:         this.addLightComponent,
+      onImportVideoByUrl: this.importVideo,
+      onUploadModel:      this.uploadModel,
+      onImportModelByUrl: this.importModel,
+      onAddLight:         this.addLight,
       onUploadAudio:      this.uploadAudio,
       onShowVFX:          () => { const m = document.getElementById(EditorIds.vfxSelection); if (m) m.style.visibility = 'visible'; },
-      onSceneSettings:    this.showSceneSettingsProperties,
+      onSceneSettings:    this.showSceneSettings,
     });
 
     this.scene = new THREE.Scene();
@@ -138,7 +136,7 @@ export class ThreeSpaceEditor {
     this.postProcessingManager = new PostProcessingManager(
       this.renderer, this.scene, this.editorCamera);
     const edgeStrength = 2;
-    this.postProcessingManager.setupOutline(edgeStrength);
+    this.postProcessingManager.SetupOutline(edgeStrength);
 
     this.clock = new THREE.Clock(true);
 
@@ -161,17 +159,15 @@ export class ThreeSpaceEditor {
     this.raycaster = new THREE.Raycaster();
     this.raycaster.layers.enableAll();
 
-    const particles = new Particles();
-
     this.skybox = new SkyBox(this.scene);
 
     this.settingsComponent = new SettingsComponent(
       SettingsComponent.DefaultProperties,
       () => {
-        this.setSceneSettings(this.settingsComponent.PlayerProperties);
+        this.setSceneSettings(this.settingsComponent.SettingsProperties);
       },
       () => {
-        this.uiController.setResetScenePopupVisibility("visible");
+        this.uiController.SetResetScenePopupVisibility("visible");
       }
     );
 
@@ -183,7 +179,7 @@ export class ThreeSpaceEditor {
     });
     canvas.addEventListener('touchstart', this.touchStart);
 
-    if (!PlayerUtils.isMobile(navigator)) {
+    if (!PlayerUtils.IsMobile(navigator)) {
       window.addEventListener("resize", this.resize);
     }
     window.addEventListener('orientationchange', this.orientationChange);
@@ -215,54 +211,34 @@ export class ThreeSpaceEditor {
 
     // Load initial scene — direct value takes priority over async callback.
     if (config.playerProperties) {
-      this.setPlayerProperties(config.playerProperties);
+      this.PlayerProperties = config.playerProperties;
     } else if (config.onLoad) {
       config.onLoad().then(scene => {
-        if (scene) this.setPlayerProperties(scene);
+        if (scene) this.PlayerProperties = scene;
       });
     }
   }
 
   /** The underlying WebGL canvas element. Style or reposition it as needed. */
-  public get canvas(): HTMLCanvasElement {
+  public get Canvas(): HTMLCanvasElement {
     return this.renderer.domElement;
   }
 
-  public setPlayerProperties = (playerProperties: PlayerProperties) => {
+  /** Sets the player properties for the editor (can change at runtime). */
+  public set PlayerProperties(playerProperties: PlayerProperties) {
     if (playerProperties !== null) {
       this.clearScene();
-      this.addComponents(playerProperties.components);
+      this.AddComponents(playerProperties.components);
       this.setSceneSettings(playerProperties.sceneProperties);
-      this.settingsComponent.PlayerProperties = playerProperties.sceneProperties;
+      this.settingsComponent.SettingsProperties = playerProperties.sceneProperties;
     }
   }
 
-  public addComponents = (components: ComponentProperties[]) => {
+  /** Add new components to the editor scene */
+  public AddComponents = (components: ComponentProperties[]) => {
     for (let i = 0; i < components.length; i++) {
       this.addComponent(components[i]);
     }
-  }
-
-  public addImageByURL = (url: string) => {
-    const imageProperties = ImageComponent.DefaultProperties;
-    imageProperties.url = url;
-    const imageComponent = new ImageComponent(imageProperties, null, this.editorCamera)
-    this.roomGroup.add(imageComponent);
-    this.componentAdded(imageComponent);
-  }
-
-  public importVideo = (properties: VideoProperties) => {
-    const videoComponent = new VideoComponent(properties, this.editorCamera)
-    this.roomGroup.add(videoComponent);
-    this.componentAdded(videoComponent);
-  }
-
-  public importModelByURL = (url: string) => {
-    const modelProperties = ModelComponent.DefaultProperties;
-    modelProperties.url = url;
-    const modelComponent = new ModelComponent(modelProperties, this.editorCamera, ()=>{});
-    this.roomGroup.add(modelComponent);
-    this.componentAdded(modelComponent);
   }
 
   private showPathConfirmPopup(filename: string, defaultPath: string): Promise<string | null> {
@@ -324,45 +300,79 @@ export class ThreeSpaceEditor {
     }
   }
 
+  /* Handles image upload from file */
   public uploadImage = (files: File[]) => {
     this.uploadAndPlaceAsset(files, (dataURL, exportUrl) => {
       const p = ImageComponent.DefaultProperties;
-      p.url = exportUrl;
+      p.filepath = exportUrl;
       return new ImageComponent(p, null, this.editorCamera, dataURL);
     });
   }
 
+  /* Handles image import from URL */
+  public importImage = (url: string) => {
+    const imageProperties = ImageComponent.DefaultProperties;
+    imageProperties.url = url;
+    const imageComponent = new ImageComponent(imageProperties, null, this.editorCamera)
+    this.roomGroup.add(imageComponent);
+    this.componentAdded(imageComponent);
+  }
+
+  /* Handles video upload from file */
   public uploadVideo = (files: File[]) => {
     this.uploadAndPlaceAsset(files, (dataURL, exportUrl) => {
       const p = VideoComponent.DefaultProperties;
-      p.url = exportUrl;
+      p.filepath = exportUrl;
       return new VideoComponent(p, this.editorCamera, dataURL);
     });
   }
 
-  public uploadModels = (files: File[]) => {
+  /* Handles video import from URL */
+  public importVideo = (url: string) => {
+    const properties = VideoComponent.DefaultProperties; 
+    properties.url = url; 
+
+    const videoComponent = new VideoComponent(properties, this.editorCamera)
+    this.roomGroup.add(videoComponent);
+    this.componentAdded(videoComponent);
+  }
+
+  /* Handles model upload from file */
+  public uploadModel = (files: File[]) => {
     this.uploadAndPlaceAsset(files, (dataURL, exportUrl) => {
       const p = ModelComponent.DefaultProperties;
-      p.url = exportUrl;
+      p.filepath = exportUrl;
       return new ModelComponent(p, this.editorCamera, ()=>{}, dataURL);
     });
   }
 
+  /* Handles model import from URL */
+  public importModel = (url: string) => {
+    const modelProperties = ModelComponent.DefaultProperties;
+    modelProperties.url = url;
+    const modelComponent = new ModelComponent(modelProperties, this.editorCamera, ()=>{});
+    this.roomGroup.add(modelComponent);
+    this.componentAdded(modelComponent);
+  }
+
+  /* Handles audio upload from file */
   public uploadAudio = (files: File[]) => {
     this.uploadAndPlaceAsset(files, (dataURL, exportUrl) => {
       const p = AudioComponent.DefaultProperties;
-      p.url = exportUrl;
+      p.filepath = exportUrl;
       return new AudioComponent(p, this.editorCamera, dataURL, this.assetBasePath);
     });
   }
 
-  public addLightComponent = () => {
+  /* Adds new light to the scene */
+  public addLight = () => {
     const lightProperties = LightComponent.DefaultProperties;
     const lightComponent = new LightComponent(lightProperties, this.assetBasePath);
     this.roomGroup.add(lightComponent);
     this.componentAdded(lightComponent);
   }
 
+  /* Adds new VFX to the scene */
   public addVFX = (type: VFXType) => {
     let vfx, vfxProperties = null;
     switch (type) {
@@ -395,10 +405,12 @@ export class ThreeSpaceEditor {
     }
   }
 
-  public showSceneSettingsProperties = () => {
-    this.uiController.showPropertiesWindow(this.settingsComponent);
+  /** Display the scene settings */
+  public showSceneSettings = () => {
+    this.uiController.ShowPropertiesWindow(this.settingsComponent);
   }
 
+  /** Handles resize of screen */
   public resize = () => {
     if (this.editorCamera) {
       this.editorCamera.aspect = this.editorParent.clientWidth / this.editorParent.clientHeight;
@@ -410,14 +422,16 @@ export class ThreeSpaceEditor {
       this.userCamera.Camera.updateProjectionMatrix();
     }
 
-    this.postProcessingManager.resize(this.editorParent.clientWidth, this.editorParent.clientHeight);
+    this.postProcessingManager.Resize(this.editorParent.clientWidth, this.editorParent.clientHeight);
 
     this.renderer.setSize(this.editorParent.clientWidth, this.editorParent.clientHeight, true);
   }
 
+  /** Called every frame */
   private update = () => {
-    requestAnimationFrame( this.update );
+    requestAnimationFrame( this.update ); // Triggers the next update call
 
+    // Early out so we can only handle "player" logic in the preview window
     if (this.inPreviewMode) {
       return;
     }
@@ -447,24 +461,23 @@ export class ThreeSpaceEditor {
     this.controls.update();
     this.stats.update();
     this.componentManager.update(deltaTime);
-    this.uiController.update();
-    this.postProcessingManager.update();
+    this.postProcessingManager.Update();
     if (this.userCamera) this.userCamera.update(deltaTime);
   }
 
   private getSceneProperties = () : PlayerProperties => {
-    const sceneProperties = ThreeSpacePlayer.getDefaultSpaceProperties();
+    const sceneProperties = SharedData.DefaultPlayerProperties;
 
     const components = this.componentManager.Components;
     for (let i = 0; i < components.length; i++) {
       const json = components[i].toJSON();
-      const properties = components[i].PlayerProperties;
+      const properties = components[i].ComponentProperties;
       properties.transformMatrix = json.object.matrix;
 
       sceneProperties.components.push(properties);
     }
 
-    sceneProperties.sceneProperties = this.settingsComponent.PlayerProperties;
+    sceneProperties.sceneProperties = this.settingsComponent.SettingsProperties;
 
     return sceneProperties;
   }
@@ -484,7 +497,7 @@ export class ThreeSpaceEditor {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'scene.json';
+        a.download = 'sceneon';
         a.click();
         URL.revokeObjectURL(url);
       };
@@ -498,7 +511,7 @@ export class ThreeSpaceEditor {
 
   private addComponent = (componentProperties: ComponentProperties) => {
     const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
-    const dataURL = componentProperties.url;
+    const path = componentProperties.url ?? componentProperties.filepath ?? "";
 
     let component: any = null;
     switch (componentProperties.componentType) {
@@ -516,16 +529,16 @@ export class ThreeSpaceEditor {
         component = new Text3DComponent(componentProperties as Text3DProperties, this.editorCamera);
         break;
       case ComponentType.Video:
-        component = new VideoComponent(componentProperties as VideoProperties, this.editorCamera, dataURL);
+        component = new VideoComponent(componentProperties as VideoProperties, this.editorCamera, path);
         break;
       case ComponentType.Image:
-        component = new ImageComponent(componentProperties as ImageProperties, null, this.editorCamera, dataURL)
+        component = new ImageComponent(componentProperties as ImageProperties, null, this.editorCamera, path)
         break;
       case ComponentType.Model:
-        component = new ModelComponent(componentProperties as ModelProperties, this.editorCamera, ()=>{}, dataURL);
+        component = new ModelComponent(componentProperties as ModelProperties, this.editorCamera, ()=>{}, path);
         break;
       case ComponentType.Audio:
-        component = new AudioComponent(componentProperties as AudioProperties, this.editorCamera, dataURL, this.assetBasePath);
+        component = new AudioComponent(componentProperties as AudioProperties, this.editorCamera, path, this.assetBasePath);
         break;
       case ComponentType.VFX:
         const vfxProperties = componentProperties as VFXProperties;
@@ -618,7 +631,7 @@ export class ThreeSpaceEditor {
     this.componentManager.addComponent(component);
     if (selectComponent) {
       this.componentManager.setSelectedComponent(component);
-      this.uiController.showPropertiesWindow(component);
+      this.uiController.ShowPropertiesWindow(component);
     }
   }
 
@@ -633,7 +646,7 @@ export class ThreeSpaceEditor {
       }
     } else {
       if (this.previewPlayer) {
-        this.previewPlayer.dispose();
+        this.previewPlayer.Dispose();
         this.previewPlayer = null;
       }
       if (playerParent) playerParent.style.pointerEvents = 'none';
@@ -650,21 +663,21 @@ export class ThreeSpaceEditor {
   }
 
   private setSceneSettings = (sceneProperties: SceneProperties) => {
-    const colorOne = PlayerUtils.getColorFromSerializableColor(sceneProperties.colorOne);
+    const colorOne = PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorOne);
     switch (sceneProperties.backgroundColorType) {
       case BackgroundColorType.Single:
         this.setBackgroundColorSolid(colorOne);
         break;
       case BackgroundColorType.Gradient:
         this.setBackgroundColorGradient(
-          colorOne, PlayerUtils.getColorFromSerializableColor(sceneProperties.colorTwo));
+          colorOne, PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorTwo));
         break;
     }
   }
 
   private setupDefaultScene = () => {
     this.setSceneSettings(SettingsComponent.DefaultProperties);
-    this.settingsComponent.PlayerProperties = SettingsComponent.DefaultProperties;
+    this.settingsComponent.SettingsProperties = SettingsComponent.DefaultProperties;
 
     this.userCamera = new CameraComponent(
       this.scene,
@@ -679,14 +692,14 @@ export class ThreeSpaceEditor {
 
     const ambientLightProperties = LightComponent.DefaultProperties;
     ambientLightProperties.type = LightType.AMBIENT;
-    const ambientLight = new LightComponent(ambientLightProperties as LightProperties);
+    const ambientLight = new LightComponent(ambientLightProperties as LightProperties, this.assetBasePath);
     this.roomGroup.add(ambientLight);
     ambientLight.position.set(0, 7.5, 0);
     this.componentAdded(ambientLight, false);
 
     const directionalLightProperties = LightComponent.DefaultProperties;
     directionalLightProperties.type = LightType.DIRECTIONAL;
-    const directionalLight = new LightComponent(directionalLightProperties as LightProperties);
+    const directionalLight = new LightComponent(directionalLightProperties as LightProperties, this.assetBasePath);
     this.roomGroup.add(directionalLight);
     directionalLight.position.set(5, 10, -5);
     directionalLight.lookAt(new THREE.Vector3(0, 0, 0));
@@ -723,7 +736,7 @@ export class ThreeSpaceEditor {
       }
     }
 
-    this.postProcessingManager.setOutlineObjects(this.outlineObjects);
+    this.postProcessingManager.SetOutlineObjects(this.outlineObjects);
   }
 
   private canvasMouseDown = (e: MouseEvent) => {
@@ -741,20 +754,20 @@ export class ThreeSpaceEditor {
 
       if (baseComponents.length > 0) {
         this.componentManager.setSelectedComponent(baseComponents[0]);
-        this.uiController.show3DToolsWindow();
-        this.uiController.showPropertiesWindow(baseComponents[0]);
+        this.uiController.Show3DToolsWindow();
+        this.uiController.ShowPropertiesWindow(baseComponents[0]);
       } else {
         this.componentManager.setSelectedComponent(null);
-        this.uiController.hide3DToolsWindow();
-        this.uiController.hidePropertiesWindow();
+        this.uiController.Hide3DToolsWindow();
+        this.uiController.HidePropertiesWindow();
       }
     } else {
       this.componentManager.setSelectedComponent(null);
-      this.uiController.hide3DToolsWindow();
-      this.uiController.hidePropertiesWindow();
+      this.uiController.Hide3DToolsWindow();
+      this.uiController.HidePropertiesWindow();
     }
 
-    this.uiController.resetUIState();
+    this.uiController.ResetUIState();
   }
 
   private getBaseComponentParent(object: THREE.Object3D, baseComponents: BaseComponent[]) {

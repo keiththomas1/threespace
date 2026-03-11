@@ -362,3 +362,56 @@
 
 /* ── Color picker ────────────────────────────────────── */
 #ts-color-picker { width: 230px; }
+
+/* ── Project View ────────────────────────────────────── */
+#ts-project-view-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 15;
+  pointer-events: all;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#ts-project-view-toggle {
+  font-size: 13px;
+  padding: 4px 10px;
+  background-color: #2c2a2a;
+  color: #ddd;
+  border: none;
+  cursor: pointer;
+  border-bottom-left-radius: 4px;
+}
+#ts-project-view-toggle:hover { background-color: #444; }
+
+#ts-project-view-panel {
+  background-color: rgba(30, 30, 30, 0.92);
+  min-width: 200px;
+  max-width: 280px;
+  max-height: 60vh;
+  overflow-y: auto;
+  border-bottom-left-radius: 4px;
+  padding: 6px 0;
+}
+
+.ts-pv-folder, .ts-pv-file {
+  display: flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #ccc;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+.ts-pv-folder:hover, .ts-pv-file:hover { background-color: rgba(255,255,255,0.08); }
+
+.ts-pv-file[draggable="true"] { cursor: grab; }
+.ts-pv-file[draggable="true"]:active { cursor: grabbing; }
+
+.ts-pv-arrow { margin-right: 4px; font-size: 10px; display: inline-block; width: 10px; }
+.ts-pv-icon  { margin-right: 5px; }
+.ts-pv-children { display: block; }
+.ts-pv-children.ts-pv-collapsed { display: none; }

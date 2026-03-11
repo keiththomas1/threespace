@@ -490,6 +490,17 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
   savePopup.addEventListener('click', (e) => e.stopPropagation());
   container.appendChild(savePopupParent);
 
+  // ── Project view ─────────────────────────────────────────────────────────────
+  const projectViewContainer = el('div', { id: EditorIds.projectViewContainer });
+  const projectViewToggle = el('button', { id: EditorIds.projectViewToggle });
+  projectViewToggle.textContent = 'Project ▾';
+  const projectViewPanel = el('div', { id: EditorIds.projectViewPanel });
+  const projectViewTree  = el('div', { id: EditorIds.projectViewTree });
+  projectViewPanel.appendChild(projectViewTree);
+  projectViewContainer.appendChild(projectViewToggle);
+  projectViewContainer.appendChild(projectViewPanel);
+  container.appendChild(projectViewContainer);
+
   return {
     editorParent: container,
     canvasParent,

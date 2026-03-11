@@ -5,6 +5,7 @@ import BaseComponent from "./baseComponent";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import ThreeUtilities from "../utils/threeUtilities";
 import { CameraProperties, CameraType, ComponentType } from "../../player/utils/playerDefinitions";
+import { AssetManager } from "../../shared/assetManager";
 import { ComponentFactory } from "../../player/components/componentFactory";
 
 export default class CameraComponent extends BaseComponent {
@@ -27,8 +28,7 @@ export default class CameraComponent extends BaseComponent {
     scene: THREE.Scene,
     cameraProperties: CameraProperties,
     editorCamera: THREE.Camera,
-    moveCameraToEditorCamera: () => any,
-    assetPath: string = "") {
+    moveCameraToEditorCamera: () => any) {
     super("CameraComponent", editorCamera, { hasActions: false, hasCredit: false, hasTransform: true});
 
     this.componentType = ComponentType.Light;
@@ -40,7 +40,7 @@ export default class CameraComponent extends BaseComponent {
     this.moveCameraToEditorCamera = moveCameraToEditorCamera;
 
     this.createCamera(cameraProperties.type);
-    this.createCameraModelRepresentation(assetPath);
+    this.createCameraModelRepresentation();
     this.createRenderTexture(scene);
   }
 
@@ -142,10 +142,10 @@ export default class CameraComponent extends BaseComponent {
     this.add(this.camera);
   }
 
-  private createCameraModelRepresentation(assetPath: string = "") {
+  private createCameraModelRepresentation() {
     const gltfLoader = new GLTFLoader();
     const self = this;
-    gltfLoader.load(`${assetPath}/models/camera/camera.glb`, (gltf: GLTF) => {
+    gltfLoader.load(`${AssetManager.AssetBasePath}/models/camera/camera.glb`, (gltf: GLTF) => {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene);
       self.mesh = gltf.scene;
       this.add( self.mesh );

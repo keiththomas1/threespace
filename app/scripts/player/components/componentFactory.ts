@@ -9,7 +9,6 @@ import PlayerUtils from "../utils/playerUtils";
 import {
   CameraProperties,
   CameraType,
-  FontDefinition,
   ModelProperties,
   Text3DProperties,
   ModelInfo,
@@ -18,6 +17,7 @@ import {
   AudioProperties,
   VFXProperties,
   VFXType} from "../utils/playerDefinitions";
+import { AssetManager } from "../../shared/assetManager";
 import { VFXObject } from "./vfxObject";
 import { BasicVfxData, DustVfxData, RainVfxData, SnowVfxData } from "../utils/vfxInfo";
 import VFXFishObject from "./vfxFishObject";
@@ -131,10 +131,11 @@ export class ComponentFactory {
 
   public static async Create3DTextMesh(
     textProperties: Text3DProperties,
-    parent: THREE.Object3D,
-    fonts: FontDefinition[] = [],
-    assetBasePath: string = ''): Promise<THREE.Mesh> {
+    parent: THREE.Object3D): Promise<THREE.Mesh> {
     return new Promise<THREE.Mesh>((resolve, reject) => {
+      const fonts = AssetManager.Fonts;
+      const assetBasePath = AssetManager.AssetBasePath;
+
       if (textProperties.type === "" || textProperties.type === undefined) {
         if (fonts.length > 0) {
           textProperties.type = fonts[0].name;

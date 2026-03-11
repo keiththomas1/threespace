@@ -3,6 +3,7 @@ import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import VFXFishObject from "../../player/components/vfxFishObject";
 
 import { VFXProperties, ComponentType, VFXType } from "../../player/utils/playerDefinitions";
+import { AssetManager } from "../../shared/assetManager";
 import PlayerUtils from "../../player/utils/playerUtils";
 import BaseComponent from "../components/baseComponent";
 import { ComponentProperty } from "../utils/constants";
@@ -17,7 +18,7 @@ export default class VFXFish extends BaseComponent {
 
   private vfxFishObject: VFXFishObject;
 
-  constructor(vfxProperties: VFXProperties, renderer: THREE.WebGLRenderer, assetPath: string = "") {
+  constructor(vfxProperties: VFXProperties, renderer: THREE.WebGLRenderer) {
     super("VFX", null, { hasActions: false, hasCredit: false, hasTransform: true});
     vfxProperties.type = VFXType.Fish;
 
@@ -28,7 +29,7 @@ export default class VFXFish extends BaseComponent {
     this.vfxFishObject = new VFXFishObject({}, renderer);
     this.add(this.vfxFishObject);
 
-    this.createModelRepresentation(assetPath);
+    this.createModelRepresentation();
   }
 
   public static get DefaultProperties() : VFXProperties {
@@ -68,10 +69,10 @@ export default class VFXFish extends BaseComponent {
     //  this.vfxObject.Color = color;
   }
 
-  private createModelRepresentation(assetPath: string = "") {
+  private createModelRepresentation() {
     const gltfLoader = new GLTFLoader();
     const self = this;
-    gltfLoader.load(`${assetPath}/models/lightningBolt/lightningBolt.glb`, (gltf: GLTF) => {
+    gltfLoader.load(`${AssetManager.AssetBasePath}/models/lightningBolt/lightningBolt.glb`, (gltf: GLTF) => {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene);
       self.mesh = gltf.scene;
       this.add( self.mesh );

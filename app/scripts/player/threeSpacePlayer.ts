@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { ComponentFactory } from "./components/componentFactory";
 import { ActionType, CameraProperties, ComponentProperties, AnimationBehaviorType,
-  ComponentType, ModelInfo, ModelProperties, PlayerProperties, Text3DProperties,
+  ComponentType, FontDefinition, ModelInfo, ModelProperties, PlayerProperties, Text3DProperties,
   BackgroundColorType, SceneProperties, VideoProperties, AudioProperties, LightProperties, LightType, VFXProperties, ImageProperties,
   SCHEMA_VERSION, DEFAULT_SCENE_PROPERTIES
   } from "./utils/playerDefinitions";
@@ -55,6 +55,8 @@ export class ThreeSpacePlayer {
   private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
   private inViewMode: boolean = false;
   private startDrag: THREE.Vector2 = new THREE.Vector2();
+  private assetBasePath: string = '';
+  private fonts: FontDefinition[] = [];
 
   /* Callbacks */
   private componentSelected: (eventName: string) => any = () => {};
@@ -63,18 +65,22 @@ export class ThreeSpacePlayer {
 
   /**
    * @param canvasParent The parent element that the player's canvas will be added to. The canvas will be sized to fill this parent element.
-   * @param playerSettings The settings for the player, including scene properties and component properties. 
-   * @param canvas An optional canvas element to use for rendering. If not provided, a new canvas element will be created and added to the canvasParent. 
-   * @param assetBasePath // Prepended to the filename when searching for assets such as models, videos, images, etc. in the player settings. 
+   * @param playerSettings The settings for the player, including scene properties and component properties.
+   * @param canvas An optional canvas element to use for rendering. If not provided, a new canvas element will be created and added to the canvasParent.
+   * @param assetBasePath Prepended to the filename when searching for assets such as models, videos, images, etc. in the player settings.
    *                        This is used when the asset paths in the player settings are relative paths.
-   *                        e.g. "/models/" → file "robot.glb" is imported as "/models/robot.glb". 
+   *                        e.g. "/models/" → file "robot.glb" is imported as "/models/robot.glb".
    *                        If not set, will use the root as the base path.
+   * @param fonts The fonts available for Text3D components. Each entry provides a display name and a path relative to assetBasePath.
    */
   public constructor(
     canvasParent: HTMLElement,
     playerSettings: PlayerProperties,
     canvas: HTMLCanvasElement = null,
-    assetBasePath?: string) {
+    assetBasePath: string = '',
+    fonts: FontDefinition[] = []) {
+    this.assetBasePath = assetBasePath;
+    this.fonts = fonts;
     this.scene = new THREE.Scene();
 
     this.renderer = new THREE.WebGLRenderer();
@@ -215,7 +221,7 @@ export class ThreeSpacePlayer {
           }
           break;
         case ComponentType.Text3D:
-          ComponentFactory.Create3DTextMesh(componentProperties[i] as Text3DProperties, this.scene).then(
+          ComponentFactory.Create3DTextMesh(componentProperties[i] as Text3DProperties, this.scene, this.fonts, this.assetBasePath).then(
             (textMesh: THREE.Mesh) => {
               const playerComponent = this.CreatePlayerComponent(textMesh, componentProperties[i]);
 

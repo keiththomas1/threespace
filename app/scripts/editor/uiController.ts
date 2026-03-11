@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as AColorPicker from 'a-color-picker';
-import { EditorIds, EditorClasses } from './editorIds';
+import { EditorIds } from './editorIds';
 
 import BaseComponent from "./components/baseComponent";
 import Text3DComponent from "./components/text3DComponent";
@@ -17,7 +17,7 @@ export default class UiController {
 
   private roomGroup: THREE.Group;
   private editorCamera: THREE.Camera;
-  private colorPicker: AColorPicker.ACPController;
+  private colorPicker: any; 
 
   private componentAdded: (component: BaseComponent) => any;
   private togglePreviewMode: (inPreview: boolean) => any;

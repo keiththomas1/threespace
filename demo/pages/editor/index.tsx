@@ -18,8 +18,13 @@ export default class EditorPage extends Component {
     const container = this.container;
 
     const editorConfig: EditorConfig = {
-      playerProperties: playerSettingsJSON as PlayerProperties
+      playerProperties: playerSettingsJSON as PlayerProperties,
+      fonts: [
+        { name: 'Noto Sans', path: '/fonts/NotoSans-Regular.ttf' },
+        { name: 'Roboto',    path: '/fonts/Roboto/Roboto-Regular.ttf' },
+      ]
     };
+    
     this.editor = new ThreeSpaceEditor(container, editorConfig, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
   }
 

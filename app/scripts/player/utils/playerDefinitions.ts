@@ -144,24 +144,22 @@ export interface CreditInfo {
 
 /* StartText 3D */
 
+/** Describes a single injectable font: its display name and path relative to assetBasePath. */
+export interface FontDefinition {
+  name: string;
+  path: string;
+}
+
 export interface Text3DProperties extends ComponentProperties {
   transformMatrix: number[],
   text: string,
-  type: FontType,
+  /** The display name of the font to use, matching a FontDefinition.name from the injected fonts. */
+  type: string,
   size: number,
   thickness: number,
   height: number,
   frontColor: SerializableColor,
   sideColor: SerializableColor,
-}
-
-export enum FontType {
-  NOTO_SANS = "Noto Sans",
-  AMATIC_SC = "Amatic SC",
-  DANCING_SCRIPT = "Dancing Script",
-  INDIE_FLOWER = "Indie Flower",
-  OPEN_SANS = "Open Sans",
-  ROBOTO = "Robotic"
 }
 
 export const TEXT3D_FRONT_MAT_NAME = "Text3D_Front_material";

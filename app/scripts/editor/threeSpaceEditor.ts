@@ -155,6 +155,8 @@ export class ThreeSpaceEditor {
       this.roomGroup,
       this.editorCamera,
       this.componentManager,
+      this.fonts,
+      this.assetBasePath,
       this.componentAdded,
       this.togglePreview,
       this.resetScene,

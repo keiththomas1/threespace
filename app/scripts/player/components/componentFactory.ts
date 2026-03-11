@@ -135,6 +135,16 @@ export class ComponentFactory {
     fonts: FontDefinition[] = [],
     assetBasePath: string = ''): Promise<THREE.Mesh> {
     return new Promise<THREE.Mesh>((resolve, reject) => {
+      if (textProperties.type === "" || textProperties.type === undefined) {
+        if (fonts.length > 0) {
+          textProperties.type = fonts[0].name;
+        } else {
+          console.warn("ThreeSpace: No fonts provided for Text3D component. Text3D mesh will not be created.");
+          reject(new Error("No fonts provided"));
+          return;
+        }
+      }
+
       const fontDef = fonts.find(f => f.name === textProperties.type);
       if (!fontDef) {
         console.warn(`ThreeSpace: No font found with name "${textProperties.type}". Text3D mesh will not be created.`);

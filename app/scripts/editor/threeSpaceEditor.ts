@@ -12,7 +12,7 @@ import BaseComponent from "./components/baseComponent";
 import ComponentManager from "./componentManager";
 import { ThreeSpacePlayer } from "../player/threeSpacePlayer";
 import { AudioProperties, BackgroundColorType, CameraProperties, ComponentProperties,
-  ComponentType, ImageProperties, LightProperties, LightType,
+  ComponentType, FontDefinition, ImageProperties, LightProperties, LightType,
   ModelProperties, PlayerProperties, SceneProperties, Text3DProperties, VFXProperties, VideoProperties
   } from "../player/utils/playerDefinitions";
 import PlayerUtils from "../player/utils/playerUtils";
@@ -39,6 +39,8 @@ export interface EditorConfig {
   playerProperties?:         PlayerProperties;
   onSave?:        (scene: PlayerProperties) => void;
   onLoad?:        () => Promise<PlayerProperties | null>;
+  /** Fonts available for Text3D components. Each entry provides a display name and a path relative to assetBasePath. */
+  fonts?:         FontDefinition[];
 }
 
 /**
@@ -74,6 +76,7 @@ export class ThreeSpaceEditor {
   /* State */
   private config: EditorConfig;
   private assetBasePath?: string;
+  private fonts: FontDefinition[] = [];
   private inPreviewMode: boolean = false;
   private clickTimer: number = 0;
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
@@ -90,6 +93,7 @@ export class ThreeSpaceEditor {
     this.editorParent = container;
     this.config = config;
     this.assetBasePath = assetBasePath;
+    this.fonts = config.fonts ?? [];
 
     // Build editor DOM inside the container, get back the canvas mount point.
     const dom = buildEditorDom(container, {
@@ -151,6 +155,8 @@ export class ThreeSpaceEditor {
       this.roomGroup,
       this.editorCamera,
       this.componentManager,
+      this.fonts,
+      this.assetBasePath,
       this.componentAdded,
       this.togglePreview,
       this.resetScene,
@@ -526,7 +532,7 @@ export class ThreeSpaceEditor {
         component = new LightComponent(componentProperties as LightProperties, this.assetBasePath);
         break;
       case ComponentType.Text3D:
-        component = new Text3DComponent(componentProperties as Text3DProperties, this.editorCamera);
+        component = new Text3DComponent(componentProperties as Text3DProperties, this.editorCamera, this.fonts, this.assetBasePath ?? '');
         break;
       case ComponentType.Video:
         component = new VideoComponent(componentProperties as VideoProperties, this.editorCamera, path);
@@ -642,7 +648,7 @@ export class ThreeSpaceEditor {
     if (inPreviewMode) {
       if (playerParent) {
         playerParent.style.pointerEvents = 'all';
-        this.previewPlayer = new ThreeSpacePlayer(playerParent, this.getSceneProperties());
+        this.previewPlayer = new ThreeSpacePlayer(playerParent, this.getSceneProperties(), null, this.assetBasePath ?? '', this.fonts);
       }
     } else {
       if (this.previewPlayer) {

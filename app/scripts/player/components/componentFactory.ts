@@ -9,7 +9,7 @@ import PlayerUtils from "../utils/playerUtils";
 import {
   CameraProperties,
   CameraType,
-  FontType,
+  FontDefinition,
   ModelProperties,
   Text3DProperties,
   ModelInfo,
@@ -129,9 +129,29 @@ export class ComponentFactory {
     return videoElement;
   }
 
-  public static async Create3DTextMesh(textProperties: Text3DProperties, parent: THREE.Object3D): Promise<THREE.Mesh> {
+  public static async Create3DTextMesh(
+    textProperties: Text3DProperties,
+    parent: THREE.Object3D,
+    fonts: FontDefinition[] = [],
+    assetBasePath: string = ''): Promise<THREE.Mesh> {
     return new Promise<THREE.Mesh>((resolve, reject) => {
-      const fontPath = ComponentFactory.GetFontPathFromType(textProperties.type);
+      if (textProperties.type === "" || textProperties.type === undefined) {
+        if (fonts.length > 0) {
+          textProperties.type = fonts[0].name;
+        } else {
+          console.warn("ThreeSpace: No fonts provided for Text3D component. Text3D mesh will not be created.");
+          reject(new Error("No fonts provided"));
+          return;
+        }
+      }
+
+      const fontDef = fonts.find(f => f.name === textProperties.type);
+      if (!fontDef) {
+        console.warn(`ThreeSpace: No font found with name "${textProperties.type}". Text3D mesh will not be created.`);
+        reject(new Error(`Font not found: ${textProperties.type}`));
+        return;
+      }
+      const fontPath = assetBasePath + fontDef.path;
       const ttfLoader = new TTFLoader();
       ttfLoader.load(fontPath, (fontJson: object) => {
         const font = new Font(fontJson);
@@ -189,21 +209,4 @@ export class ComponentFactory {
     return new VFXObject(vfxProperties, vfxData);
   }
 
-  private static GetFontPathFromType = (fontType: FontType) : string => {
-    switch (fontType) {
-      case FontType.AMATIC_SC:
-        return '/fonts/Amatic_SC/AmaticSC-Regular.ttf';
-      case FontType.DANCING_SCRIPT:
-        return '/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf';
-      case FontType.INDIE_FLOWER:
-        return '/fonts/Indie_Flower/IndieFlower-Regular.ttf';
-      case FontType.OPEN_SANS:
-        return '/fonts/Open_Sans/OpenSans-VariableFont.ttf';
-      case FontType.ROBOTO:
-        return '/fonts/Roboto/Roboto-Regular.ttf';
-      case FontType.NOTO_SANS:
-      default:
-        return '/fonts/NotoSans-Regular.ttf';
-    }
-  }
 }

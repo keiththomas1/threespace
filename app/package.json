@@ -61,6 +61,8 @@
   },
   "devDependencies": {
     "@types/dom-to-image": "^2.6.4",
+    "a-color-picker": "^1.2.1",
+    "dom-to-image": "^2.6.0",
     "@types/three": "^0.144.0",
     "glslify-loader": "^2.0.0",
     "raw-loader": "^4.0.2",

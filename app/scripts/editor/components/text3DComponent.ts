@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Color } from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
-import { ComponentType, FontType, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
+import { ComponentType, FontDefinition, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
 import PlayerUtils from "../../player/utils/playerUtils";
 import { ComponentProperty, DEFAULT_ACTION, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
@@ -15,7 +15,6 @@ export default class Text3DComponent extends BaseComponent {
   private readonly FONT_THICKNESS = "Font Thickness";
   private readonly FONT_FAMILY = "Font Family";
 
-  private static readonly DEFAULT_FONT = FontType.NOTO_SANS;
   private static readonly DEFAULT_FONT_SIZE = 32;
   private static readonly DEFAULT_FONT_THICKNESS = 4;
   private static readonly DEFAULT_FRONT_COLOR = new THREE.Color(0x00AAAA);
@@ -27,10 +26,14 @@ export default class Text3DComponent extends BaseComponent {
   private sideMaterial: THREE.MeshBasicMaterial | null = null;
 
   private currentPromises: Promise<THREE.Mesh>[] = [];
+  private readonly fonts: FontDefinition[];
+  private readonly assetBasePath: string;
 
-  constructor(textProperties: Text3DProperties, editorCamera: THREE.Camera) {
+  constructor(textProperties: Text3DProperties, editorCamera: THREE.Camera, fonts: FontDefinition[] = [], assetBasePath: string = '') {
     super("Text3DComponent", editorCamera, { hasActions: true, hasCredit: false, hasTransform: true});
 
+    this.fonts = fonts;
+    this.assetBasePath = assetBasePath;
     this.componentType = ComponentType.Text3D;
     this.assignProperties(textProperties);
     this.setupEditorProperties();
@@ -42,7 +45,6 @@ export default class Text3DComponent extends BaseComponent {
     const defaultproperties = this.BaseDefaultProperties as Text3DProperties;
     defaultproperties.componentType = ComponentType.Text3D;
     defaultproperties.text = "";
-    defaultproperties.type = this.DEFAULT_FONT;
     defaultproperties.size = this.DEFAULT_FONT_SIZE;
     defaultproperties.thickness = this.DEFAULT_FONT_THICKNESS;
     defaultproperties.height = this.DEFAULT_FONT_THICKNESS;
@@ -88,9 +90,12 @@ export default class Text3DComponent extends BaseComponent {
   }
 
   protected setupEditorProperties() {
+    // Build an ad-hoc options object from injected fonts so the existing ENUM_TYPE
+    // dropdown renderer can derive its option list via Object.values().
+    const fontOptions = Object.fromEntries(this.fonts.map(f => [f.name, f.name]));
     super.setupEditorProperties(() => {
       this.editorProperties[this.DISPLAY_NAME] = { value: this.textProperties.text, type: "String" };
-      this.editorProperties[this.FONT_FAMILY] = { value: this.textProperties.type, type: "Enum", enumType: FontType };
+      this.editorProperties[this.FONT_FAMILY] = { value: this.textProperties.type, type: "Enum", enumType: fontOptions };
       this.editorProperties[this.FONT_SIZE] = { value: this.textProperties.size, type: "Number", min: 2, max: 128 };
       this.editorProperties[this.FONT_THICKNESS] = { value: this.textProperties.thickness, type: "Number", min: 0, max: 16 };
       this.editorProperties[this.FRONT_COLOR] = { value: this.textProperties.frontColor, type: "Color" };
@@ -99,7 +104,7 @@ export default class Text3DComponent extends BaseComponent {
   }
 
   private loadTextMesh() {
-    const promise = ComponentFactory.Create3DTextMesh(this.textProperties, this);
+    const promise = ComponentFactory.Create3DTextMesh(this.textProperties, this, this.fonts, this.assetBasePath);
     promise.then(
       (textMesh: THREE.Mesh) => {
         this.mesh = textMesh;

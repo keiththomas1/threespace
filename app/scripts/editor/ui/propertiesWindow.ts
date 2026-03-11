@@ -1,5 +1,5 @@
 import { EditorIds, EditorClasses } from '../editorIds';
-import { ActionType, AnimationBehaviorType, BackgroundColorType, CameraType, FontType, LightType } from "../../player/utils/playerDefinitions";
+import { ActionType, AnimationBehaviorType, BackgroundColorType, CameraType, LightType } from "../../player/utils/playerDefinitions";
 import BaseComponent from "../components/baseComponent";
 import { ActionProperty, ComponentProperty, CreditProperty, TransformProperty } from "../utils/constants";
 

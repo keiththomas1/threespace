@@ -87,7 +87,7 @@ const editor = new ThreeSpaceEditor(document.getElementById('editorParent'), edi
 To load an existing scene into a running editor:
 
 ```ts
-editor.SetPlayerProperties(myScene);
+editor.PlayerProperties = myProperties;
 ```
 
 ---

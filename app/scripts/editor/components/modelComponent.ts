@@ -28,9 +28,9 @@ export default class ModelComponent extends BaseComponent {
     const modelLoader = new ModelLoader(loader);
 
     if (dataURL !== "") {
-      modelLoader.loadGLTFFromURL(dataURL, this.loadModelInfo);
+      modelLoader.LoadGLTFFromURL(dataURL, this.loadModelInfo);
     } else {
-      modelLoader.loadGLTFFromURL(this.modelProperties.url, this.loadModelInfo);
+      modelLoader.LoadGLTFFromURL(this.modelProperties.url, this.loadModelInfo);
     }
   }
 
@@ -47,8 +47,8 @@ export default class ModelComponent extends BaseComponent {
     return this.modelProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.CURRENT_ANIMATION:

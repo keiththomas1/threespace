@@ -1,2 +1,2 @@
-export { ThreeSpaceEditor } from './ThreeSpaceEditor';
-export type { EditorConfig } from './ThreeSpaceEditor';
+export { ThreeSpaceEditor } from './threeSpaceEditor';
+export type { EditorConfig } from './threeSpaceEditor';

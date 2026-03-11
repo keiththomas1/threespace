@@ -118,12 +118,12 @@ export default class BaseComponent extends THREE.Object3D {
     this.onTransformChanged = newCallback;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) : void {
+  public PropertyChanged(propertyName: string, property: ComponentProperty) : void {
     this.editorProperties[propertyName] = property;
 
     switch (propertyName) {
       case BaseComponent.TRANSFORM_POSITION_NAME:
-        this.position.copy(PlayerUtils.getVector3FromSerializableVector3(property.value));
+        this.position.copy(PlayerUtils.GetVector3FromSerializableVector3(property.value));
         this.dontUpdatePropertyWindow = true;
         break;
       case BaseComponent.TRANSFORM_ROTATION_NAME:
@@ -131,7 +131,7 @@ export default class BaseComponent extends THREE.Object3D {
         this.dontUpdatePropertyWindow = true;
         break;
       case BaseComponent.TRANSFORM_SCALE_NAME:
-        this.scale.copy(PlayerUtils.getVector3FromSerializableVector3(property.value));
+        this.scale.copy(PlayerUtils.GetVector3FromSerializableVector3(property.value));
         this.dontUpdatePropertyWindow = true;
         break;
       case BaseComponent.ACTION_TYPE_NAME:

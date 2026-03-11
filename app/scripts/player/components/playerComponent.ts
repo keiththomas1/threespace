@@ -42,17 +42,17 @@ export default class PlayerComponent extends THREE.Object3D {
     this.updateCallback = callback;
   }
 
-  public addClickCallback = (callback:()=>any) => {
+  public AddClickCallback = (callback:()=>any) => {
     this.onClickCallbacks.push(callback);
   }
 
-  public clicked = () => {
+  public Clicked = () => {
     for (let i = 0; i < this.onClickCallbacks.length; i++) {
       this.onClickCallbacks[i]();
     }
   }
 
-  public update(deltaTime: number) {
+  public Update(deltaTime: number) {
     if (this.updateCallback) {
       this.updateCallback(deltaTime);
     }

@@ -1,8 +1,7 @@
 import * as THREE from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
-import { AudioProperties, ComponentType, VideoProperties } from "../../player/utils/playerDefinitions";
-import PlayerUtils from "../../player/utils/playerUtils";
-import { ComponentProperty, DEFAULT_ACTION, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
+import { ComponentType, VideoProperties } from "../../player/utils/playerDefinitions";
+import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 
 export default class VideoComponent extends BaseComponent {
@@ -19,7 +18,7 @@ export default class VideoComponent extends BaseComponent {
 
     this.editorProperties[this.DISPLAY_NAME] = { value: this.videoProperties.url, type: "String" };
 
-    this.createVideoMesh(dataURL === "" ? this.videoProperties.url : dataURL);
+    this.CreateVideoMesh(dataURL === "" ? this.videoProperties.url : dataURL);
   }
 
   public static get DefaultProperties() : VideoProperties {
@@ -33,17 +32,17 @@ export default class VideoComponent extends BaseComponent {
     return this.videoProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
     switch (propertyName) {
       case this.DISPLAY_NAME:
         break;
     }
   }
 
-  private createVideoMesh = (url: string) => {
-    const videoElement = ComponentFactory.createVideoElement(url);
-    this.mesh = ComponentFactory.createVideoMesh(videoElement);
+  private CreateVideoMesh = (url: string) => {
+    const videoElement = ComponentFactory.CreateVideoElement(url);
+    this.mesh = ComponentFactory.CreateVideoMesh(videoElement);
     this.mesh.layers.set(PREVIEW_LAYER);
     this.add(this.mesh);
   }

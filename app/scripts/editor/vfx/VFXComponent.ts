@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { VFXObject } from "../../player/components/VFXObject";
+import { VFXObject } from "../../player/components/vfxObject";
 import { ComponentType, VFXProperties, VFXType } from "../../player/utils/playerDefinitions";
 import PlayerUtils from "../../player/utils/playerUtils";
 import { VFXData } from "../../player/utils/vfxInfo";
@@ -52,7 +52,7 @@ export default class VFXComponent extends BaseComponent {
     defaultproperties.componentType = ComponentType.VFX;
     defaultproperties.type = VFXType.Basic;
     defaultproperties.textureSrc = "";
-    defaultproperties.color = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_COLOR);
+    defaultproperties.color = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_COLOR);
     defaultproperties.speed = this.DEFAULT_SPEED;
     defaultproperties.size = this.DEFAULT_SIZE / this.SIZE_MULTIPLIER;
     defaultproperties.count = this.DEFAULT_COUNT;
@@ -67,11 +67,11 @@ export default class VFXComponent extends BaseComponent {
   }
 
   public update = (deltaTime: number) => {
-    this.vfxObject.update(deltaTime);
+    this.vfxObject.Update(deltaTime);
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.TEXTURE_PROPERTY:

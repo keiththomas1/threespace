@@ -1,6 +1,6 @@
 import { VFXProperties, VFXType } from "../../player/utils/playerDefinitions";
 import { SnowVfxData } from "../../player/utils/vfxInfo";
-import VFXComponent from "./VFXComponent";
+import VFXComponent from "./vfxComponent";
 
 export default class VFXSnow extends VFXComponent {
   protected static DEFAULT_SPEED = 1;

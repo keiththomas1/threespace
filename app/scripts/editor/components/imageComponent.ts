@@ -42,8 +42,8 @@ export default class ImageComponent extends BaseComponent {
     return this.imageProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.DISPLAY_NAME:
@@ -70,7 +70,7 @@ export default class ImageComponent extends BaseComponent {
 
   private createImageMesh = (imageUrl: string) => {
     const self = this;
-    this.mesh = ComponentFactory.createImageMesh(imageUrl, (mat: THREE.MeshBasicMaterial) => {
+    this.mesh = ComponentFactory.CreateImageMesh(imageUrl, (mat: THREE.MeshBasicMaterial) => {
       if (self.renderTarget) mat.envMap = self.renderTarget.texture;
     });
     this.mesh.layers.set(PREVIEW_LAYER);

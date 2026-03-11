@@ -42,7 +42,7 @@ export default class LightComponent extends BaseComponent {
     defaultproperties.componentType = ComponentType.Light;
     defaultproperties.type = LightType.AMBIENT;
     defaultproperties.intensity = LightComponent.DEFAULT_INTENSITY;
-    defaultproperties.color = PlayerUtils.getSerializableColorFromColor(LightComponent.DEFAULT_COLOR);
+    defaultproperties.color = PlayerUtils.GetSerializableColorFromColor(LightComponent.DEFAULT_COLOR);
     return defaultproperties;
   }
 
@@ -55,8 +55,8 @@ export default class LightComponent extends BaseComponent {
     return this.lightProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.LIGHT_TYPE:
@@ -99,7 +99,7 @@ export default class LightComponent extends BaseComponent {
   }
 
   private createLight(lightType: LightType, assetPath: string = "") {
-    const color = PlayerUtils.getColorFromSerializableColor(this.lightProperties.color);
+    const color = PlayerUtils.GetColorFromSerializableColor(this.lightProperties.color);
     switch (lightType) {
       case LightType.AMBIENT:
         this.light = new THREE.AmbientLight(color, this.lightProperties.intensity);

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { VFXProperties, VFXType } from "../../player/utils/playerDefinitions";
 import { RainVfxData } from "../../player/utils/vfxInfo";
-import VFXComponent from "./VFXComponent";
+import VFXComponent from "./vfxComponent";
 
 export default class VFXRain extends VFXComponent {
   protected static DEFAULT_SPEED = 1;

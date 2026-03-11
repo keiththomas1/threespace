@@ -129,11 +129,11 @@ export default class VFXFishObject extends VFXBaseObject {
     this.uniforms = { ...this.gpuTexturesUniforms, ...this.commonUniforms };
 
     this.config = config;
-    this.initGPU(renderer);
-    this.initScene();
+    this.InitGPU(renderer);
+    this.InitScene();
   }
 
-  public update(deltaTime: number) {
+  public Update(deltaTime: number) {
     this.uTime.value = this.clock.getElapsedTime() * 3 * this.config.noiseTimeCoef;
 
     this.gpu.compute()
@@ -142,7 +142,7 @@ export default class VFXFishObject extends VFXBaseObject {
     this.uTextureVelocity.value = this.velocityVariable.renderTargets[this.gpu.currentTextureIndex].texture;
   }
 
-  private initGPU(renderer) {
+  private InitGPU(renderer) {
     this.gpu = new GPUComputationRenderer(this.WIDTH, this.WIDTH, renderer)
     if (!renderer.capabilities.isWebGL2) {
       this.gpu.setDataType(THREE.HalfFloatType)
@@ -150,7 +150,7 @@ export default class VFXFishObject extends VFXBaseObject {
 
     this.dtPosition = this.gpu.createTexture()
     this.dtVelocity = this.gpu.createTexture()
-    this.initTextures(this.dtPosition, this.dtVelocity)
+    this.InitTextures(this.dtPosition, this.dtVelocity)
 
     this.velocityVariable = this.gpu.addVariable('textureVelocity', `
       ${psrdnoise}
@@ -207,7 +207,7 @@ export default class VFXFishObject extends VFXBaseObject {
     }
   }
 
-  private initScene() {
+  private InitScene() {
     this.geometry = new THREE.PlaneGeometry(2, 1, this.config.fishWidthSegments, 1).rotateY(Math.PI / 2)
 
     const gpuUvs = new Float32Array(this.COUNT * 2)
@@ -343,12 +343,12 @@ export default class VFXFishObject extends VFXBaseObject {
     }
 
     this.iMesh = new THREE.InstancedMesh(this.geometry, this.material, this.COUNT);
-    this.setColors(this.config.colors);
+    this.SetColors(this.config.colors);
 
     this.add(this.iMesh);
   }
 
-  private setColors(colors) {
+  private SetColors(colors) {
     if (Array.isArray(colors) && colors.length > 1) {
       const cscale = new ColorScale(colors)
       for (let i = 0; i < this.COUNT; i++) {
@@ -358,7 +358,7 @@ export default class VFXFishObject extends VFXBaseObject {
     }
   }
 
-   private initTextures(texturePosition, textureVelocity) {
+   private InitTextures(texturePosition, textureVelocity) {
     const dummy = new THREE.Vector3()
     const posArray = texturePosition.image.data;
     const velArray = textureVelocity.image.data;

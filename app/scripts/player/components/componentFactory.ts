@@ -18,7 +18,7 @@ import {
   AudioProperties,
   VFXProperties,
   VFXType} from "../utils/playerDefinitions";
-import { VFXObject } from "./VFXObject";
+import { VFXObject } from "./vfxObject";
 import { BasicVfxData, DustVfxData, RainVfxData, SnowVfxData } from "../utils/vfxInfo";
 import VFXFishObject from "./vfxFishObject";
 import VFXBaseObject from "./vfxBaseObject";
@@ -27,7 +27,7 @@ export class ComponentFactory {
   constructor() {
   }
 
-  public static createPlayerCamera(cameraSettings: CameraProperties): THREE.Camera {
+  public static CreatePlayerCamera(cameraSettings: CameraProperties): THREE.Camera {
     let camera = null;
     switch (cameraSettings.type) {
       case CameraType.PERSPECTIVE:
@@ -44,20 +44,20 @@ export class ComponentFactory {
     return camera;
   }
 
-  public static loadModelInfo = async (
+  public static LoadModelInfo = async (
     modelLoader: ModelLoader, modelProperties: ModelProperties): Promise<ModelInfo | null> => {
     return new Promise<ModelInfo | null> ((resolve) => {
-      modelLoader.loadGLTFFromURL(modelProperties.url ?? modelProperties.filepath, (modelInfo: ModelInfo) => { resolve(modelInfo); });
+      modelLoader.LoadGLTFFromURL(modelProperties.url ?? modelProperties.filepath, (modelInfo: ModelInfo) => { resolve(modelInfo); });
     });
   }
 
-  public static loadAudio = async (audioProperties: AudioProperties): Promise<string | null> => {
+  public static LoadAudio = async (audioProperties: AudioProperties): Promise<string | null> => {
     return new Promise<string | null> ((resolve) => {
       resolve(audioProperties.url ?? audioProperties.filepath);
     });
   }
 
-  public static createImageMesh = (
+  public static CreateImageMesh = (
     imageUrl: string,
     materialLoaded: (mat: THREE.MeshBasicMaterial)=>any = ()=>{}) : THREE.Mesh => {
     const textureLoader = new THREE.TextureLoader();
@@ -93,7 +93,7 @@ export class ComponentFactory {
     return mesh;
   }
 
-  public static createVideoMesh = (videoElement: HTMLVideoElement) => {
+  public static CreateVideoMesh = (videoElement: HTMLVideoElement) => {
     const geometry = new THREE.PlaneGeometry( 1, 1 );
     const mesh = new THREE.Mesh( geometry );
 
@@ -115,7 +115,7 @@ export class ComponentFactory {
     return mesh;
   }
 
-  public static createVideoElement = (videoSrc: string): HTMLVideoElement => {
+  public static CreateVideoElement = (videoSrc: string): HTMLVideoElement => {
     const videoElement = document.createElement( 'video' );
     videoElement.id = "video-element-" + videoSrc;
     videoElement.src = videoSrc;
@@ -129,9 +129,9 @@ export class ComponentFactory {
     return videoElement;
   }
 
-  public static async create3DTextMesh(textProperties: Text3DProperties, parent: THREE.Object3D): Promise<THREE.Mesh> {
+  public static async Create3DTextMesh(textProperties: Text3DProperties, parent: THREE.Object3D): Promise<THREE.Mesh> {
     return new Promise<THREE.Mesh>((resolve, reject) => {
-      const fontPath = ComponentFactory.getFontPathFromType(textProperties.type);
+      const fontPath = ComponentFactory.GetFontPathFromType(textProperties.type);
       const ttfLoader = new TTFLoader();
       ttfLoader.load(fontPath, (fontJson: object) => {
         const font = new Font(fontJson);
@@ -158,7 +158,7 @@ export class ComponentFactory {
 
         parent.add(textMesh);
 
-        const hitbox = PlayerUtils.createHitBoxForObject3D(textMesh);
+        const hitbox = PlayerUtils.CreateHitBoxForObject3D(textMesh);
         textMesh.add(hitbox);
 
         resolve(textMesh);
@@ -166,7 +166,7 @@ export class ComponentFactory {
     });
   }
 
-  public static createVFX(vfxProperties: VFXProperties, renderer: THREE.WebGLRenderer) : VFXBaseObject {
+  public static CreateVFX(vfxProperties: VFXProperties, renderer: THREE.WebGLRenderer) : VFXBaseObject {
     let vfxData = null;
     switch (vfxProperties.type) {
       case VFXType.Dust:
@@ -189,7 +189,7 @@ export class ComponentFactory {
     return new VFXObject(vfxProperties, vfxData);
   }
 
-  private static getFontPathFromType = (fontType: FontType) : string => {
+  private static GetFontPathFromType = (fontType: FontType) : string => {
     switch (fontType) {
       case FontType.AMATIC_SC:
         return '/fonts/Amatic_SC/AmaticSC-Regular.ttf';

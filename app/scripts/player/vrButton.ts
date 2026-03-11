@@ -116,7 +116,7 @@ export default class VRButton {
 
 		}
 
-		if ( 'xr' in navigator && !PlayerUtils.isMobile(navigator)) {
+		if ( 'xr' in navigator && !PlayerUtils.IsMobile(navigator)) {
 
 			button.id = 'VRButton';
 			button.style.display = 'none';
@@ -150,7 +150,7 @@ export default class VRButton {
 
 	static registerSessionGrantedListener() {
 
-		if ( 'xr' in navigator && !PlayerUtils.isMobile(navigator) ) {
+		if ( 'xr' in navigator && !PlayerUtils.IsMobile(navigator) ) {
 
 			// WebXRViewer (based on Firefox) has a bug where addEventListener
 			// throws a silent exception and aborts execution entirely.

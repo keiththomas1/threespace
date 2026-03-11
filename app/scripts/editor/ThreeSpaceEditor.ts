@@ -1,14 +1,13 @@
 import * as THREE from "three";
-import Stats from 'three/addons/libs/stats.module.js';
-import { OrbitControls } from "./external/OrbitControls.js";
-import { OrbitControlsGizmo } from  "./external/OrbitControlsGizmo.js";
+import Stats from 'three/addons/libs/stats.module';
+import { OrbitControls } from "./external/OrbitControls";
+import { OrbitControlsGizmo } from  "./external/OrbitControlsGizmo";
 import anime from 'animejs';
 import { DEFAULT_BACKGROUND_COLOR } from "./utils/constants";
 import { buildEditorDom } from "./editorDom";
 import { EditorClasses, EditorIds } from "./editorIds";
 import GridRenderer from "./gridRenderer";
 import UiController from "./uiController";
-import Particles from "./particles";
 import BaseComponent from "./components/baseComponent";
 import ComponentManager from "./componentManager";
 import { ThreeSpacePlayer } from "../player/threeSpacePlayer";
@@ -28,13 +27,13 @@ import SettingsComponent from "./components/settingsComponent";
 import VideoComponent from "./components/videoComponent";
 import AudioComponent from "./components/audioComponent";
 import { VFXType } from "../player/utils/playerDefinitions";
-import VFXSnow from "../editor/vfx/VFXSnow";
-import VFXDust from "../editor/vfx/VFXDust";
-import VFXRain from "../editor/vfx/VFXRain";
-import VFXFish from "../editor/vfx/VFXFish";
-import VFXComponent from "./vfx/VFXComponent";
+import VFXSnow from "./vfx/vfxSnow";
+import VFXDust from "./vfx/vfxDust";
+import VFXRain from "./vfx/vfxRain";
+import VFXFish from "./vfx/vfxFish";
+import VFXComponent from "./vfx/vfxComponent";
 import { BasicVfxData } from "../player/utils/vfxInfo";
-import { SharedData } from "../shared/sharedData.js";
+import { SharedData } from "../shared/sharedData";
 
 export interface EditorConfig {
   playerProperties?:         PlayerProperties;
@@ -137,7 +136,7 @@ export class ThreeSpaceEditor {
     this.postProcessingManager = new PostProcessingManager(
       this.renderer, this.scene, this.editorCamera);
     const edgeStrength = 2;
-    this.postProcessingManager.setupOutline(edgeStrength);
+    this.postProcessingManager.SetupOutline(edgeStrength);
 
     this.clock = new THREE.Clock(true);
 
@@ -160,8 +159,6 @@ export class ThreeSpaceEditor {
     this.raycaster = new THREE.Raycaster();
     this.raycaster.layers.enableAll();
 
-    const particles = new Particles();
-
     this.skybox = new SkyBox(this.scene);
 
     this.settingsComponent = new SettingsComponent(
@@ -170,7 +167,7 @@ export class ThreeSpaceEditor {
         this.setSceneSettings(this.settingsComponent.SettingsProperties);
       },
       () => {
-        this.uiController.setResetScenePopupVisibility("visible");
+        this.uiController.SetResetScenePopupVisibility("visible");
       }
     );
 
@@ -182,7 +179,7 @@ export class ThreeSpaceEditor {
     });
     canvas.addEventListener('touchstart', this.touchStart);
 
-    if (!PlayerUtils.isMobile(navigator)) {
+    if (!PlayerUtils.IsMobile(navigator)) {
       window.addEventListener("resize", this.resize);
     }
     window.addEventListener('orientationchange', this.orientationChange);
@@ -410,7 +407,7 @@ export class ThreeSpaceEditor {
 
   /** Display the scene settings */
   public showSceneSettings = () => {
-    this.uiController.showPropertiesWindow(this.settingsComponent);
+    this.uiController.ShowPropertiesWindow(this.settingsComponent);
   }
 
   /** Handles resize of screen */
@@ -425,7 +422,7 @@ export class ThreeSpaceEditor {
       this.userCamera.Camera.updateProjectionMatrix();
     }
 
-    this.postProcessingManager.resize(this.editorParent.clientWidth, this.editorParent.clientHeight);
+    this.postProcessingManager.Resize(this.editorParent.clientWidth, this.editorParent.clientHeight);
 
     this.renderer.setSize(this.editorParent.clientWidth, this.editorParent.clientHeight, true);
   }
@@ -464,8 +461,7 @@ export class ThreeSpaceEditor {
     this.controls.update();
     this.stats.update();
     this.componentManager.update(deltaTime);
-    this.uiController.update();
-    this.postProcessingManager.update();
+    this.postProcessingManager.Update();
     if (this.userCamera) this.userCamera.update(deltaTime);
   }
 
@@ -501,7 +497,7 @@ export class ThreeSpaceEditor {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'scene.json';
+        a.download = 'sceneon';
         a.click();
         URL.revokeObjectURL(url);
       };
@@ -635,7 +631,7 @@ export class ThreeSpaceEditor {
     this.componentManager.addComponent(component);
     if (selectComponent) {
       this.componentManager.setSelectedComponent(component);
-      this.uiController.showPropertiesWindow(component);
+      this.uiController.ShowPropertiesWindow(component);
     }
   }
 
@@ -650,7 +646,7 @@ export class ThreeSpaceEditor {
       }
     } else {
       if (this.previewPlayer) {
-        this.previewPlayer.dispose();
+        this.previewPlayer.Dispose();
         this.previewPlayer = null;
       }
       if (playerParent) playerParent.style.pointerEvents = 'none';
@@ -667,14 +663,14 @@ export class ThreeSpaceEditor {
   }
 
   private setSceneSettings = (sceneProperties: SceneProperties) => {
-    const colorOne = PlayerUtils.getColorFromSerializableColor(sceneProperties.colorOne);
+    const colorOne = PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorOne);
     switch (sceneProperties.backgroundColorType) {
       case BackgroundColorType.Single:
         this.setBackgroundColorSolid(colorOne);
         break;
       case BackgroundColorType.Gradient:
         this.setBackgroundColorGradient(
-          colorOne, PlayerUtils.getColorFromSerializableColor(sceneProperties.colorTwo));
+          colorOne, PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorTwo));
         break;
     }
   }
@@ -740,7 +736,7 @@ export class ThreeSpaceEditor {
       }
     }
 
-    this.postProcessingManager.setOutlineObjects(this.outlineObjects);
+    this.postProcessingManager.SetOutlineObjects(this.outlineObjects);
   }
 
   private canvasMouseDown = (e: MouseEvent) => {
@@ -758,20 +754,20 @@ export class ThreeSpaceEditor {
 
       if (baseComponents.length > 0) {
         this.componentManager.setSelectedComponent(baseComponents[0]);
-        this.uiController.show3DToolsWindow();
-        this.uiController.showPropertiesWindow(baseComponents[0]);
+        this.uiController.Show3DToolsWindow();
+        this.uiController.ShowPropertiesWindow(baseComponents[0]);
       } else {
         this.componentManager.setSelectedComponent(null);
-        this.uiController.hide3DToolsWindow();
-        this.uiController.hidePropertiesWindow();
+        this.uiController.Hide3DToolsWindow();
+        this.uiController.HidePropertiesWindow();
       }
     } else {
       this.componentManager.setSelectedComponent(null);
-      this.uiController.hide3DToolsWindow();
-      this.uiController.hidePropertiesWindow();
+      this.uiController.Hide3DToolsWindow();
+      this.uiController.HidePropertiesWindow();
     }
 
-    this.uiController.resetUIState();
+    this.uiController.ResetUIState();
   }
 
   private getBaseComponentParent(object: THREE.Object3D, baseComponents: BaseComponent[]) {

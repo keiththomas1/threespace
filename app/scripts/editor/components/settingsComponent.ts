@@ -36,8 +36,8 @@ export default class SettingsComponent extends BaseComponent {
     return {
       componentType: ComponentType.Settings,
       backgroundColorType: BackgroundColorType.Gradient,
-      colorOne: PlayerUtils.getSerializableColorFromColor(new THREE.Color("aqua")),
-      colorTwo: PlayerUtils.getSerializableColorFromColor(new THREE.Color("purple"))
+      colorOne: PlayerUtils.GetSerializableColorFromColor(new THREE.Color("aqua")),
+      colorTwo: PlayerUtils.GetSerializableColorFromColor(new THREE.Color("purple"))
     };
   }
 
@@ -59,18 +59,18 @@ export default class SettingsComponent extends BaseComponent {
     this.editorProperties[this.SECOND_TYPE] = { value: this.settingsProperties.colorTwo, type: "Color" };
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
     switch (propertyName) {
       case this.BACKGROUND_TYPE:
         this.settingsProperties.backgroundColorType = property.value;
         break;
       case this.FIRST_COLOR:
         this.settingsProperties.colorOne =
-          PlayerUtils.getSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
+          PlayerUtils.GetSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
       case this.SECOND_TYPE:
         this.settingsProperties.colorTwo =
-          PlayerUtils.getSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
+          PlayerUtils.GetSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
     }
 

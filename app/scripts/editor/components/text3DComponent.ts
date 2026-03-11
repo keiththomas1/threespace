@@ -46,8 +46,8 @@ export default class Text3DComponent extends BaseComponent {
     defaultproperties.size = this.DEFAULT_FONT_SIZE;
     defaultproperties.thickness = this.DEFAULT_FONT_THICKNESS;
     defaultproperties.height = this.DEFAULT_FONT_THICKNESS;
-    defaultproperties.frontColor = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_FRONT_COLOR);
-    defaultproperties.sideColor = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_SIDE_COLOR);
+    defaultproperties.frontColor = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_FRONT_COLOR);
+    defaultproperties.sideColor = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_SIDE_COLOR);
     return defaultproperties;
   }
 
@@ -56,8 +56,8 @@ export default class Text3DComponent extends BaseComponent {
     return this.textProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.DISPLAY_NAME:
@@ -99,7 +99,7 @@ export default class Text3DComponent extends BaseComponent {
   }
 
   private loadTextMesh() {
-    const promise = ComponentFactory.create3DTextMesh(this.textProperties, this);
+    const promise = ComponentFactory.Create3DTextMesh(this.textProperties, this);
     promise.then(
       (textMesh: THREE.Mesh) => {
         this.mesh = textMesh;

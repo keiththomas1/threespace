@@ -31,7 +31,7 @@ export default class Player extends Component {
 
   componentDidUpdate(prevProps: any, prevState: any) {
     if (prevProps.playerSettings !== this.props.playerSettings && this.player) {
-      this.player.dispose();
+      this.player.Dispose();
       this.player = null;
     }
     this.setupPlayer();
@@ -43,8 +43,8 @@ export default class Player extends Component {
       const playerParent = document.getElementById(styles.playerParent);
       if (playerParent) {
         this.player = new ThreeSpacePlayer(playerParent, playerSettings, null, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
-        this.player.onSceneLoaded = this.sceneLoaded;
-        this.player.onComponentSelected = this.playerComponentSelected;
+        this.player.OnSceneLoaded = this.sceneLoaded;
+        this.player.OnComponentSelected = this.playerComponentSelected;
       }
     }
   }

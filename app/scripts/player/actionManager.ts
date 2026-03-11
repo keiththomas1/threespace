@@ -13,7 +13,7 @@ export default class ActionManager {
     this.moveCameraTo = moveCameraTo;
   }
 
-  public handleAction(component: PlayerComponent) {
+  public HandleAction(component: PlayerComponent) {
     const action = component.ComponentProperties.action;
     if (action !== null) {
       switch (action.actionType) {

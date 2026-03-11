@@ -66,8 +66,8 @@ export default class CameraComponent extends BaseComponent {
     return this.renderTarget;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.CAMERA_FOV:
@@ -136,7 +136,7 @@ export default class CameraComponent extends BaseComponent {
       this.createTransformProperty();
     }
 
-    this.camera = ComponentFactory.createPlayerCamera(this.cameraProperties);
+    this.camera = ComponentFactory.CreatePlayerCamera(this.cameraProperties);
     this.camera.layers.set(PREVIEW_LAYER);
 
     this.add(this.camera);

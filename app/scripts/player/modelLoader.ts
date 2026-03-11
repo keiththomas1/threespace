@@ -8,7 +8,7 @@ export default class ModelLoader {
     this.gltfLoader = new GLTFLoader(loadingManager);
   }
 
-  public loadGLTFFromArrayBuffer = (modelArrayBuffer: any, modelLoaded: (modelInfo: ModelInfo) => void) => {
+  public LoadGLTFFromArrayBuffer = (modelArrayBuffer: any, modelLoaded: (modelInfo: ModelInfo) => void) => {
     this.gltfLoader.parse(
       modelArrayBuffer,
       '',
@@ -19,7 +19,7 @@ export default class ModelLoader {
     );
   }
 
-  public loadGLTFFromURL = (modelURL: string, modelLoaded: (modelInfo: ModelInfo) => any) => {
+  public LoadGLTFFromURL = (modelURL: string, modelLoaded: (modelInfo: ModelInfo) => any) => {
     this.gltfLoader.load(
       modelURL,
       (gltf) => { modelLoaded({ object: gltf.scene, animations: gltf.animations}) },

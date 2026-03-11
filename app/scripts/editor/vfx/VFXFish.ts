@@ -34,7 +34,7 @@ export default class VFXFish extends BaseComponent {
   public static get DefaultProperties() : VFXProperties {
     const defaultproperties = this.BaseDefaultProperties as VFXProperties;
     defaultproperties.componentType = ComponentType.VFX;
-    defaultproperties.color = PlayerUtils.getSerializableColorFromColor(this.DEFAULT_COLOR);
+    defaultproperties.color = PlayerUtils.GetSerializableColorFromColor(this.DEFAULT_COLOR);
     return defaultproperties;
   }
 
@@ -44,11 +44,11 @@ export default class VFXFish extends BaseComponent {
   }
 
   public update = (deltaTime: number) => {
-    this.vfxFishObject.update(deltaTime);
+    this.vfxFishObject.Update(deltaTime);
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.COLOR_PROPERTY:

@@ -31,7 +31,7 @@ export default class PostProcessingManager {
     this.composer.addPass( this.effectFXAA );
   }
 
-  public setupOutline(edgeStrength: number = 3, edgeColor: string = "#15ff1c") {
+  public SetupOutline(edgeStrength: number = 3, edgeColor: string = "#15ff1c") {
     this.outlinePass = new OutlinePass(
       new THREE.Vector2( window.innerWidth, window.innerHeight ), this.scene, this.camera );
     this.outlinePass.edgeStrength = edgeStrength;
@@ -39,7 +39,7 @@ export default class PostProcessingManager {
     this.composer.addPass( this.outlinePass );
   }
 
-  public setOutlineObjects(objects: THREE.Object3D[]) {
+  public SetOutlineObjects(objects: THREE.Object3D[]) {
     if (this.outlinePass) {
       let equivalent = true;
       if (this.previousOutlineObjects.length !== objects.length) {
@@ -61,13 +61,13 @@ export default class PostProcessingManager {
     }
   }
 
-  public resize(width: number, height: number) {
+  public Resize(width: number, height: number) {
     this.composer.setSize(width, height);
     this.effectFXAA.uniforms[ 'resolution' ].value.set( 1 / width, 1 / height );
     // this.fxaaPass.material.uniforms['resolution'].value.y = 1 / (window.innerHeight * pixelRatio);
   }
 
-  public update() {
+  public Update() {
     this.composer.render();
   }
 }

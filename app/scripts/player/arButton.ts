@@ -2,12 +2,11 @@ import PlayerUtils from "./utils/playerUtils";
 
 export default class ARButton {
 
-	public static createButton( renderer: THREE.WebGLRenderer ) {
-
+	public static CreateButton( renderer: THREE.WebGLRenderer ) {
 		const button = document.createElement( 'button' );
-    let sessionInit: XRSessionInit = {};
+		let sessionInit: XRSessionInit = {};
 
-		function showStartAR( /*device*/ ) {
+		function ShowStartAR() {
 			if ( sessionInit.domOverlay === undefined ) {
 
 				const overlay = document.createElement( 'div' );
@@ -114,12 +113,8 @@ export default class ARButton {
 
 		}
 
-		function disableButton() {
+		function DisableButton() {
       button.style.visibility = "hidden";
-			// button.style.display = '';
-			// button.style.cursor = 'auto';
-			// button.style.left = 'calc(50% - 75px)';
-			// button.style.width = '150px';
 
 			button.onmouseenter = null;
 			button.onmouseleave = null;
@@ -128,17 +123,17 @@ export default class ARButton {
 
 		}
 
-		function showARNotSupported() {
+		function ShowARNotSupported() {
 
-			disableButton();
+			DisableButton();
 
 			button.textContent = 'AR NOT SUPPORTED';
 
 		}
 
-		function showARNotAllowed( exception ) {
+		function ShowARNotAllowed( exception ) {
 
-			disableButton();
+			DisableButton();
 
 			console.warn( 'Exception when trying to call xr.isSessionSupported', exception );
 
@@ -146,7 +141,7 @@ export default class ARButton {
 
 		}
 
-		function stylizeElement( element ) {
+		function StylizeElement( element ) {
 
 			element.style.position = 'absolute';
 			element.style.bottom = '20px';
@@ -163,18 +158,18 @@ export default class ARButton {
 
 		}
 
-		if ( 'xr' in navigator && PlayerUtils.isMobile(navigator) ) {
+		if ( 'xr' in navigator && PlayerUtils.IsMobile(navigator) ) {
 
 			button.id = 'ARButton';
 			button.style.display = 'none';
 
-			stylizeElement( button );
+			StylizeElement( button );
 
 			navigator.xr.isSessionSupported( 'immersive-ar' ).then( function ( supported ) {
 
-				supported ? showStartAR() : showARNotSupported();
+				supported ? ShowStartAR() : ShowARNotSupported();
 
-			} ).catch( showARNotAllowed );
+			} ).catch( ShowARNotAllowed );
 
 			return button;
 
@@ -182,21 +177,9 @@ export default class ARButton {
 
 			if ( window.isSecureContext === false ) {
 				console.warn("WebXR needs HTTPS");
-
-				// const message = document.createElement( 'a' );
-				// message.href = document.location.href.replace( /^http:/, 'https:' );
-				// message.innerHTML = 'WEBXR NEEDS HTTPS'; // TODO Improve message
-
-				// message.style.left = 'calc(50% - 90px)';
-				// message.style.width = '180px';
-				// message.style.textDecoration = 'none';
-
-				// stylizeElement( message );
-
-				// return message;
 			}
 
-			disableButton();
+			DisableButton();
 
 			return null;
 		}

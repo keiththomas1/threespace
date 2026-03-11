@@ -159,7 +159,7 @@ export default class PropertiesWindow {
     input.id = propertyName;
     input.oninput = (e: Event) => {
       componentProperty.value = input.value;
-      baseComponent.propertyChanged(propertyName, componentProperty);
+      baseComponent.PropertyChanged(propertyName, componentProperty);
     }
 
     propertySection.appendChild(input);
@@ -212,7 +212,7 @@ export default class PropertiesWindow {
       try {
         sliderNumber.innerHTML = slider.value;
         componentProperty.value = parseInt(slider.value);
-        baseComponent.propertyChanged(propertyName, componentProperty);
+        baseComponent.PropertyChanged(propertyName, componentProperty);
       } catch (e) {
         console.warn(e);
       }
@@ -243,7 +243,7 @@ export default class PropertiesWindow {
       const x = this.getNumberValueFromInput(xInput.value);
       if (x !== -1) {
         componentProperty.value.x = x;
-        baseComponent.propertyChanged(propertyName, componentProperty);
+        baseComponent.PropertyChanged(propertyName, componentProperty);
       }
     }
     propertySection.appendChild(xInput);
@@ -255,7 +255,7 @@ export default class PropertiesWindow {
       const y = this.getNumberValueFromInput(yInput.value);
       if (y !== -1) {
         componentProperty.value.y = y;
-        baseComponent.propertyChanged(propertyName, componentProperty);
+        baseComponent.PropertyChanged(propertyName, componentProperty);
       }
     }
     propertySection.appendChild(yInput);
@@ -267,7 +267,7 @@ export default class PropertiesWindow {
       const z = this.getNumberValueFromInput(zInput.value);
       if (z !== -1) {
         componentProperty.value.z = z;
-        baseComponent.propertyChanged(propertyName, componentProperty);
+        baseComponent.PropertyChanged(propertyName, componentProperty);
       }
     }
     propertySection.appendChild(zInput);
@@ -286,7 +286,7 @@ export default class PropertiesWindow {
     input.checked = componentProperty.value;
     input.addEventListener("click", () => {
       componentProperty.value = input.checked;
-      baseComponent.propertyChanged(propertyName, componentProperty);
+      baseComponent.PropertyChanged(propertyName, componentProperty);
       // this.showPropertiesWindow(baseComponent);
       selectedCallback(input.checked);
     });
@@ -324,7 +324,7 @@ export default class PropertiesWindow {
     select.value = componentProperty.value;
     select.onchange = (e: Event) => {
       componentProperty.value = select.value;
-      baseComponent.propertyChanged(propertyName, componentProperty);
+      baseComponent.PropertyChanged(propertyName, componentProperty);
       this.showPropertiesWindow(baseComponent);
     };
 

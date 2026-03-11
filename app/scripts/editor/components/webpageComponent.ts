@@ -40,8 +40,8 @@ export default class WebpageComponent extends BaseComponent {
     return this.webpageProperties;
   }
 
-  public propertyChanged(propertyName: string, property: ComponentProperty) {
-    super.propertyChanged(propertyName, property);
+  public PropertyChanged(propertyName: string, property: ComponentProperty) {
+    super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
       case this.DISPLAY_NAME:

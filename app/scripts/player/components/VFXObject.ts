@@ -41,7 +41,7 @@ export class VFXObject extends VFXBaseObject {
     this.material = new THREE.MeshBasicMaterial(
       { color: new THREE.Color(vfxProperties.color.r, vfxProperties.color.g, vfxProperties.color.b) });
 
-    this.particles = this.getParticleValues(vfxProperties, vfxData);
+    this.particles = this.GetParticleValues(vfxProperties, vfxData);
     this.vfxMesh = new THREE.InstancedMesh(geometry, this.material, vfxProperties.count);
     this.add(this.vfxMesh);
 
@@ -63,18 +63,18 @@ export class VFXObject extends VFXBaseObject {
     this.vfxMesh = new THREE.InstancedMesh(this.vfxMesh.geometry, this.vfxMesh.material, count);
     this.add(this.vfxMesh);
 
-    this.particles = this.getParticleValues(this.vfxProperties, this.vfxData);
+    this.particles = this.GetParticleValues(this.vfxProperties, this.vfxData);
   }
   public set CurrentLifetimeMin(min: number) {
     this.vfxProperties.lifetimeMin = min;
-    this.particles = this.getParticleValues(this.vfxProperties, this.vfxData);
+    this.particles = this.GetParticleValues(this.vfxProperties, this.vfxData);
   }
   public set CurrentLifetimeMax(max: number) {
     this.vfxProperties.lifetimeMax = max;
-    this.particles = this.getParticleValues(this.vfxProperties, this.vfxData);
+    this.particles = this.GetParticleValues(this.vfxProperties, this.vfxData);
   }
 
-  public update(deltaTime: number) {
+  public Update(deltaTime: number) {
     if (deltaTime > this.DELTA_TIME_THRESHOLD) {
       return;
     }
@@ -86,9 +86,9 @@ export class VFXObject extends VFXBaseObject {
         particle.time = 0;
       }
 
-      this.setParticleTranslation(particle);
-      this.setParticleEulerRotation(particle);
-      this.setParticleScale(particle);
+      this.SetParticleTranslation(particle);
+      this.SetParticleEulerRotation(particle);
+      this.SetParticleScale(particle);
       this.tempQuaternion.setFromEuler(this.tempEuler, false);
 
       this.tempMatrix.identity();
@@ -105,49 +105,49 @@ export class VFXObject extends VFXBaseObject {
     this.vfxMesh.instanceMatrix.needsUpdate = true;
   }
 
-  private getParticleValues(vfxProperties: VFXProperties, vfxData: VFXData) {
+  private GetParticleValues(vfxProperties: VFXProperties, vfxData: VFXData) {
     const particles: ParticleInfo[] = [];
     for (let i = 0; i < vfxProperties.count; i++) {
-      const speed = this.getRandomSpeedValue();
-      const lifetime = this.getRandomLifetimeValue(vfxProperties);
-      const time = this.getRandomTimeValue(lifetime, vfxData);
+      const speed = this.GetRandomSpeedValue();
+      const lifetime = this.GetRandomLifetimeValue(vfxProperties);
+      const time = this.GetRandomTimeValue(lifetime, vfxData);
       const velocity = vfxData.randomizeDirection ?
         { x: Math.random(), y: Math.random(), z: Math.random() } :
         vfxData.velocity;
 
-      const x = this.getRandomXValue();
-      const y = this.getRandomYValue();
-      const z = this.getRandomZValue();
+      const x = this.GetRandomXValue();
+      const y = this.GetRandomYValue();
+      const z = this.GetRandomZValue();
 
       particles.push({ time, speed, lifetime, velocity, x, y, z });
     }
     return particles;
   }
 
-  protected getRandomTimeValue(lifetime: number, vfxData: VFXData) {
+  protected GetRandomTimeValue(lifetime: number, vfxData: VFXData) {
     if (vfxData.randomizeTimeOnStart) {
       return Math.random() * lifetime;
     } else {
       return 0;
     }
   }
-  protected getRandomSpeedValue() {
+  protected GetRandomSpeedValue() {
     return ((Math.random() * 0.5) + 1) / 100 / 2;
   }
-  protected getRandomXValue() {
+  protected GetRandomXValue() {
     return this.vfxData.xMin + (Math.random() * (this.vfxData.xMax - this.vfxData.xMin));
   }
-  protected getRandomYValue() {
+  protected GetRandomYValue() {
     return this.vfxData.yMin + (Math.random() * (this.vfxData.yMax - this.vfxData.yMin));
   }
-  protected getRandomZValue() {
+  protected GetRandomZValue() {
     return this.vfxData.zMin + (Math.random() * (this.vfxData.zMax - this.vfxData.zMin));
   }
-  protected getRandomLifetimeValue(vfxProperties: VFXProperties) {
+  protected GetRandomLifetimeValue(vfxProperties: VFXProperties) {
     return (Math.random() * (vfxProperties.lifetimeMax - vfxProperties.lifetimeMin)) + vfxProperties.lifetimeMin;
   }
 
-  protected setParticleTranslation(info: ParticleInfo) {
+  protected SetParticleTranslation(info: ParticleInfo) {
     let { time, x, y, z } = info;
 
     x += (info.velocity.x * this.currentSpeed * time);
@@ -167,12 +167,12 @@ export class VFXObject extends VFXBaseObject {
     // );
   }
 
-  protected setParticleScale(info: ParticleInfo) {
+  protected SetParticleScale(info: ParticleInfo) {
     const s = Math.sin(info.time / 2) * this.currentSize;
     this.tempScale.set(s, s, s);
   }
 
-  protected setParticleEulerRotation(info: ParticleInfo) {
+  protected SetParticleEulerRotation(info: ParticleInfo) {
     const s = Math.sin(info.time);
     this.tempEuler.set(s * 5, s * 5, s * 5);
   }

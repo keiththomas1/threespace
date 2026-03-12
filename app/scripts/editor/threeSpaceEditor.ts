@@ -12,9 +12,10 @@ import BaseComponent from "./components/baseComponent";
 import ComponentManager from "./componentManager";
 import { ThreeSpacePlayer } from "../player/threeSpacePlayer";
 import { AudioProperties, BackgroundColorType, CameraProperties, ComponentProperties,
-  ComponentType, FontDefinition, ImageProperties, LightProperties, LightType,
+  ComponentType, ImageProperties, LightProperties, LightType,
   ModelProperties, PlayerProperties, SceneProperties, Text3DProperties, VFXProperties, VideoProperties
   } from "../player/utils/playerDefinitions";
+import { AssetManager } from "../shared/assetManager";
 import PlayerUtils from "../player/utils/playerUtils";
 import PostProcessingManager from "../player/postProcessingManager";
 import ImageComponent from "./components/imageComponent";
@@ -39,8 +40,6 @@ export interface EditorConfig {
   playerProperties?:         PlayerProperties;
   onSave?:        (scene: PlayerProperties) => void;
   onLoad?:        () => Promise<PlayerProperties | null>;
-  /** Fonts available for Text3D components. Each entry provides a display name and a path relative to assetBasePath. */
-  fonts?:         FontDefinition[];
 }
 
 /**
@@ -75,8 +74,6 @@ export class ThreeSpaceEditor {
 
   /* State */
   private config: EditorConfig;
-  private assetBasePath?: string;
-  private fonts: FontDefinition[] = [];
   private inPreviewMode: boolean = false;
   private clickTimer: number = 0;
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
@@ -85,15 +82,10 @@ export class ThreeSpaceEditor {
   /**
    * @param container // The HTMLElement that this will create it's scene within.
    * @param config // The config to start the editor up with.
-   * @param assetBasePath // Prepended to the filename when exporting or searching for assets such as models, videos, images, etc. in the player settings.
-   *                        e.g. "/models/" → file "robot.glb" is imported as "/models/robot.glb". 
-   *                        If not set, will use the root as the base path.
    */
-  public constructor(container: HTMLElement, config: EditorConfig = {}, assetBasePath?: string) {
+  public constructor(container: HTMLElement, config: EditorConfig = {}) {
     this.editorParent = container;
     this.config = config;
-    this.assetBasePath = assetBasePath;
-    this.fonts = config.fonts ?? [];
 
     // Build editor DOM inside the container, get back the canvas mount point.
     const dom = buildEditorDom(container, {
@@ -155,8 +147,6 @@ export class ThreeSpaceEditor {
       this.roomGroup,
       this.editorCamera,
       this.componentManager,
-      this.fonts,
-      this.assetBasePath,
       this.componentAdded,
       this.togglePreview,
       this.resetScene,
@@ -286,7 +276,7 @@ export class ThreeSpaceEditor {
     let placed = 0;
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const defaultPath = (this.assetBasePath ?? '') + file.name;
+      const defaultPath = AssetManager.AssetBasePath + file.name;
       const exportUrl = await this.showPathConfirmPopup(file.name, defaultPath);
       if (!exportUrl) continue;
 
@@ -366,14 +356,14 @@ export class ThreeSpaceEditor {
     this.uploadAndPlaceAsset(files, (dataURL, exportUrl) => {
       const p = AudioComponent.DefaultProperties;
       p.filepath = exportUrl;
-      return new AudioComponent(p, this.editorCamera, dataURL, this.assetBasePath);
+      return new AudioComponent(p, this.editorCamera, dataURL);
     });
   }
 
   /* Adds new light to the scene */
   public addLight = () => {
     const lightProperties = LightComponent.DefaultProperties;
-    const lightComponent = new LightComponent(lightProperties, this.assetBasePath);
+    const lightComponent = new LightComponent(lightProperties);
     this.roomGroup.add(lightComponent);
     this.componentAdded(lightComponent);
   }
@@ -384,23 +374,23 @@ export class ThreeSpaceEditor {
     switch (type) {
       case VFXType.Basic:
         vfxProperties = VFXDust.DefaultProperties;
-        vfx = new VFXComponent(vfxProperties, BasicVfxData, this.assetBasePath);
+        vfx = new VFXComponent(vfxProperties, BasicVfxData);
         break;
       case VFXType.Dust:
         vfxProperties = VFXDust.DefaultProperties;
-        vfx = new VFXDust(vfxProperties, this.assetBasePath);
+        vfx = new VFXDust(vfxProperties);
         break;
       case VFXType.Snow:
         vfxProperties = VFXSnow.DefaultProperties;
-        vfx = new VFXSnow(vfxProperties, this.assetBasePath);
+        vfx = new VFXSnow(vfxProperties);
         break;
       case VFXType.Rain:
         vfxProperties = VFXRain.DefaultProperties;
-        vfx = new VFXRain(vfxProperties, this.assetBasePath);
+        vfx = new VFXRain(vfxProperties);
         break;
       case VFXType.Fish:
         vfxProperties = VFXFish.DefaultProperties;
-        vfx = new VFXFish(vfxProperties, this.renderer, this.assetBasePath);
+        vfx = new VFXFish(vfxProperties, this.renderer);
         break;
     }
 
@@ -524,15 +514,14 @@ export class ThreeSpaceEditor {
       case ComponentType.Camera:
         component = new CameraComponent(
           this.scene, componentProperties as CameraProperties,
-          this.editorCamera, this.alignUserCameraWithView,
-          this.assetBasePath);
+          this.editorCamera, this.alignUserCameraWithView);
         this.userCamera = component;
         break;
       case ComponentType.Light:
-        component = new LightComponent(componentProperties as LightProperties, this.assetBasePath);
+        component = new LightComponent(componentProperties as LightProperties);
         break;
       case ComponentType.Text3D:
-        component = new Text3DComponent(componentProperties as Text3DProperties, this.editorCamera, this.fonts, this.assetBasePath ?? '');
+        component = new Text3DComponent(componentProperties as Text3DProperties, this.editorCamera);
         break;
       case ComponentType.Video:
         component = new VideoComponent(componentProperties as VideoProperties, this.editorCamera, path);
@@ -544,25 +533,25 @@ export class ThreeSpaceEditor {
         component = new ModelComponent(componentProperties as ModelProperties, this.editorCamera, ()=>{}, path);
         break;
       case ComponentType.Audio:
-        component = new AudioComponent(componentProperties as AudioProperties, this.editorCamera, path, this.assetBasePath);
+        component = new AudioComponent(componentProperties as AudioProperties, this.editorCamera, path);
         break;
       case ComponentType.VFX:
         const vfxProperties = componentProperties as VFXProperties;
         switch (vfxProperties.type) {
           case VFXType.Basic:
-            component = new VFXComponent(vfxProperties, BasicVfxData, this.assetBasePath);
+            component = new VFXComponent(vfxProperties, BasicVfxData);
             break;
           case VFXType.Snow:
-            component = new VFXSnow(vfxProperties, this.assetBasePath);
+            component = new VFXSnow(vfxProperties);
             break;
           case VFXType.Dust:
-            component = new VFXDust(vfxProperties, this.assetBasePath);
+            component = new VFXDust(vfxProperties);
             break;
           case VFXType.Rain:
-            component = new VFXRain(vfxProperties, this.assetBasePath);
+            component = new VFXRain(vfxProperties);
             break;
           case VFXType.Fish:
-            component = new VFXFish(vfxProperties, this.renderer, this.assetBasePath);
+            component = new VFXFish(vfxProperties, this.renderer);
             break;
         }
         break;
@@ -648,7 +637,7 @@ export class ThreeSpaceEditor {
     if (inPreviewMode) {
       if (playerParent) {
         playerParent.style.pointerEvents = 'all';
-        this.previewPlayer = new ThreeSpacePlayer(playerParent, this.getSceneProperties(), null, this.assetBasePath ?? '', this.fonts);
+        this.previewPlayer = new ThreeSpacePlayer(playerParent, this.getSceneProperties());
       }
     } else {
       if (this.previewPlayer) {
@@ -689,8 +678,7 @@ export class ThreeSpaceEditor {
       this.scene,
       CameraComponent.DefaultProperties as CameraProperties,
       this.editorCamera,
-      this.alignUserCameraWithView,
-      this.assetBasePath);
+      this.alignUserCameraWithView);
     this.roomGroup.add(this.userCamera);
     this.userCamera.position.set(0, 5, 5);
     this.userCamera.lookAt(new THREE.Vector3(0, 10, 10));
@@ -698,14 +686,14 @@ export class ThreeSpaceEditor {
 
     const ambientLightProperties = LightComponent.DefaultProperties;
     ambientLightProperties.type = LightType.AMBIENT;
-    const ambientLight = new LightComponent(ambientLightProperties as LightProperties, this.assetBasePath);
+    const ambientLight = new LightComponent(ambientLightProperties as LightProperties);
     this.roomGroup.add(ambientLight);
     ambientLight.position.set(0, 7.5, 0);
     this.componentAdded(ambientLight, false);
 
     const directionalLightProperties = LightComponent.DefaultProperties;
     directionalLightProperties.type = LightType.DIRECTIONAL;
-    const directionalLight = new LightComponent(directionalLightProperties as LightProperties, this.assetBasePath);
+    const directionalLight = new LightComponent(directionalLightProperties as LightProperties);
     this.roomGroup.add(directionalLight);
     directionalLight.position.set(5, 10, -5);
     directionalLight.lookAt(new THREE.Vector3(0, 0, 0));

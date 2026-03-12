@@ -5,6 +5,7 @@ import psrdnoise from '../glsl/psrdnoise3.glsl'
 import mat3LookAt from '../glsl/mat3-lookat.glsl'
 import mat4Compose from '../glsl/mat4-compose.glsl'
 import VFXBaseObject from "./vfxBaseObject";
+import { AssetManager } from "../..";
 
 const { randFloat: rnd, randFloatSpread: rndFS } = THREE.MathUtils;
 
@@ -81,7 +82,7 @@ export default class VFXFishObject extends VFXBaseObject {
     config = {
       gpgpuSize: 8,
       fogDensity: 0.025,
-      texture: '/images/fishes.png',
+      texture: `${AssetManager.AssetBasePath}/images/fishes.png`,
       textureCount: 8,
       material: 'phong',
       materialParams: {

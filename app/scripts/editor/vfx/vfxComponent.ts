@@ -4,6 +4,7 @@ import { VFXObject } from "../../player/components/vfxObject";
 import { ComponentType, VFXProperties, VFXType } from "../../player/utils/playerDefinitions";
 import PlayerUtils from "../../player/utils/playerUtils";
 import { VFXData } from "../../player/utils/vfxInfo";
+import { AssetManager } from "../../shared/assetManager";
 import BaseComponent from "../components/baseComponent";
 import { ComponentProperty } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
@@ -32,7 +33,7 @@ export default class VFXComponent extends BaseComponent {
 
   private vfxObject: VFXObject;
 
-  constructor(vfxProperties: VFXProperties, vfxData: VFXData, assetPath: string = "") {
+  constructor(vfxProperties: VFXProperties, vfxData: VFXData) {
     super("VFX", null, { hasActions: false, hasCredit: false, hasTransform: true});
 
     this.particleCount = vfxProperties.count;
@@ -44,7 +45,7 @@ export default class VFXComponent extends BaseComponent {
     this.vfxObject = new VFXObject(this.vfxProperties, vfxData);
     this.add(this.vfxObject);
 
-    this.createModelRepresentation(assetPath);
+    this.createModelRepresentation();
   }
 
   public static get DefaultProperties() : VFXProperties {
@@ -155,10 +156,10 @@ export default class VFXComponent extends BaseComponent {
     return 0;
   }
 
-  private createModelRepresentation(assetPath: string = "") {
+  private createModelRepresentation() {
     const gltfLoader = new GLTFLoader();
     const self = this;
-    gltfLoader.load(`${assetPath}/models/lightningBolt/lightningBolt.glb`, (gltf: GLTF) => {
+    gltfLoader.load(`${AssetManager.AssetBasePath}/models/lightningBolt/lightningBolt.glb`, (gltf: GLTF) => {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene);
       self.mesh = gltf.scene;
       this.add( self.mesh );

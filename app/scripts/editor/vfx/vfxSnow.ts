@@ -9,9 +9,9 @@ export default class VFXSnow extends VFXComponent {
   protected static DEFAULT_LIFETIME_MIN = 7;
   protected static DEFAULT_LIFETIME_MAX = 9;
 
-  constructor(vfxProperties: VFXProperties, assetPath: string = "") {
+  constructor(vfxProperties: VFXProperties) {
     vfxProperties.type = VFXType.Snow;
 
-    super(vfxProperties, SnowVfxData, assetPath);
+    super(vfxProperties, SnowVfxData);
   }
 }

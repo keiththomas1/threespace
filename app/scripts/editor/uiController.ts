@@ -8,8 +8,6 @@ import ComponentManager from "./componentManager";
 import PropertiesWindow from "./ui/propertiesWindow";
 import { ComponentProperty } from "./utils/constants";
 import WebpageComponent from "./components/webpageComponent";
-import { FontDefinition } from "../player/utils/playerDefinitions";
-
 export default class UiController {
   private propertiesWindow: PropertiesWindow;
 
@@ -18,9 +16,7 @@ export default class UiController {
 
   private roomGroup: THREE.Group;
   private editorCamera: THREE.Camera;
-  private colorPicker: any; 
-  private fonts: FontDefinition[] = [];
-  private assetBasePath: string = '';
+  private colorPicker: any;
 
   private componentAdded: (component: BaseComponent) => any;
   private togglePreviewMode: (inPreview: boolean) => any;
@@ -32,16 +28,12 @@ export default class UiController {
     roomGroup: THREE.Group,
     editorCamera: THREE.Camera,
     componentManager: ComponentManager,
-    fonts: FontDefinition[],
-    assetBasePath: string,
     componentAdded: (component: BaseComponent) => any,
     togglePreviewMode: (inPreview: boolean) => any,
     sceneCleared: () => any,
     sceneSaved: () => any) {
     this.roomGroup = roomGroup;
     this.editorCamera = editorCamera;
-    this.fonts = fonts;
-    this.assetBasePath = assetBasePath;
 
     this.colorPickerParent = document.getElementById(EditorIds.colorPickerParent);
     this.componentAdded = componentAdded;
@@ -220,7 +212,7 @@ export default class UiController {
   private AddTextComponent = (text: string) => {
     const textProperties = Text3DComponent.DefaultProperties;
     textProperties.text = text;
-    const textComponent = new Text3DComponent(textProperties, this.editorCamera, this.fonts, this.assetBasePath);
+    const textComponent = new Text3DComponent(textProperties, this.editorCamera);
     textComponent.scale.set(0.025, 0.025, 0.025);
     this.roomGroup.add(textComponent);
     this.componentAdded(textComponent);

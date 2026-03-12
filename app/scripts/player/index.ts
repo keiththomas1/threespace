@@ -1,4 +1,4 @@
 export { ThreeSpacePlayer } from './threeSpacePlayer';
 export type { PlayerProperties } from './utils/playerDefinitions';
 export type { FontDefinition } from './utils/playerDefinitions';
-export { AssetManager } from '../shared/assetManager';
+export { AssetManager as AssetManager } from '../shared/assetManager';

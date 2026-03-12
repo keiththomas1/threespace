@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import { Component } from 'react';
 import { ThreeSpaceEditor, PlayerProperties, EditorConfig, AssetManager } from 'threespace';
-import playerSettingsJSON from '../../public/json/frontPagePlayerSettings.json';
-import { VisualCarousel } from '../../components/visualCarousel/visualCarousel';
+import { SCENES, VisualCarousel } from '../../components/visualCarousel/visualCarousel';
 
 export default class EditorPage extends Component {
   private container: HTMLDivElement | null = null;
@@ -29,7 +28,7 @@ export default class EditorPage extends Component {
     ];
 
     const editorConfig: EditorConfig = {
-      playerProperties: playerSettingsJSON as PlayerProperties,
+      playerProperties: SCENES[0].properties,
     };
 
     this.editor = new ThreeSpaceEditor(container, editorConfig);
@@ -37,7 +36,7 @@ export default class EditorPage extends Component {
 
   handleSceneSelected = (path: string, properties: PlayerProperties) => {
     if (this.editor) {
-       
+      AssetManager.AssetBasePath = path;
       this.editor.PlayerProperties = properties;
     }
   }

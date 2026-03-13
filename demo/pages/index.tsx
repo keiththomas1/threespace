@@ -2,7 +2,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css'
 
 import Player from '../components/player';
-import { VisualCarousel } from '../components/visualCarousel/visualCarousel';
+import { SCENES, VisualCarousel } from '../components/visualCarousel/visualCarousel';
 
 import { Component } from 'react';
 import { PlayerProperties, AssetManager } from 'threespace';
@@ -32,7 +32,7 @@ export default class HomePage extends Component<{}, State> {
       { name: 'Roboto',    path: '/fonts/Roboto/Roboto-Regular.ttf' },
     ];
 
-    this.state = { playerSettings: null };
+    this.state = { playerSettings: SCENES[0].properties };
   }
 
   playerComponentSelected = (eventName: string) => {

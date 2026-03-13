@@ -8,6 +8,7 @@ import { AssetManager } from "../../shared/assetManager";
 import BaseComponent from "../components/baseComponent";
 import { ComponentProperty } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
+import { SharedData } from "../../shared/sharedData";
 
 export default class VFXComponent extends BaseComponent {
   protected static DEFAULT_COLOR = new THREE.Color(0xFFFFFF);
@@ -163,6 +164,7 @@ export default class VFXComponent extends BaseComponent {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene);
       self.mesh = gltf.scene;
       this.add( self.mesh );
+      self.mesh.traverse(child => child.layers.set(SharedData.EDITOR_LAYER));
       self.mesh.position.set(0, 0, 0);
       self.mesh.scale.set(0.01, 0.01, 0.01);
     });

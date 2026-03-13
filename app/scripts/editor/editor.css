@@ -100,6 +100,17 @@
   flex-direction: row;
 }
 
+/* Top Bar */
+#ts-top-center-flexbox-parent {
+  position: absolute;
+  pointer-events: none;
+  left: 0; right: 0;
+  top: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── Object toolbar ──────────────────────────────────── */
 #ts-bottom-center-flexbox-parent {
   position: absolute;
@@ -193,13 +204,14 @@
   min-width: 220px;
   width: 25%;
   right: 0;
-  top: 2%;
-  bottom: 2%;
+  top: 1vh;
+  max-height: 80vh;
   pointer-events: all;
   display: flex;
   align-items: center;
   flex-direction: column;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 10;
 }
 
@@ -367,7 +379,7 @@
 #ts-project-view-container {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   z-index: 15;
   pointer-events: all;
   display: flex;

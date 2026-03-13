@@ -127,7 +127,11 @@ export default class BaseComponent extends THREE.Object3D {
         this.dontUpdatePropertyWindow = true;
         break;
       case BaseComponent.TRANSFORM_ROTATION_NAME:
-        this.setRotationFromEuler(new THREE.Euler(property.value.x, property.value.y, property.value.z));
+        this.setRotationFromEuler(new THREE.Euler(
+          THREE.MathUtils.degToRad(property.value.x),
+          THREE.MathUtils.degToRad(property.value.y),
+          THREE.MathUtils.degToRad(property.value.z)
+        ));
         this.dontUpdatePropertyWindow = true;
         break;
       case BaseComponent.TRANSFORM_SCALE_NAME:
@@ -207,9 +211,14 @@ export default class BaseComponent extends THREE.Object3D {
     const matrix = this.matrix;
     matrix.decompose(position, quaternion, scale);
     const rotationEuler = new THREE.Euler().setFromQuaternion( quaternion, 'XYZ' );
+    const rotationDegrees = new THREE.Vector3(
+      THREE.MathUtils.radToDeg(rotationEuler.x),
+      THREE.MathUtils.radToDeg(rotationEuler.y),
+      THREE.MathUtils.radToDeg(rotationEuler.z)
+    );
     const transformProperty = {
       position: { value: position, type: "Vector3" },
-      rotation: { value: rotationEuler, type: "Vector3" },
+      rotation: { value: rotationDegrees, type: "Vector3" },
       scale: { value: scale, type: "Vector3" }
     };
     this.editorProperties[BaseComponent.TRANSFORM_TYPE] = { value: transformProperty, type: "Transform" };

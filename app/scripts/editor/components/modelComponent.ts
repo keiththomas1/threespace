@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { AnimationClip } from "three";
 import { AnimationBehaviorType, ComponentType, ModelInfo, ModelProperties } from "../../player/utils/playerDefinitions";
 import ModelLoader from "../../player/modelLoader";
-import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
+import { ComponentProperty } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 import { SharedUtils } from "../../shared/sharedUtils";
 
@@ -77,7 +77,6 @@ export default class ModelComponent extends BaseComponent {
   private loadModelInfo = (modelInfo: ModelInfo) => {
     if (modelInfo) {
       const model = modelInfo.object;
-      model.traverse( function( child ) { child.layers.set( PREVIEW_LAYER ) } );
       this.add(model);
 
       if (modelInfo.animations && modelInfo.animations.length > 0) {

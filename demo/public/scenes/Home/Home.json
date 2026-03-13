@@ -24,16 +24,16 @@
         0,
         0,
         0,
-        0.9458107926495972,
-        -0.32471825404116206,
+        0.7071067811865474,
+        -0.7071067811865477,
         0,
         0,
-        0.32471825404116206,
-        0.9458107926495972,
+        0.7071067811865477,
+        0.7071067811865474,
         0,
-        0,
-        5,
-        5,
+        -0.1741731634295398,
+        7.156937522461626,
+        7.550984152173246,
         1
       ],
       "action": {
@@ -145,7 +145,58 @@
       }
     },
     {
-      "componentName": "",
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        0.025,
+        0,
+        0,
+        0,
+        0,
+        0.021979681889137143,
+        -0.011911909336976029,
+        0,
+        0,
+        0.011911909336976029,
+        0.021979681889137143,
+        0,
+        -5.6539673259831345,
+        3.4036593527917134,
+        0.010193471578397006,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "https://github.com/keiththomas1/threespace",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "ThreeSpace",
+      "size": 49,
+      "thickness": 4,
+      "height": 4,
+      "frontColor": {
+        "r": 0.058823529411764705,
+        "g": 0.9411764705882353,
+        "b": 0.9686274509803922
+      },
+      "sideColor": {
+        "r": 0.07450980392156863,
+        "g": 0.22745098039215686,
+        "b": 0.2549019607843137
+      },
+      "type": "Audiowide"
+    },
+    {
+      "componentName": "BaseComponent",
       "componentType": "VFX",
       "transformMatrix": [
         1,
@@ -179,43 +230,39 @@
         "locked": false
       },
       "url": "",
-      "type": "BASIC",
+      "type": "DUST",
       "textureSrc": "",
-      "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1
-      },
-      "speed": 0.1,
+      "color": 9240366,
+      "speed": 1,
       "size": 0.7,
-      "count": 60,
-      "lifetimeMin": 7,
-      "lifetimeMax": 9
+      "count": 156,
+      "lifetimeMin": 4,
+      "lifetimeMax": 11
     },
     {
       "componentName": "BaseComponent",
-      "componentType": "IMAGE",
+      "componentType": "TEXT3D",
       "transformMatrix": [
-        1,
+        0.025,
         0,
         0,
         0,
         0,
-        1,
+        0.02256770649758977,
+        -0.010756329459376227,
         0,
         0,
+        0.010756329459376227,
+        0.02256770649758977,
         0,
-        0,
-        1,
-        0,
-        0,
-        3.1606325063767216,
-        0,
+        -1.3763544004756374,
+        1.8465610156362828,
+        0.5729015503829881,
         1
       ],
       "action": {
-        "actionType": "none",
-        "hyperlinkURL": "",
+        "actionType": "hyperlink",
+        "hyperlinkURL": "https://github.com/keiththomas1/threespace/tree/main",
         "zoomCameraMatrix": null,
         "eventName": ""
       },
@@ -227,7 +274,72 @@
         "locked": false
       },
       "url": "",
-      "filepath": "FrontPageLogo2.png"
+      "text": "Github",
+      "size": 21,
+      "thickness": 4,
+      "height": 4,
+      "frontColor": {
+        "r": 0.12156862745098039,
+        "g": 1,
+        "b": 0.5019607843137255
+      },
+      "sideColor": {
+        "r": 0.03137254901960784,
+        "g": 0.25882352941176473,
+        "b": 0.10980392156862745
+      },
+      "type": "Audiowide"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        0.02499955939618864,
+        0.00005513881994704834,
+        0.0001378031457235975,
+        0,
+        0.000020015743985829683,
+        0.021746464293714664,
+        -0.012332513535049779,
+        0,
+        -0.00014706925725373676,
+        0.012332406514250502,
+        0.021746036884932457,
+        0,
+        -1.2931096779660924,
+        1.0146403668909714,
+        1.0144877668675618,
+        1
+      ],
+      "action": {
+        "actionType": "hyperlink",
+        "hyperlinkURL": "https://keiththomas1.github.io/threespace/editor",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "Editor",
+      "size": 21,
+      "thickness": 4,
+      "height": 4,
+      "frontColor": {
+        "r": 0.12156862745098039,
+        "g": 1,
+        "b": 0.5019607843137255
+      },
+      "sideColor": {
+        "r": 0.03137254901960784,
+        "g": 0.25882352941176473,
+        "b": 0.10980392156862745
+      },
+      "type": "Audiowide"
     }
   ]
 }

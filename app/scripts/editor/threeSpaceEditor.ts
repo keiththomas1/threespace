@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import Stats from 'three/addons/libs/stats.module';
 import { OrbitControls } from "./external/OrbitControls";
 import { OrbitControlsGizmo } from  "./external/OrbitControlsGizmo";
 import anime from 'animejs';
@@ -73,7 +72,6 @@ export class ThreeSpaceEditor {
   private projectView!: ProjectView;
   private clock: THREE.Clock;
   private raycaster: THREE.Raycaster;
-  private stats: any;
 
   /* State */
   private config: EditorConfig;
@@ -169,9 +167,6 @@ export class ThreeSpaceEditor {
         this.uiController.SetResetScenePopupVisibility("visible");
       }
     );
-
-    this.stats = new Stats();
-    container.appendChild(this.stats.dom);
 
     canvas.addEventListener("mousedown", (event) => {
       if (event.button === 1) event.preventDefault();
@@ -498,7 +493,6 @@ export class ThreeSpaceEditor {
     }
 
     this.controls.update();
-    this.stats.update();
     this.componentManager.update(deltaTime);
     this.postProcessingManager.Update();
     if (this.userCamera) this.userCamera.update(deltaTime);
@@ -550,7 +544,10 @@ export class ThreeSpaceEditor {
 
   private addComponent = (componentProperties: ComponentProperties) => {
     const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
-    const path = SharedUtils.GetURLFromComponentProperties(componentProperties);
+    let path = "";
+    if ([ComponentType.Camera, ComponentType.Audio].indexOf(componentProperties.componentType as ComponentType) === -1) {
+      path = SharedUtils.GetURLFromComponentProperties(componentProperties);
+    }
 
     let component: any = null;
     switch (componentProperties.componentType) {

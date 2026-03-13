@@ -300,6 +300,7 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
   // ── Object toolbar (move/rotate/scale) ───────────────────────────────────
   const bottomCenterParent = el('div', { id: EditorIds.bottomCenterFlexboxParent });
   const objectToolbar = el('div', { id: EditorIds.objectToolbar });
+  bottomCenterParent.appendChild(objectToolbar);
 
   const toolActions = [
     { id: EditorIds.objectSelectButton, label: 'Select', key: 'Q' },
@@ -325,10 +326,10 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
     id: EditorIds.previewBackButton,
   }, [EditorClasses.tooltipButton, EditorClasses.fifthUIDepth]);
   previewBackButton.textContent = 'Back';
+  container.appendChild(previewBackButton);
 
-  bottomCenterParent.appendChild(objectToolbar);
-  bottomCenterParent.appendChild(previewBackButton);
-  container.appendChild(bottomCenterParent);
+  const topCenterParent = el('div', { id: EditorIds.topCenterParentFlexboxParent });
+  container.appendChild(topCenterParent);
 
   // ── Player preview overlay ───────────────────────────────────────────────
   const playerPreviewParent = el('div', { id: EditorIds.playerPreviewParent }, [EditorClasses.fourthUIDepth]);

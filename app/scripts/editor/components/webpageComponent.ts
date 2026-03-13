@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import domtoimage from 'dom-to-image';
 
-import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
+import { ComponentProperty } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 import { ComponentType, WebpageProperties } from "../../player/utils/playerDefinitions";
+import { SharedData } from "../../shared/sharedData";
 
 export default class WebpageComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -52,7 +53,7 @@ export default class WebpageComponent extends BaseComponent {
   public createWebpageMesh = (htmlElement: HTMLElement) => {
     const geometry = new THREE.PlaneGeometry( 1, 1 );
     const mesh = new THREE.Mesh( geometry );
-    mesh.layers.set(PREVIEW_LAYER);
+    mesh.layers.set(SharedData.EDITOR_LAYER);
 
     // Create HTML to texture image
     domtoimage.toPng(htmlElement).then((value: string) => {

@@ -1,12 +1,12 @@
 import * as THREE from "three";
-import { Color } from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
 import { ComponentType, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
 import { AssetManager } from "../../shared/assetManager";
 import PlayerUtils from "../../player/utils/playerUtils";
-import { ComponentProperty, DEFAULT_ACTION, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
+import { ComponentProperty } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
 import BaseComponent from "./baseComponent";
+import { SharedData } from "../../shared/sharedData";
 
 export default class Text3DComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Text";
@@ -65,11 +65,11 @@ export default class Text3DComponent extends BaseComponent {
         break;
       case this.FRONT_COLOR:
         if (this.frontMaterial) this.frontMaterial.color = property.value as THREE.Color;
-        this.textProperties.frontColor = new Color(property.value.r, property.value.g, property.value.b);
+        this.textProperties.frontColor = PlayerUtils.GetSerializableColorFromColor(property.value as THREE.Color);
         break;
       case this.BACK_COLOR:
         if (this.sideMaterial) this.sideMaterial.color = property.value as THREE.Color;
-        this.textProperties.sideColor = new Color(property.value.r, property.value.g, property.value.b);
+        this.textProperties.sideColor = PlayerUtils.GetSerializableColorFromColor(property.value as THREE.Color);
         break;
       case this.FONT_SIZE:
         this.textProperties.size = property.value;
@@ -105,7 +105,6 @@ export default class Text3DComponent extends BaseComponent {
     promise.then(
       (textMesh: THREE.Mesh) => {
         this.mesh = textMesh;
-        textMesh.layers.set(PREVIEW_LAYER);
 
         const materials = textMesh.material as THREE.MeshBasicMaterial[];
         for (let i = 0; i < materials.length; i++) {

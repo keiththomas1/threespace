@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { ActionType, ComponentAction } from "../../player/utils/playerDefinitions";
 
 export const APP_NAME: string = "ThreeSpace";
-export const PREVIEW_LAYER: number = 31;
 export const DEFAULT_BACKGROUND_COLOR: THREE.Color
   = new THREE.Color(30/255, 30/255, 30/255);
 export const DEFAULT_MATRIX_ARRAY: number[]

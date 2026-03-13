@@ -60,6 +60,7 @@ export default class ComponentManager {
       }
     }
 
+    this.controls.detach();
     component.dispose();
   }
 

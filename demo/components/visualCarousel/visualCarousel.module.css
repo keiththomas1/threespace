@@ -6,13 +6,11 @@
   bottom: 0;
 
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   flex-direction: row;
   padding-bottom: 16px;
 }
-
-#visualCarouselItemImage {}
 
 #visualCarouselLeftButton, #visualCarouselRightButton {
   pointer-events: all;

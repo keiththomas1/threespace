@@ -194,6 +194,8 @@
   position: absolute;
   font-size: 16px;
   height: 50px;
+  
+  top: 2vh;
 }
 
 #liveSiteButton {
@@ -287,6 +289,19 @@
   cursor: pointer;
   height: 0;
   width: 0;
+}
+
+#topCenterParentFlexboxParent {
+  position: absolute;
+  pointer-events: none;
+
+  left: 0;
+  right: 0;
+  top: 5%;
+
+  display: flex;
+  align-items:center;
+  justify-content: center;
 }
 
 #bottomCenterFlexboxParent {

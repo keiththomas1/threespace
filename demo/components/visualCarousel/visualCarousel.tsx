@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { PlayerProperties } from 'threespace';
 
 import HomeJSON from '../../public/scenes/Home/Home.json';
-import HomeThumb from '../../public/scenes/Home/Home.jpg';
+import HomeThumb from '../../public/scenes/Home/Home.png';
 import LabJSON from '../../public/scenes/Lab/Lab.json';
 import LabThumb from '../../public/scenes/Lab/Lab.jpg';
 import RainyHutJSON from '../../public/scenes/RainyHut/RainyHut.json';
@@ -58,14 +58,20 @@ export const SCENES: SceneEntry[] = [
 
 export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: string, properties: PlayerProperties) => void }) {
   const [isOpen, setIsOpen] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   function handleItemSelected(value: string) {
     const scene = SCENES.find(s => s.data.value === value);
     if (scene) onSceneSelected(scene.data.path, scene.properties);
   }
 
-  function navigateLeft() {}
-  function navigateRight() {}
+  function navigateLeft() {
+    setCurrentIndex((currentIndex - 1 + SCENES.length) % SCENES.length);
+  }
+
+  function navigateRight() {
+    setCurrentIndex((currentIndex + 1) % SCENES.length);
+  }
 
   if (!isOpen) {
     return (
@@ -84,12 +90,10 @@ export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: st
         onClick={navigateLeft}>
       </Image>
       <div className={styles.imageGallery}>
-        {SCENES.map(scene => (
-          <div key={scene.data.value} className={styles.sceneOption}>
-            <VisualCarouselItem visualCarouselData={scene.data} onSelected={handleItemSelected} />
-            <span className={styles.sceneLabel}>{scene.data.tooltip}</span>
-          </div>
-        ))}
+        <div className={styles.sceneOption}>
+          <VisualCarouselItem visualCarouselData={SCENES[currentIndex].data} onSelected={handleItemSelected} />
+          <span className={styles.sceneLabel}>{SCENES[currentIndex].data.tooltip}</span>
+        </div>
       </div>
       <button>
         <Image

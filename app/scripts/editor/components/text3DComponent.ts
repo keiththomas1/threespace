@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { Color } from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
 import { ComponentType, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
 import { AssetManager } from "../../shared/assetManager";
@@ -65,11 +64,11 @@ export default class Text3DComponent extends BaseComponent {
         break;
       case this.FRONT_COLOR:
         if (this.frontMaterial) this.frontMaterial.color = property.value as THREE.Color;
-        this.textProperties.frontColor = new Color(property.value.r, property.value.g, property.value.b);
+        this.textProperties.frontColor = PlayerUtils.GetSerializableColorFromColor(property.value as THREE.Color);
         break;
       case this.BACK_COLOR:
         if (this.sideMaterial) this.sideMaterial.color = property.value as THREE.Color;
-        this.textProperties.sideColor = new Color(property.value.r, property.value.g, property.value.b);
+        this.textProperties.sideColor = PlayerUtils.GetSerializableColorFromColor(property.value as THREE.Color);
         break;
       case this.FONT_SIZE:
         this.textProperties.size = property.value;

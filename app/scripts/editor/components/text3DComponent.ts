@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { Color } from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
-import { ComponentType, FontDefinition, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
+import { ComponentType, Text3DProperties, TEXT3D_FRONT_MAT_NAME, TEXT3D_SIDE_MAT_NAME } from "../../player/utils/playerDefinitions";
+import { AssetManager } from "../../shared/assetManager";
 import PlayerUtils from "../../player/utils/playerUtils";
 import { ComponentProperty, DEFAULT_ACTION, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
@@ -26,14 +27,10 @@ export default class Text3DComponent extends BaseComponent {
   private sideMaterial: THREE.MeshBasicMaterial | null = null;
 
   private currentPromises: Promise<THREE.Mesh>[] = [];
-  private readonly fonts: FontDefinition[];
-  private readonly assetBasePath: string;
 
-  constructor(textProperties: Text3DProperties, editorCamera: THREE.Camera, fonts: FontDefinition[] = [], assetBasePath: string = '') {
+  constructor(textProperties: Text3DProperties, editorCamera: THREE.Camera) {
     super("Text3DComponent", editorCamera, { hasActions: true, hasCredit: false, hasTransform: true});
 
-    this.fonts = fonts;
-    this.assetBasePath = assetBasePath;
     this.componentType = ComponentType.Text3D;
     this.assignProperties(textProperties);
     this.setupEditorProperties();
@@ -92,7 +89,7 @@ export default class Text3DComponent extends BaseComponent {
   protected setupEditorProperties() {
     // Build an ad-hoc options object from injected fonts so the existing ENUM_TYPE
     // dropdown renderer can derive its option list via Object.values().
-    const fontOptions = Object.fromEntries(this.fonts.map(f => [f.name, f.name]));
+    const fontOptions = Object.fromEntries(AssetManager.Fonts.map(f => [f.name, f.name]));
     super.setupEditorProperties(() => {
       this.editorProperties[this.DISPLAY_NAME] = { value: this.textProperties.text, type: "String" };
       this.editorProperties[this.FONT_FAMILY] = { value: this.textProperties.type, type: "Enum", enumType: fontOptions };
@@ -104,7 +101,7 @@ export default class Text3DComponent extends BaseComponent {
   }
 
   private loadTextMesh() {
-    const promise = ComponentFactory.Create3DTextMesh(this.textProperties, this, this.fonts, this.assetBasePath);
+    const promise = ComponentFactory.Create3DTextMesh(this.textProperties, this);
     promise.then(
       (textMesh: THREE.Mesh) => {
         this.mesh = textMesh;

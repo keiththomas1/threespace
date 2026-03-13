@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Image from 'next/image';
-import { ThreeSpacePlayer } from "threespace";
+import { AssetManager, ThreeSpacePlayer } from "threespace";
 import styles from '../styles/Player.module.css';
 
 export default class Player extends Component {
@@ -42,7 +42,8 @@ export default class Player extends Component {
     if (this.player === null && playerSettings && document) {
       const playerParent = document.getElementById(styles.playerParent);
       if (playerParent) {
-        this.player = new ThreeSpacePlayer(playerParent, playerSettings, null, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
+        AssetManager.AssetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+        this.player = new ThreeSpacePlayer(playerParent, playerSettings, null);
         this.player.OnSceneLoaded = this.sceneLoaded;
         this.player.OnComponentSelected = this.playerComponentSelected;
       }
@@ -91,15 +92,17 @@ export default class Player extends Component {
 
     this.player.Muted = false;
   }
-
+  
   render() {
+    const muteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_31.png`;
+    const unmuteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_27.png`;
     return (
       <div id={styles.playerParent}>
         <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >
-          <Image src="/images/32x/icon_31.png" alt="Mute" width={16} height={16}></Image>
+          <Image src={muteSrc} alt="Mute" width={16} height={16}></Image>
         </button>
         <button id={styles.unmuteButton} onClick={this.unmuted} className={styles.tooltipButton} >
-          <Image src="/images/32x/icon_27.png" alt="Un-mute" width={16} height={16}></Image>
+          <Image src={unmuteSrc} alt="Un-mute" width={16} height={16}></Image>
         </button>
         <div id={styles.referenceSection}>
           <p id={styles.referencePieceName} className={styles.referenceLine}></p>

@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import { Component } from 'react';
-import { ThreeSpaceEditor, PlayerProperties, EditorConfig } from 'threespace';
-import playerSettingsJSON from '../../public/json/frontPagePlayerSettings.json';
-import { VisualCarousel } from '../../components/visualCarousel/visualCarousel';
+import { ThreeSpaceEditor, PlayerProperties, EditorConfig, AssetManager } from 'threespace';
+import { SCENES, VisualCarousel } from '../../components/visualCarousel/visualCarousel';
 
 export default class EditorPage extends Component {
   private container: HTMLDivElement | null = null;
@@ -17,25 +16,27 @@ export default class EditorPage extends Component {
     this.editorCreated = true;
     const container = this.container;
 
+    AssetManager.AssetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+    AssetManager.Fonts = [
+      { name: 'Open Sans', path: '/fonts/Open_Sans/OpenSans-VariableFont.ttf' },
+      { name: 'Noto Sans', path: '/fonts/NotoSans-Regular.ttf' },
+      { name: 'Audiowide', path: '/fonts/Audiowide/Audiowide.ttf' },
+      { name: 'Amatic SC', path: '/fonts/Amatic_SC/AmaticSC-Regular.ttf' },
+      { name: 'Dancing Script', path: '/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf' },
+      { name: 'Indie Flower', path: '/fonts/Indie_Flower/IndieFlower-Regular.ttf' },
+      { name: 'Roboto',    path: '/fonts/Roboto/Roboto-Regular.ttf' },
+    ];
+
     const editorConfig: EditorConfig = {
-      playerProperties: playerSettingsJSON as PlayerProperties,
-      fonts: [
-        { name: 'Open Sans', path: '/fonts/Open_Sans/OpenSans-VariableFont.ttf' },
-        { name: 'Noto Sans', path: '/fonts/NotoSans-Regular.ttf' },
-        { name: 'Audiowide', path: '/fonts/Audiowide/Audiowide.ttf' },
-        { name: 'Amatic SC', path: '/fonts/Amatic_SC/AmaticSC-Regular.ttf' },
-        { name: 'Dancing Script', path: '/fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf' },
-        { name: 'Indie Flower', path: '/fonts/Indie_Flower/IndieFlower-Regular.ttf' },
-        { name: 'Roboto',    path: '/fonts/Roboto/Roboto-Regular.ttf' },
-      ]
+      playerProperties: SCENES[0].properties,
     };
-    
-    this.editor = new ThreeSpaceEditor(container, editorConfig, process.env.NEXT_PUBLIC_BASE_PATH ?? '');
+
+    this.editor = new ThreeSpaceEditor(container, editorConfig);
   }
 
   handleSceneSelected = (path: string, properties: PlayerProperties) => {
     if (this.editor) {
-       
+      AssetManager.AssetBasePath = path;
       this.editor.PlayerProperties = properties;
     }
   }

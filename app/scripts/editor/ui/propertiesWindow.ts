@@ -2,6 +2,7 @@ import { EditorIds, EditorClasses } from '../editorIds';
 import { ActionType, AnimationBehaviorType, BackgroundColorType, CameraType, LightType } from "../../player/utils/playerDefinitions";
 import BaseComponent from "../components/baseComponent";
 import { ActionProperty, ComponentProperty, CreditProperty, TransformProperty } from "../utils/constants";
+import { AssetManager } from '../..';
 
 export default class PropertiesWindow {
   private readonly ALTERNATE_COLOR_ONE = "#222";
@@ -184,7 +185,7 @@ export default class PropertiesWindow {
       this.onShowColorPicker(baseComponent, componentProperty, propertyName);
     };
     const icon = document.createElement("img");
-    icon.src = "/images/32x/icon_24.png";
+    icon.src = `${AssetManager.AssetBasePath}/images/32x/icon_24.png`;
     icon.alt = "Color picker for " + propertyName;
     icon.width = 32;
     icon.height = 32;

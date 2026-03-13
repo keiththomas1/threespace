@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { AudioProperties, ComponentType } from "../../player/utils/playerDefinitions";
+import { AssetManager } from "../../shared/assetManager";
 import { ComponentProperty } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
 import BaseComponent from "./baseComponent";
@@ -14,7 +15,7 @@ export default class AudioComponent extends BaseComponent {
 
   protected audioProperties: AudioProperties = AudioComponent.DefaultProperties;
 
-  constructor(audioProperties: AudioProperties, camera: THREE.Camera, dataURL: string = "", assetPath: string = "") {
+  constructor(audioProperties: AudioProperties, camera: THREE.Camera, dataURL: string = "") {
     super("Audio", null, { hasActions: false, hasCredit: true, hasTransform: true});
 
     this.componentType = ComponentType.Audio;
@@ -28,7 +29,7 @@ export default class AudioComponent extends BaseComponent {
 
     this.addMusic(dataURL === "" ? this.audioProperties.url : dataURL, 1);
 
-    this.createMusicModelRepresentation(assetPath);
+    this.createMusicModelRepresentation();
   }
 
   public static get DefaultProperties() : AudioProperties {
@@ -77,10 +78,10 @@ export default class AudioComponent extends BaseComponent {
     }
   }
 
-  private createMusicModelRepresentation(assetPath: string = "") {
+  private createMusicModelRepresentation() {
     const gltfLoader = new GLTFLoader();
     const self = this;
-    gltfLoader.load(`${assetPath}/models/headphones/headphones.glb`, (gltf: GLTF) => {
+    gltfLoader.load(`${AssetManager.AssetBasePath}/models/headphones/headphones.glb`, (gltf: GLTF) => {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene, new THREE.Color("black"));
       self.mesh = gltf.scene;
       this.add( self.mesh );

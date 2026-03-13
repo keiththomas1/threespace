@@ -29,7 +29,7 @@ interface SceneEntry {
   properties: PlayerProperties;
 }
 
-const SCENES: SceneEntry[] = [
+export const SCENES: SceneEntry[] = [
   {
     data: { thumbnailURL: HomeThumb.src, path: '/scenes/Home', tooltip: 'Home Page', value: 'Home' },
     properties: HomeJSON as PlayerProperties,

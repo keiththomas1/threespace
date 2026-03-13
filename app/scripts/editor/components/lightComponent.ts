@@ -5,6 +5,7 @@ import BaseComponent from "./baseComponent";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import ThreeUtilities from "../utils/threeUtilities";
 import { ComponentProperties, ComponentType, LightProperties, LightType } from "../../player/utils/playerDefinitions";
+import { AssetManager } from "../../shared/assetManager";
 import PlayerUtils from "../../player/utils/playerUtils";
 
 export default class LightComponent extends BaseComponent {
@@ -18,22 +19,20 @@ export default class LightComponent extends BaseComponent {
   private static readonly DEFAULT_INTENSITY = 1;
 
   protected lightProperties: LightProperties = LightComponent.DefaultProperties;
-  private assetBasePath: string = "";
 
   private light: THREE.Light | null = null;
   private lightModelSrc: string = "";
   private lightModelScale: THREE.Vector3 = new THREE.Vector3();
 
-  constructor(lightProperties: LightProperties, assetPath: string = "") {
+  constructor(lightProperties: LightProperties) {
     super("LightComponent", null, { hasActions: false, hasCredit: false, hasTransform: true});
 
     this.componentType = ComponentType.Light;
-    this.assetBasePath = assetPath;
 
     this.assignProperties(lightProperties);
     this.setupEditorProperties();
 
-    this.createLight(lightProperties.type, assetPath);
+    this.createLight(lightProperties.type);
     this.createLightModelRepresentation();
   }
 
@@ -70,7 +69,7 @@ export default class LightComponent extends BaseComponent {
         }
 
         this.lightProperties.type = property.value;
-        this.createLight(property.value as LightType, this.assetBasePath);
+        this.createLight(property.value as LightType);
         this.createLightModelRepresentation();
         break;
       case this.LIGHT_COLOR:
@@ -98,7 +97,8 @@ export default class LightComponent extends BaseComponent {
     });
   }
 
-  private createLight(lightType: LightType, assetPath: string = "") {
+  private createLight(lightType: LightType) {
+    const assetBasePath = AssetManager.AssetBasePath;
     const color = PlayerUtils.GetColorFromSerializableColor(this.lightProperties.color);
     switch (lightType) {
       case LightType.AMBIENT:
@@ -106,7 +106,7 @@ export default class LightComponent extends BaseComponent {
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
-        this.lightModelSrc = `${assetPath}/models/lightbulb/lightbulb.glb`;
+        this.lightModelSrc = `${assetBasePath}/models/lightbulb/lightbulb.glb`;
         this.lightModelScale.set(7, 7, 7);
         break;
       case LightType.DIRECTIONAL:
@@ -114,7 +114,7 @@ export default class LightComponent extends BaseComponent {
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
-        this.lightModelSrc = `${assetPath}/models/spotlight/spotlight.glb`;
+        this.lightModelSrc = `${assetBasePath}/models/spotlight/spotlight.glb`;
         this.lightModelScale.set(10, 10, 5);
         break;
     }

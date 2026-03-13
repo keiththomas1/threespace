@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
-import { ComponentProperties, ComponentType, ImageProperties } from "../../player/utils/playerDefinitions";
-import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
-import ThreeUtilities from "../utils/threeUtilities";
+import { ComponentType, ImageProperties } from "../../player/utils/playerDefinitions";
+import { ComponentProperty } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 import { SharedUtils } from "../../shared/sharedUtils";
+import { SharedData } from "../../shared/sharedData";
 
 export default class ImageComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -74,8 +74,6 @@ export default class ImageComponent extends BaseComponent {
     this.mesh = ComponentFactory.CreateImageMesh(imageUrl, (mat: THREE.MeshBasicMaterial) => {
       if (self.renderTarget) mat.envMap = self.renderTarget.texture;
     });
-    this.mesh.layers.set(PREVIEW_LAYER);
-
     this.add(this.mesh);
   }
 }

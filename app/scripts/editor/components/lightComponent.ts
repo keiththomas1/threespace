@@ -7,6 +7,7 @@ import ThreeUtilities from "../utils/threeUtilities";
 import { ComponentProperties, ComponentType, LightProperties, LightType } from "../../player/utils/playerDefinitions";
 import { AssetManager } from "../../shared/assetManager";
 import PlayerUtils from "../../player/utils/playerUtils";
+import { SharedData } from "../../shared/sharedData";
 
 export default class LightComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -127,6 +128,7 @@ export default class LightComponent extends BaseComponent {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene);
       self.mesh = gltf.scene;
       this.add( self.mesh );
+      self.mesh.traverse(child => child.layers.set(SharedData.EDITOR_LAYER));
       self.mesh.position.set(0, 0, 0);
       self.mesh.scale.copy(this.lightModelScale);
     });

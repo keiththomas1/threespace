@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { SharedData } from "../shared/sharedData";
 
 export default class GridRenderer {
   private gridHelperFloor: THREE.Group;
@@ -12,6 +13,7 @@ export default class GridRenderer {
 
     const gridHelperFloor = new THREE.GridHelper( 30, 30, GRID_COLOR, GRID_COLOR );
     this.gridHelperFloor.add(gridHelperFloor);
+    this.gridHelperFloor.traverse(child => child.layers.set(SharedData.EDITOR_LAYER));
     roomGroup.add( this.gridHelperFloor );
   }
 

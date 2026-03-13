@@ -328,7 +328,7 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
   previewBackButton.textContent = 'Back';
   container.appendChild(previewBackButton);
 
-  const topCenterParent = el('div', { id: EditorIds.topCenterParent });
+  const topCenterParent = el('div', { id: EditorIds.topCenterParentFlexboxParent });
   container.appendChild(topCenterParent);
 
   // ── Player preview overlay ───────────────────────────────────────────────

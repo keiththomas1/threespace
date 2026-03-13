@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { ComponentFactory } from "../../player/components/componentFactory";
 import { ComponentType, VideoProperties } from "../../player/utils/playerDefinitions";
-import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
+import { ComponentProperty } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 import { SharedUtils } from "../../shared/sharedUtils";
+import { SharedData } from "../../shared/sharedData";
 
 export default class VideoComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -44,7 +45,6 @@ export default class VideoComponent extends BaseComponent {
   private CreateVideoMesh = (url: string) => {
     const videoElement = ComponentFactory.CreateVideoElement(url);
     this.mesh = ComponentFactory.CreateVideoMesh(videoElement);
-    this.mesh.layers.set(PREVIEW_LAYER);
     this.add(this.mesh);
   }
 }

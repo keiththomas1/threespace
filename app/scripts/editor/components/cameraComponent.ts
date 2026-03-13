@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ComponentProperty, DEFAULT_MATRIX_ARRAY, PREVIEW_LAYER } from "../utils/constants";
+import { ComponentProperty } from "../utils/constants";
 import BaseComponent from "./baseComponent";
 
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -7,6 +7,7 @@ import ThreeUtilities from "../utils/threeUtilities";
 import { CameraProperties, CameraType, ComponentType } from "../../player/utils/playerDefinitions";
 import { AssetManager } from "../../shared/assetManager";
 import { ComponentFactory } from "../../player/components/componentFactory";
+import { SharedData } from "../../shared/sharedData";
 
 export default class CameraComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -21,6 +22,7 @@ export default class CameraComponent extends BaseComponent {
   private camera: THREE.Camera | null = null;
   private renderTarget: THREE.WebGLRenderTarget | null = null;
   private renderMesh: THREE.Mesh | null = null;
+  private alwaysShowViewport: boolean = false;
 
   private moveCameraToEditorCamera: () => any;
 
@@ -90,6 +92,10 @@ export default class CameraComponent extends BaseComponent {
         this.createCamera(property.value as CameraType);
         this.createCameraModelRepresentation();
         break;
+      case this.CAMERA_VIEWPORT:
+        this.alwaysShowViewport = property.value;
+        if (this.renderMesh) this.renderMesh.visible = property.value;
+        break;
     }
   }
 
@@ -102,7 +108,7 @@ export default class CameraComponent extends BaseComponent {
   public unselected(): void {
     super.unselected();
 
-    if (this.renderMesh) this.renderMesh.visible = false;
+    if (this.renderMesh && !this.alwaysShowViewport) this.renderMesh.visible = false;
   }
 
   public update(deltaTime: number) {
@@ -137,7 +143,6 @@ export default class CameraComponent extends BaseComponent {
     }
 
     this.camera = ComponentFactory.CreatePlayerCamera(this.cameraProperties);
-    this.camera.layers.set(PREVIEW_LAYER);
 
     this.add(this.camera);
   }
@@ -148,6 +153,7 @@ export default class CameraComponent extends BaseComponent {
     gltfLoader.load(`${AssetManager.AssetBasePath}/models/camera/camera.glb`, (gltf: GLTF) => {
       ThreeUtilities.setBasicMaterialOnGLTF(gltf.scene);
       self.mesh = gltf.scene;
+      self.mesh.traverse(child => child.layers.set(SharedData.EDITOR_LAYER));
       this.add( self.mesh );
       self.mesh.position.set(0, 0, 0);
       self.mesh.rotateOnAxis(new THREE.Vector3(0, 1, 0), Math.PI);
@@ -162,6 +168,7 @@ export default class CameraComponent extends BaseComponent {
     const material = new THREE.MeshBasicMaterial({map: this.renderTarget.texture})
     const plane = new THREE.PlaneGeometry( 4, 4 );
     this.renderMesh = new THREE.Mesh(plane, material);
+    this.renderMesh.layers.set(SharedData.EDITOR_LAYER);
     this.renderMesh.visible = false;
     scene.add(this.renderMesh);
 
@@ -169,6 +176,7 @@ export default class CameraComponent extends BaseComponent {
     const borderMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF})
     const borderPlane = new THREE.PlaneGeometry( 4.4, 4.4 );
     const borderMesh = new THREE.Mesh(borderPlane, borderMaterial);
+    borderMesh.layers.set(SharedData.EDITOR_LAYER);
     this.renderMesh.add(borderMesh);
     borderMesh.position.set(0, 0, -0.3);
   }

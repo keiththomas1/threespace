@@ -17,6 +17,7 @@ import ActionManager from "./actionManager";
 import SkyBox from "./skyBox";
 import ARButton from './arButton';
 import VRButton from './vrButton';
+import { SharedUtils } from "../shared/sharedUtils";
 
 /**
  * The ThreeSpace player. Loads player properties (the JSON exported from the editor) and renders the scene accordingly. 
@@ -229,10 +230,10 @@ export class ThreeSpacePlayer {
           this.components.push(playerComponent);
           break;
         case ComponentType.Video:
-          this.CreateVideoComponent(componentProperties[i].url ?? componentProperties[i].filepath, componentProperties[i]);
+          this.CreateVideoComponent(SharedUtils.GetURLFromComponentProperties(componentProperties[i]), componentProperties[i]);
           break;
         case ComponentType.Image:
-          this.CreateImageComponent(componentProperties[i].url ?? componentProperties[i].filepath, componentProperties[i]);
+          this.CreateImageComponent(SharedUtils.GetURLFromComponentProperties(componentProperties[i]), componentProperties[i]);
           break;
         case ComponentType.Model:
           const modelProperties = componentProperties[i] as ModelProperties;

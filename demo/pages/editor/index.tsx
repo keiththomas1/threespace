@@ -36,7 +36,6 @@ export default class EditorPage extends Component {
 
   handleSceneSelected = (path: string, properties: PlayerProperties) => {
     if (this.editor) {
-      AssetManager.AssetBasePath = path;
       this.editor.PlayerProperties = properties;
     }
   }

@@ -4,6 +4,7 @@ import { ComponentProperties, ComponentType, ImageProperties } from "../../playe
 import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
 import BaseComponent from "./baseComponent";
+import { SharedUtils } from "../../shared/sharedUtils";
 
 export default class ImageComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -28,7 +29,7 @@ export default class ImageComponent extends BaseComponent {
     this.assignProperties(imageProperties);
     this.setupEditorProperties();
 
-    this.createImageMesh(dataURL === "" ? this.imageProperties.url : dataURL);
+    this.createImageMesh(dataURL === "" ? SharedUtils.GetURLFromComponentProperties(this.imageProperties) : dataURL);
   }
 
   public static get DefaultProperties() : ImageProperties {

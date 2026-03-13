@@ -5,6 +5,7 @@ import { AssetManager } from "../../shared/assetManager";
 import { ComponentProperty } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
 import BaseComponent from "./baseComponent";
+import { SharedUtils } from "../../shared/sharedUtils";
 
 export default class AudioComponent extends BaseComponent {
   private readonly TOGGLE_PLAY = "Play/Pause";
@@ -27,7 +28,7 @@ export default class AudioComponent extends BaseComponent {
 
     this.audioLoader = new THREE.AudioLoader();
 
-    this.addMusic(dataURL === "" ? this.audioProperties.url : dataURL, 1);
+    this.addMusic(dataURL === "" ? SharedUtils.GetURLFromComponentProperties(this.audioProperties) : dataURL, 1);
 
     this.createMusicModelRepresentation();
   }

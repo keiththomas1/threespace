@@ -22,6 +22,7 @@ import { VFXObject } from "./vfxObject";
 import { BasicVfxData, DustVfxData, RainVfxData, SnowVfxData } from "../utils/vfxInfo";
 import VFXFishObject from "./vfxFishObject";
 import VFXBaseObject from "./vfxBaseObject";
+import { SharedUtils } from "../../shared/sharedUtils";
 
 export class ComponentFactory {
   constructor() {
@@ -47,13 +48,13 @@ export class ComponentFactory {
   public static LoadModelInfo = async (
     modelLoader: ModelLoader, modelProperties: ModelProperties): Promise<ModelInfo | null> => {
     return new Promise<ModelInfo | null> ((resolve) => {
-      modelLoader.LoadGLTFFromURL(modelProperties.url ?? modelProperties.filepath, (modelInfo: ModelInfo) => { resolve(modelInfo); });
+      modelLoader.LoadGLTFFromURL(SharedUtils.GetURLFromComponentProperties(modelProperties), (modelInfo: ModelInfo) => { resolve(modelInfo); });
     });
   }
 
   public static LoadAudio = async (audioProperties: AudioProperties): Promise<string | null> => {
     return new Promise<string | null> ((resolve) => {
-      resolve(audioProperties.url ?? audioProperties.filepath);
+      resolve(SharedUtils.GetURLFromComponentProperties(audioProperties));
     });
   }
 

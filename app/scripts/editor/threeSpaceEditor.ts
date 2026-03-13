@@ -36,6 +36,7 @@ import VFXComponent from "./vfx/vfxComponent";
 import { BasicVfxData } from "../player/utils/vfxInfo";
 import { SharedData } from "../shared/sharedData";
 import { ProjectView } from "./ui/projectView";
+import { SharedUtils } from "../shared/sharedUtils";
 
 export interface EditorConfig {
   playerProperties?:         PlayerProperties;
@@ -205,7 +206,7 @@ export class ThreeSpaceEditor {
     const pvToggle = document.getElementById(EditorIds.projectViewToggle) as HTMLButtonElement;
     const pvPanel  = document.getElementById(EditorIds.projectViewPanel)  as HTMLElement;
     const pvTree   = document.getElementById(EditorIds.projectViewTree)   as HTMLElement;
-    this.projectView = new ProjectView(pvToggle, pvPanel, pvTree, this.assetBasePath ?? '', this.dropAsset);
+    this.projectView = new ProjectView(pvToggle, pvPanel, pvTree, AssetManager.AssetBasePath, this.dropAsset);
 
     this.setupDefaultScene();
     this.resize();
@@ -371,9 +372,9 @@ export class ThreeSpaceEditor {
 
   /* Handles audio import from URL */
   public importAudio = (url: string) => {
-    const p = AudioComponent.DefaultProperties;
-    p.url = url;
-    const component = new AudioComponent(p, this.editorCamera, url, this.assetBasePath);
+    const audioProperties = AudioComponent.DefaultProperties;
+    audioProperties.url = url;
+    const component = new AudioComponent(audioProperties, this.editorCamera, url);
     this.roomGroup.add(component);
     this.componentAdded(component);
     this.projectView.registerAsset(url);
@@ -388,6 +389,7 @@ export class ThreeSpaceEditor {
     });
   }
 
+  // TODO: Re-factor the types so they aren't hard-coded and are shared somewhere with the types in editorDom and elsewhere
   private dropAsset = (path: string) => {
     const lower = path.toLowerCase();
     if (lower.endsWith('.glb') || lower.endsWith('.gltf')) {
@@ -548,7 +550,7 @@ export class ThreeSpaceEditor {
 
   private addComponent = (componentProperties: ComponentProperties) => {
     const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
-    const path = componentProperties.url ?? componentProperties.filepath ?? "";
+    const path = SharedUtils.GetURLFromComponentProperties(componentProperties);
 
     let component: any = null;
     switch (componentProperties.componentType) {

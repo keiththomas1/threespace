@@ -22,15 +22,6 @@ export default class HomePage extends Component<{}, State> {
     this.titleContent = EditorPage.APP_NAME + ", the 3D Editor and Player";
     this.descriptionContent = EditorPage.APP_NAME + " is a 3D editor and player for designing three.js scenes.";
 
-    this.state = { playerSettings: null };
-  }
-
-  playerComponentSelected = (eventName: string) => {
-    console.log("Component selected in player with event name: " + eventName);
-  }
-
-  handleSceneSelected = (path: string, properties: PlayerProperties) => {
-    AssetManager.AssetBasePath = path;
     AssetManager.Fonts = [
       { name: 'Open Sans', path: '/fonts/Open_Sans/OpenSans-VariableFont.ttf' },
       { name: 'Noto Sans', path: '/fonts/NotoSans-Regular.ttf' },
@@ -40,6 +31,15 @@ export default class HomePage extends Component<{}, State> {
       { name: 'Indie Flower', path: '/fonts/Indie_Flower/IndieFlower-Regular.ttf' },
       { name: 'Roboto',    path: '/fonts/Roboto/Roboto-Regular.ttf' },
     ];
+
+    this.state = { playerSettings: null };
+  }
+
+  playerComponentSelected = (eventName: string) => {
+    console.log("Component selected in player with event name: " + eventName);
+  }
+
+  handleSceneSelected = (path: string, properties: PlayerProperties) => {
     this.setState({ playerSettings: properties });
   }
 

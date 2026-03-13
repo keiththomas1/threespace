@@ -3,6 +3,7 @@ import { ComponentFactory } from "../../player/components/componentFactory";
 import { ComponentType, VideoProperties } from "../../player/utils/playerDefinitions";
 import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
 import BaseComponent from "./baseComponent";
+import { SharedUtils } from "../../shared/sharedUtils";
 
 export default class VideoComponent extends BaseComponent {
   private readonly DISPLAY_NAME = "Name";
@@ -18,7 +19,7 @@ export default class VideoComponent extends BaseComponent {
 
     this.editorProperties[this.DISPLAY_NAME] = { value: this.videoProperties.url, type: "String" };
 
-    this.CreateVideoMesh(dataURL === "" ? this.videoProperties.url : dataURL);
+    this.CreateVideoMesh(dataURL === "" ? SharedUtils.GetURLFromComponentProperties(this.videoProperties) : dataURL);
   }
 
   public static get DefaultProperties() : VideoProperties {

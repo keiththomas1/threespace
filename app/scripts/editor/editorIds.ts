@@ -58,6 +58,10 @@ export const EditorIds = {
   addMusicButton:            'ts-add-music-button',
   addVFXButton:              'ts-add-vfx-button',
   sceneSettingsButton:       'ts-scene-settings-button',
+  projectViewContainer:      'ts-project-view-container',
+  projectViewToggle:         'ts-project-view-toggle',
+  projectViewPanel:          'ts-project-view-panel',
+  projectViewTree:           'ts-project-view-tree',
 };
 
 export const EditorClasses = {

@@ -35,6 +35,8 @@ import VFXFish from "./vfx/vfxFish";
 import VFXComponent from "./vfx/vfxComponent";
 import { BasicVfxData } from "../player/utils/vfxInfo";
 import { SharedData } from "../shared/sharedData";
+import { ProjectView } from "./ui/projectView";
+import { SharedUtils } from "../shared/sharedUtils";
 
 export interface EditorConfig {
   playerProperties?:         PlayerProperties;
@@ -68,6 +70,7 @@ export class ThreeSpaceEditor {
 
   /* UI and Utils */
   private settingsComponent: SettingsComponent;
+  private projectView!: ProjectView;
   private clock: THREE.Clock;
   private raycaster: THREE.Raycaster;
   private stats: any;
@@ -175,6 +178,13 @@ export class ThreeSpaceEditor {
     });
     canvas.addEventListener('touchstart', this.touchStart);
 
+    this.renderer.domElement.addEventListener('dragover', (e) => { e.preventDefault(); });
+    this.renderer.domElement.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const path = e.dataTransfer?.getData('text/plain');
+      if (path) this.dropAsset(path);
+    });
+
     if (!PlayerUtils.IsMobile(navigator)) {
       window.addEventListener("resize", this.resize);
     }
@@ -192,6 +202,11 @@ export class ThreeSpaceEditor {
       const btn = document.getElementById(id);
       if (btn) btn.addEventListener('click', () => this.addVFX(type));
     });
+
+    const pvToggle = document.getElementById(EditorIds.projectViewToggle) as HTMLButtonElement;
+    const pvPanel  = document.getElementById(EditorIds.projectViewPanel)  as HTMLElement;
+    const pvTree   = document.getElementById(EditorIds.projectViewTree)   as HTMLElement;
+    this.projectView = new ProjectView(pvToggle, pvPanel, pvTree, AssetManager.AssetBasePath, this.dropAsset);
 
     this.setupDefaultScene();
     this.resize();
@@ -290,6 +305,7 @@ export class ThreeSpaceEditor {
           component.position.copy(position);
           this.componentAdded(component);
           this.focusCamera(component);
+          this.projectView.registerAsset(exportUrl);
         }
       };
       reader.readAsDataURL(file);
@@ -312,6 +328,7 @@ export class ThreeSpaceEditor {
     const imageComponent = new ImageComponent(imageProperties, null, this.editorCamera)
     this.roomGroup.add(imageComponent);
     this.componentAdded(imageComponent);
+    this.projectView.registerAsset(url);
   }
 
   /* Handles video upload from file */
@@ -325,12 +342,13 @@ export class ThreeSpaceEditor {
 
   /* Handles video import from URL */
   public importVideo = (url: string) => {
-    const properties = VideoComponent.DefaultProperties; 
-    properties.url = url; 
+    const properties = VideoComponent.DefaultProperties;
+    properties.url = url;
 
     const videoComponent = new VideoComponent(properties, this.editorCamera)
     this.roomGroup.add(videoComponent);
     this.componentAdded(videoComponent);
+    this.projectView.registerAsset(url);
   }
 
   /* Handles model upload from file */
@@ -349,6 +367,17 @@ export class ThreeSpaceEditor {
     const modelComponent = new ModelComponent(modelProperties, this.editorCamera, ()=>{});
     this.roomGroup.add(modelComponent);
     this.componentAdded(modelComponent);
+    this.projectView.registerAsset(url);
+  }
+
+  /* Handles audio import from URL */
+  public importAudio = (url: string) => {
+    const audioProperties = AudioComponent.DefaultProperties;
+    audioProperties.url = url;
+    const component = new AudioComponent(audioProperties, this.editorCamera, url);
+    this.roomGroup.add(component);
+    this.componentAdded(component);
+    this.projectView.registerAsset(url);
   }
 
   /* Handles audio upload from file */
@@ -358,6 +387,20 @@ export class ThreeSpaceEditor {
       p.filepath = exportUrl;
       return new AudioComponent(p, this.editorCamera, dataURL);
     });
+  }
+
+  // TODO: Re-factor the types so they aren't hard-coded and are shared somewhere with the types in editorDom and elsewhere
+  private dropAsset = (path: string) => {
+    const lower = path.toLowerCase();
+    if (lower.endsWith('.glb') || lower.endsWith('.gltf')) {
+      this.importModel(path);
+    } else if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.webp')) {
+      this.importImage(path);
+    } else if (lower.endsWith('.mp4') || lower.endsWith('.mov') || lower.endsWith('.webm')) {
+      this.importVideo(path);
+    } else if (lower.endsWith('.mp3') || lower.endsWith('.ogg') || lower.endsWith('.wav')) {
+      this.importAudio(path);
+    }
   }
 
   /* Adds new light to the scene */
@@ -507,7 +550,7 @@ export class ThreeSpaceEditor {
 
   private addComponent = (componentProperties: ComponentProperties) => {
     const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
-    const path = componentProperties.url ?? componentProperties.filepath ?? "";
+    const path = SharedUtils.GetURLFromComponentProperties(componentProperties);
 
     let component: any = null;
     switch (componentProperties.componentType) {
@@ -564,6 +607,7 @@ export class ThreeSpaceEditor {
       component.applyMatrix4(matrix);
 
       this.componentAdded(component, false);
+      if (path) this.projectView.registerAsset(path);
     }
   }
 

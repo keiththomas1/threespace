@@ -4,6 +4,7 @@ import { AnimationBehaviorType, ComponentType, ModelInfo, ModelProperties } from
 import ModelLoader from "../../player/modelLoader";
 import { ComponentProperty, PREVIEW_LAYER } from "../utils/constants";
 import BaseComponent from "./baseComponent";
+import { SharedUtils } from "../../shared/sharedUtils";
 
 export default class ModelComponent extends BaseComponent {
   private readonly CURRENT_ANIMATION = "Selected Animation";
@@ -30,7 +31,7 @@ export default class ModelComponent extends BaseComponent {
     if (dataURL !== "") {
       modelLoader.LoadGLTFFromURL(dataURL, this.loadModelInfo);
     } else {
-      modelLoader.LoadGLTFFromURL(this.modelProperties.url, this.loadModelInfo);
+      modelLoader.LoadGLTFFromURL(SharedUtils.GetURLFromComponentProperties(this.modelProperties), this.loadModelInfo);
     }
   }
 

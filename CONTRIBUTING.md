@@ -185,6 +185,39 @@ Add new helpers to the appropriate existing utility class. If no fitting class e
 
 ---
 
+## End-to-End Tests (Playwright)
+
+The `playwright/` package contains a Playwright e2e suite that runs against the demo app.
+
+### Setup
+
+```bash
+cd playwright
+npm install
+npx playwright install chromium
+```
+
+### Running Tests
+
+```bash
+npm run test:headed   # headed Chromium — all tests pass; use this for local development
+npm run test:ui       # Playwright interactive UI — best for debugging
+npm run report        # open the last HTML report
+npm test              # headless (some tests expected to fail) — HTTP/navigation tests pass
+```
+
+> **WebGL requirement:** Most tests (canvas rendering, editor UI) need WebGL. Headless Chromium does not support WebGL, so `npm test` will likely fail on those assertions. Always use `npm run test:headed` when developing or verifying locally.
+
+### How it works
+
+The `webServer` config in `playwright.config.ts` starts `cd demo && npm run dev` automatically before the suite runs, and reuses an existing server if one is already up on port 3000. The demo in turn depends on the built `app/` package, so run `cd app && npm run build` if you have made library changes before running the tests.
+
+### Adding tests
+
+See `playwright/CLAUDE.md` for conventions on file structure, selectors, timeouts, and screenshot tests.
+
+---
+
 ## What NOT to Do
 
 - Do not create standalone utility functions at module scope — add them to an appropriate static utility class.

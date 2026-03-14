@@ -175,6 +175,12 @@ export interface SceneProperties {
 
 ---
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards, architecture guidelines, and development workflow.
+
+---
+
 ## License
 
 [MIT](LICENSE) — Copyright (c) 2026 Keith Thomas

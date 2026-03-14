@@ -1,7 +1,7 @@
 import { EditorIds, EditorClasses } from '../editorIds';
 import { ActionType, AnimationBehaviorType, BackgroundColorType, CameraType, LightType } from "../../player/utils/playerDefinitions";
 import BaseComponent from "../components/baseComponent";
-import { ActionProperty, ComponentProperty, CreditProperty, TransformProperty } from "../utils/constants";
+import { ActionProperty, ComponentProperty, CreditProperty, TransformProperty, UrlPathType, UrlProperty } from "../utils/constants";
 import { AssetManager } from '../..';
 
 export default class PropertiesWindow {
@@ -101,6 +101,9 @@ export default class PropertiesWindow {
           break;
         case BaseComponent.CREDIT_TYPE:
           section = this.createCreditSection(baseComponent, componentProperty);
+          break;
+        case BaseComponent.URL_TYPE:
+          section = this.createUrlSection(baseComponent, componentProperty);
           break;
       }
 
@@ -413,6 +416,21 @@ export default class PropertiesWindow {
       );
       propertySection.appendChild(lockedNameSection);
     }
+  }
+
+  private createUrlSection(baseComponent: BaseComponent, componentProperty: ComponentProperty): HTMLElement {
+    const propertySection = this.createPropertySection("Source", "h2");
+    const urlProperty = componentProperty.value as UrlProperty;
+
+    const pathTypeSection = this.createEnumSection(
+      UrlPathType, baseComponent, "Path Type", BaseComponent.URL_PATH_TYPE_NAME, urlProperty.pathType);
+    propertySection.appendChild(pathTypeSection);
+
+    const pathSection = this.createInputTextSection(
+      baseComponent, BaseComponent.URL_PATH_NAME, urlProperty.path);
+    propertySection.appendChild(pathSection);
+
+    return propertySection;
   }
 
   private createTransformSection(baseComponent: BaseComponent, componentProperty: ComponentProperty) : HTMLElement {

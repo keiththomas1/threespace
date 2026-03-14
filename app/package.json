@@ -47,11 +47,9 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "animejs": "^3.2.1",
-    "three": "^0.146.0"
-  },
   "peerDependencies": {
+    "three": "^0.146.0",
+    "animejs": "^3.2.1",
     "a-color-picker": "^1.2.1",
     "dom-to-image": "^2.6.0"
   },

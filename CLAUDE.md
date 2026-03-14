@@ -31,3 +31,5 @@ threespace/
 ## App Package Coding Standards
 
 @app/CLAUDE.md
+
+> Human contributors and Claude alike should also follow [CONTRIBUTING.md](CONTRIBUTING.md) at the repo root.

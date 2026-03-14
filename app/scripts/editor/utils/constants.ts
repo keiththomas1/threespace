@@ -38,3 +38,13 @@ export interface CreditProperty {
   licenseName: ComponentProperty,
   locked: ComponentProperty
 }
+
+export enum UrlPathType {
+  InternetURL = "Internet URL",
+  RelativeServerPath = "Relative Server Path"
+}
+
+export interface UrlProperty {
+  pathType: ComponentProperty,
+  path: ComponentProperty,
+}

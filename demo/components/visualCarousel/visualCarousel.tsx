@@ -2,7 +2,7 @@ import styles from "./visualCarousel.module.css";
 import VisualCarouselItem from "./visualCarouselItem";
 import Image from 'next/image';
 import { useState } from 'react';
-import { PlayerProperties } from 'threespace';
+import { AssetManager, PlayerProperties } from 'threespace';
 
 import HomeJSON from '../../public/scenes/Home/Home.json';
 import HomeThumb from '../../public/scenes/Home/Home.png';
@@ -81,11 +81,14 @@ export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: st
     );
   }
 
+  const previousSrc = `${AssetManager.AssetBasePath}/images/48x/Icon_238.png`;
+  const nextSrc = `${AssetManager.AssetBasePath}/images/48x/Icon_237.png`;
+
   return (
     <div id={styles.visualCarousel}>
       <Image
         id={styles.visualCarouselLeftButton}
-        src="/images/48x/Icon_238.png" alt="Previous item"
+        src={previousSrc} alt="Previous item"
         width={48} height={48}
         onClick={navigateLeft}>
       </Image>
@@ -98,7 +101,7 @@ export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: st
       <button>
         <Image
           id={styles.visualCarouselRightButton}
-          src="/images/48x/Icon_237.png" alt="Next item"
+          src={nextSrc} alt="Next item"
           width={48} height={48}
           onClick={navigateRight}>
         </Image>

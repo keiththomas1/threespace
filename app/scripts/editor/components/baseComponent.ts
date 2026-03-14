@@ -2,13 +2,14 @@ import * as THREE from "three";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ActionType, ComponentAction, ComponentProperties, ComponentTransform, CreditInfo, SerializableVector3 } from "../../player/utils/playerDefinitions";
 import PlayerUtils from "../../player/utils/playerUtils";
-import { ComponentProperty, DEFAULT_MATRIX_ARRAY } from "../utils/constants";
+import { ComponentProperty, DEFAULT_MATRIX_ARRAY, UrlPathType, UrlProperty } from "../utils/constants";
 import ThreeUtilities from "../utils/threeUtilities";
 
 export interface ComponentEditorOptions {
   hasTransform?: boolean;
   hasActions?: boolean;
   hasCredit?: boolean;
+  hasUrl?: boolean;
 }
 
 export default class BaseComponent extends THREE.Object3D {
@@ -28,6 +29,10 @@ export default class BaseComponent extends THREE.Object3D {
   public static readonly CREDIT_WEBSITE_NAME = "Website";
   public static readonly CREDIT_LICENSE_NAME = "License";
   public static readonly CREDIT_LOCKED_NAME = "Locked";
+
+  public static readonly URL_TYPE = "Url";
+  public static readonly URL_PATH_TYPE_NAME = "Url Path Type";
+  public static readonly URL_PATH_NAME = "Url Path";
 
   protected readonly NAME_PROPERTY = "Name";
   public static readonly STRING_TYPE = "String";
@@ -162,6 +167,28 @@ export default class BaseComponent extends THREE.Object3D {
       case BaseComponent.CREDIT_LOCKED_NAME:
         if (this.ComponentProperties.credit) this.ComponentProperties.credit.locked = property.value;
         break;
+      case BaseComponent.URL_PATH_TYPE_NAME: {
+        const currentPath = (this.editorProperties[BaseComponent.URL_TYPE] as ComponentProperty).value as UrlProperty;
+        if (property.value === UrlPathType.InternetURL) {
+          this.ComponentProperties.url = currentPath.path.value;
+          this.ComponentProperties.filepath = "";
+        } else {
+          this.ComponentProperties.filepath = currentPath.path.value;
+          this.ComponentProperties.url = "";
+        }
+        break;
+      }
+      case BaseComponent.URL_PATH_NAME: {
+        const urlEditorProp = (this.editorProperties[BaseComponent.URL_TYPE] as ComponentProperty).value as UrlProperty;
+        if (urlEditorProp.pathType.value === UrlPathType.InternetURL) {
+          this.ComponentProperties.url = property.value;
+          this.ComponentProperties.filepath = "";
+        } else {
+          this.ComponentProperties.filepath = property.value;
+          this.ComponentProperties.url = "";
+        }
+        break;
+      }
     }
   }
 
@@ -202,6 +229,9 @@ export default class BaseComponent extends THREE.Object3D {
     if (this.editorOptions.hasCredit) {
       this.createCreditProperty(this.ComponentProperties.credit);
     }
+    if (this.editorOptions.hasUrl) {
+      this.createUrlProperty();
+    }
   }
 
   protected createTransformProperty = () => {
@@ -232,6 +262,20 @@ export default class BaseComponent extends THREE.Object3D {
       eventName: { value: componentAction.eventName, type: "String", min: 0, max: 0 },
     };
     this.editorProperties[BaseComponent.ACTION_TYPE] = { value: actionProperty, type: "Action" };
+  }
+
+  protected createUrlProperty = () => {
+    const hasUrl = this.ComponentProperties.url != null && this.ComponentProperties.url !== "";
+    const pathType = hasUrl ? UrlPathType.InternetURL : UrlPathType.RelativeServerPath;
+    const path = hasUrl
+      ? this.ComponentProperties.url
+      : (this.ComponentProperties.filepath ?? "");
+
+    const urlProperty: UrlProperty = {
+      pathType: { value: pathType, type: "Enum", enumType: UrlPathType, min: 0, max: 0 },
+      path: { value: path, type: "String", min: 0, max: 0 },
+    };
+    this.editorProperties[BaseComponent.URL_TYPE] = { value: urlProperty, type: "Url", min: 0, max: 0 };
   }
 
   protected createCreditProperty = (credit: CreditInfo) => {

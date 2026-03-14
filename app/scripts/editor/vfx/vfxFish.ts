@@ -53,7 +53,7 @@ export default class VFXFish extends BaseComponent {
 
     switch (propertyName) {
       case this.COLOR_PROPERTY:
-        this.vfxProperties.color = property.value;
+        this.vfxProperties.color = PlayerUtils.GetSerializableColorFromColor(property.value as THREE.Color);
         this.colorChanged(new THREE.Color(property.value.r, property.value.g, property.value.b));
         break;
     }

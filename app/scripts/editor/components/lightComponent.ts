@@ -75,7 +75,7 @@ export default class LightComponent extends BaseComponent {
         break;
       case this.LIGHT_COLOR:
         if (this.light) this.light.color = property.value as THREE.Color;
-        this.lightProperties.color = property.value;
+        this.lightProperties.color = PlayerUtils.GetSerializableColorFromColor(property.value as THREE.Color);
         break;
       case this.LIGHT_INTENSITY:
         this.lightProperties.intensity = property.value / this.INTENSITY_MULTIPLIER;

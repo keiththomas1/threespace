@@ -11,12 +11,15 @@ export default class EditorPage extends Component {
 
   public static APP_NAME = "ThreeSpace";
 
+  constructor(props: any) {
+    super(props);
+    AssetManager.AssetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+  }
+
   componentDidMount() {
     if (!this.container || this.editorCreated) return;
     this.editorCreated = true;
     const container = this.container;
-
-    AssetManager.AssetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
     AssetManager.Fonts = [
       { name: 'Open Sans', path: '/fonts/Open_Sans/OpenSans-VariableFont.ttf' },
       { name: 'Noto Sans', path: '/fonts/NotoSans-Regular.ttf' },

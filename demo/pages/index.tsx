@@ -19,6 +19,8 @@ export default class HomePage extends Component<{}, State> {
   constructor(props: any) {
     super(props);
 
+    AssetManager.AssetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
     this.titleContent = EditorPage.APP_NAME + ", the 3D Editor and Player";
     this.descriptionContent = EditorPage.APP_NAME + " is a 3D editor and player for designing three.js scenes.";
 

@@ -2,7 +2,7 @@ import styles from "./visualCarousel.module.css";
 import VisualCarouselItem from "./visualCarouselItem";
 import Image from 'next/image';
 import { useState } from 'react';
-import { PlayerProperties } from 'threespace';
+import { AssetManager, PlayerProperties } from 'threespace';
 
 import HomeJSON from '../../public/scenes/Home/Home.json';
 import HomeThumb from '../../public/scenes/Home/Home.png';
@@ -81,9 +81,8 @@ export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: st
     );
   }
 
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-  const previousSrc = `${basePath}/images/48x/Icon_238.png`;
-  const nextSrc = `${basePath}/images/48x/Icon_237.png`;
+  const previousSrc = `${AssetManager.AssetBasePath}/images/48x/Icon_238.png`;
+  const nextSrc = `${AssetManager.AssetBasePath}/images/48x/Icon_237.png`;
 
   return (
     <div id={styles.visualCarousel}>

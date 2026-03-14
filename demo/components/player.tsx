@@ -94,9 +94,8 @@ export default class Player extends Component {
   }
   
   render() {
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-    const muteSrc = `${basePath}/images/32x/icon_31.png`;
-    const unmuteSrc = `${basePath}/images/32x/icon_27.png`;
+    const muteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_31.png`;
+    const unmuteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_27.png`;
     return (
       <div id={styles.playerParent}>
         <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >

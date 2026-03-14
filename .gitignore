@@ -5,4 +5,7 @@
 */.next
 *.claude*
 */dist
+*/playwright-report/*
+*/test-results/*
+
 ./PR

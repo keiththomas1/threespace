@@ -321,6 +321,7 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
     wrap.appendChild(btn);
     objectToolbar.appendChild(wrap);
   });
+  container.appendChild(bottomCenterParent);
 
   const previewBackButton = el('button', {
     id: EditorIds.previewBackButton,

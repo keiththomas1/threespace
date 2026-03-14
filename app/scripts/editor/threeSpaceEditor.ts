@@ -545,7 +545,7 @@ export class ThreeSpaceEditor {
   private addComponent = (componentProperties: ComponentProperties) => {
     const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
     let path = "";
-    if ([ComponentType.Camera, ComponentType.Audio].indexOf(componentProperties.componentType as ComponentType) === -1) {
+    if ([ComponentType.Camera, ComponentType.Light, ComponentType.Text3D, ComponentType.Settings, ComponentType.VFX].indexOf(componentProperties.componentType as ComponentType) === -1) {
       path = SharedUtils.GetURLFromComponentProperties(componentProperties);
     }
 

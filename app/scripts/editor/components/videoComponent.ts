@@ -12,7 +12,7 @@ export default class VideoComponent extends BaseComponent {
   protected videoProperties: VideoProperties = VideoComponent.DefaultProperties;
 
   constructor(videoProperties: VideoProperties, editorCamera: THREE.Camera, dataURL: string = "") {
-    super("VideoComponent", editorCamera, { hasActions: false, hasCredit: true, hasTransform: true});
+    super("VideoComponent", editorCamera, { hasActions: false, hasCredit: true, hasTransform: true, hasUrl: true });
 
     this.componentType = ComponentType.Video;
     this.assignProperties(videoProperties);

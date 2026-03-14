@@ -160,11 +160,6 @@ export class VFXObject extends VFXBaseObject {
     z += (Math.cos(time) * this.vfxData.angularVelocity.z * time);
 
     this.tempTranslation.set(x, y, z);
-    // this.tempTranslation.set(
-    //   (x + Math.cos((time / 10)) + (Math.sin(time * 1))) / 10,
-    //   (y + Math.sin((time / 10)) + (Math.cos(time * 2))) / 10,
-    //   (z + Math.cos((time / 10)) + (Math.sin(time * 3))) / 10,
-    // );
   }
 
   protected SetParticleScale(info: ParticleInfo) {

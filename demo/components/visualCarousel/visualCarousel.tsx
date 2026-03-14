@@ -81,11 +81,15 @@ export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: st
     );
   }
 
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+  const previousSrc = `${basePath}/images/48x/Icon_238.png`;
+  const nextSrc = `${basePath}/images/48x/Icon_237.png`;
+
   return (
     <div id={styles.visualCarousel}>
       <Image
         id={styles.visualCarouselLeftButton}
-        src="/images/48x/Icon_238.png" alt="Previous item"
+        src={previousSrc} alt="Previous item"
         width={48} height={48}
         onClick={navigateLeft}>
       </Image>
@@ -98,7 +102,7 @@ export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: st
       <button>
         <Image
           id={styles.visualCarouselRightButton}
-          src="/images/48x/Icon_237.png" alt="Next item"
+          src={nextSrc} alt="Next item"
           width={48} height={48}
           onClick={navigateRight}>
         </Image>

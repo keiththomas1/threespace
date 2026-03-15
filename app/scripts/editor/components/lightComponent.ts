@@ -61,6 +61,9 @@ export default class LightComponent extends BaseComponent {
     switch (propertyName) {
       case this.LIGHT_TYPE:
         if (this.light) {
+          if (this.light instanceof THREE.DirectionalLight) {
+            this.remove(this.light.target);
+          }
           this.remove(this.light);
           this.light.dispose();
         }
@@ -115,6 +118,8 @@ export default class LightComponent extends BaseComponent {
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
+        (this.light as THREE.DirectionalLight).target.position.set(0, 0, -1);
+        this.add((this.light as THREE.DirectionalLight).target);
         this.lightModelSrc = `${assetBasePath}/models/spotlight/spotlight.glb`;
         this.lightModelScale.set(10, 10, 5);
         break;

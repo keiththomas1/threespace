@@ -208,6 +208,12 @@ export class ThreeSpacePlayer {
             light.applyMatrix4(matrix);
 
             this.scene.add(light);
+
+            if (light instanceof THREE.DirectionalLight) {
+              const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(light.quaternion);
+              light.target.position.copy(light.position).add(direction);
+              this.scene.add(light.target);
+            }
           }
           break;
         case ComponentType.Text3D:

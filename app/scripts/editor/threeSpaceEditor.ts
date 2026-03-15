@@ -234,6 +234,7 @@ export class ThreeSpaceEditor {
   public set PlayerProperties(playerProperties: PlayerProperties) {
     if (playerProperties !== null) {
       this.clearScene();
+      this.projectView.reset();
       this.AddComponents(playerProperties.components);
       this.setSceneSettings(playerProperties.sceneProperties);
       this.settingsComponent.SettingsProperties = playerProperties.sceneProperties;

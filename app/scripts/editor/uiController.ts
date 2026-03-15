@@ -4,7 +4,7 @@ import { EditorIds } from './editorIds';
 
 import BaseComponent from "./components/baseComponent";
 import Text3DComponent from "./components/text3DComponent";
-import ComponentManager from "./componentManager";
+import ComponentManager, { TransformControlMode } from "./componentManager";
 import PropertiesWindow from "./ui/propertiesWindow";
 import { ComponentProperty } from "./utils/constants";
 import WebpageComponent from "./components/webpageComponent";
@@ -43,7 +43,7 @@ export default class UiController {
 
     this.propertiesWindow = new PropertiesWindow(
       (component: BaseComponent) => {
-        componentManager.removeComponent(component);
+        componentManager.RemoveComponent(component);
       },
       (baseComponent: BaseComponent, componentProperty: ComponentProperty, propertyName: string) => {
         // Need to reset the following so as not to affect last callback.
@@ -72,25 +72,25 @@ export default class UiController {
     const objectSelectButton = document.getElementById(EditorIds.objectSelectButton);
     if (objectSelectButton) {
       objectSelectButton.addEventListener("click", () => {
-        componentManager.setMode("");
+        componentManager.SetMode(TransformControlMode.None);
       });
     }
     const objectMoveButton = document.getElementById(EditorIds.objectMoveButton);
     if (objectMoveButton) {
       objectMoveButton.addEventListener("click", () => {
-        componentManager.setMode("translate");
+        componentManager.SetMode(TransformControlMode.Translate);
       });
     }
     const objectRotateButton = document.getElementById(EditorIds.objectRotateButton);
     if (objectRotateButton) {
       objectRotateButton.addEventListener("click", () => {
-        componentManager.setMode("rotate");
+        componentManager.SetMode(TransformControlMode.Rotate);
       });
     }
     const objectScaleButton = document.getElementById(EditorIds.objectScaleButton);
     if (objectScaleButton) {
       objectScaleButton.addEventListener("click", () => {
-        componentManager.setMode("scale");
+        componentManager.SetMode(TransformControlMode.Scale);
       });
     }
 

@@ -3,6 +3,13 @@ import BaseComponent from "./components/baseComponent";
 import { TransformControls } from "./external/TransformControls.js";
 import { OrbitControls } from "./external/OrbitControls.js";
 
+export enum TransformControlMode {
+  Translate = "translate",
+  Rotate = "rotate",
+  Scale = "scale",
+  None = "",
+}
+
 export default class ComponentManager {
   private controls: TransformControls;
   private components: BaseComponent[] = [];
@@ -31,22 +38,24 @@ export default class ComponentManager {
     this.setupControls();
   }
 
+  /** Returns the list of all components in the scene */
   public get Components() {
     return this.components;
   }
 
+  /** Returns the list of all meshes in the scene */
   public get Meshes() {
     return this.meshes;
   }
 
-  public addComponent = (component: BaseComponent) => {
+  public AddComponent = (component: BaseComponent) => {
     this.components.push(component);
     if (component.Mesh) {
       this.meshes.push(component.Mesh);
     }
   }
 
-  public removeComponent = (component: BaseComponent) => {
+  public RemoveComponent = (component: BaseComponent) => {
     for (let i = 0; i < this.meshes.length; i++) {
       if (component.Mesh && component.Mesh === this.meshes[i]) {
         this.meshes.splice(i, 1);
@@ -64,7 +73,7 @@ export default class ComponentManager {
     component.dispose();
   }
 
-  public disposeAll() {
+  public DisposeAll() {
     for (let i = 0; i < this.components.length; i++) {
       this.components[i].dispose();
     }
@@ -72,13 +81,14 @@ export default class ComponentManager {
     this.components = [];
   }
 
-  public update = (deltaTime: number) => {
+  public Update = (deltaTime: number) => {
     for (let i = 0; i < this.components.length; i++) {
       this.components[i].update(deltaTime);
     }
   }
 
-  public setSelectedComponent = (component: BaseComponent | null) => {
+  /** Sets current selected component */
+  public SetSelectedComponent = (component: BaseComponent | null) => {
     if (this.currentComponent) this.currentComponent.unselected();
 
     if (component !== null) {
@@ -93,8 +103,14 @@ export default class ComponentManager {
     this.currentComponent = component;
   }
 
-  public setMode = (mode: "translate" | "rotate" | "scale" | "") => {
-    if (mode === "") {
+  /** Sets the amount that translation will snap to (grid size) */
+  public SetTranslationSnap(size: number | null): void {
+    this.controls.setTranslationSnap(size);
+  }
+
+  /** Sets transform control mode (translate, rotate, scale, none) */
+  public SetMode = (mode: TransformControlMode) => {
+    if (mode === TransformControlMode.None) {
       this.controls.detach();
     } else {
       if (this.currentComponent) {
@@ -117,16 +133,16 @@ export default class ComponentManager {
           }
           break;
         case 81: // Q
-          self.setMode("");
+          self.SetMode(TransformControlMode.None);
           break;
         case 87: // W
-          self.setMode("translate");
+          self.SetMode(TransformControlMode.Translate);
           break;
         case 69: // E
-          self.setMode("rotate");
+          self.SetMode(TransformControlMode.Rotate);
           break;
         case 82: // R
-          self.setMode("scale");
+          self.SetMode(TransformControlMode.Scale);
           break;
       }
     });

@@ -9,6 +9,8 @@ export default class SettingsComponent extends BaseComponent {
   private readonly BACKGROUND_TYPE = "Background Type";
   private readonly FIRST_COLOR = "First Color";
   private readonly SECOND_TYPE = "Second Color";
+  private readonly GRID_ENABLED = "Grid Snap";
+  private readonly GRID_SIZE = "Grid Size";
 
   protected settingsProperties: SceneProperties = SettingsComponent.DefaultProperties;
   protected editorProperties: any = {};
@@ -37,7 +39,9 @@ export default class SettingsComponent extends BaseComponent {
       componentType: ComponentType.Settings,
       backgroundColorType: BackgroundColorType.Gradient,
       colorOne: PlayerUtils.GetSerializableColorFromColor(new THREE.Color("aqua")),
-      colorTwo: PlayerUtils.GetSerializableColorFromColor(new THREE.Color("purple"))
+      colorTwo: PlayerUtils.GetSerializableColorFromColor(new THREE.Color("purple")),
+      gridEnabled: false,
+      gridSize: 1,
     };
   }
 
@@ -57,6 +61,14 @@ export default class SettingsComponent extends BaseComponent {
       { value: this.settingsProperties.backgroundColorType, type: "Enum", enumType: BackgroundColorType };
     this.editorProperties[this.FIRST_COLOR] = { value: this.settingsProperties.colorOne, type: "Color" };
     this.editorProperties[this.SECOND_TYPE] = { value: this.settingsProperties.colorTwo, type: "Color" };
+    this.editorProperties[this.GRID_ENABLED] = {
+      value: this.settingsProperties.gridEnabled ?? false,
+      type: "Boolean"
+    };
+    this.editorProperties[this.GRID_SIZE] = {
+      value: this.settingsProperties.gridSize ?? 1,
+      type: "Number", min: 0.1, max: 20, step: 0.1
+    };
   }
 
   public PropertyChanged(propertyName: string, property: ComponentProperty) {
@@ -71,6 +83,12 @@ export default class SettingsComponent extends BaseComponent {
       case this.SECOND_TYPE:
         this.settingsProperties.colorTwo =
           PlayerUtils.GetSerializableColorFromColor(new THREE.Color(property.value.r, property.value.g, property.value.b));
+        break;
+      case this.GRID_ENABLED:
+        this.settingsProperties.gridEnabled = property.value;
+        break;
+      case this.GRID_SIZE:
+        this.settingsProperties.gridSize = property.value;
         break;
     }
 

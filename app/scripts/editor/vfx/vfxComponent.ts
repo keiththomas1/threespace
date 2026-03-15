@@ -110,12 +110,12 @@ export default class VFXComponent extends BaseComponent {
   protected setupEditorProperties() {
     super.setupEditorProperties(() => {
       this.editorProperties[this.COLOR_PROPERTY] = { value: this.vfxProperties.color, type: "Color" };
-      this.editorProperties[this.SPEED_PROPERTY] = { value: this.vfxProperties.speed, type: "Number", min: -10, max: 10 };
+      this.editorProperties[this.SPEED_PROPERTY] = { value: this.vfxProperties.speed, type: "Number", min: -10, max: 10, step: 0.2 };
       this.editorProperties[this.SIZE_PROPERTY] =
-        { value: this.vfxProperties.size * VFXComponent.SIZE_MULTIPLIER, type: "Number", min: 0, max: 10 * VFXComponent.SIZE_MULTIPLIER };
-      this.editorProperties[this.COUNT_PROPERTY] = { value: this.vfxProperties.count, type: "Number", min: 1, max: 300 };
-      this.editorProperties[this.LIFETIME_MIN_PROPERTY] = { value: this.vfxProperties.lifetimeMin, type: "Number", min: 0, max: 20 };
-      this.editorProperties[this.LIFETIME_MAX_PROPERTY] = { value: this.vfxProperties.lifetimeMax, type: "Number", min: 0, max: 20 };
+        { value: this.vfxProperties.size * VFXComponent.SIZE_MULTIPLIER, type: "Number", min: 0, max: 10 * VFXComponent.SIZE_MULTIPLIER, step: 0.25 };
+      this.editorProperties[this.COUNT_PROPERTY] = { value: this.vfxProperties.count, type: "Number", min: 1, max: 300, step: 1 };
+      this.editorProperties[this.LIFETIME_MIN_PROPERTY] = { value: this.vfxProperties.lifetimeMin, type: "Number", min: 0, max: 20, step: 0.2 };
+      this.editorProperties[this.LIFETIME_MAX_PROPERTY] = { value: this.vfxProperties.lifetimeMax, type: "Number", min: 0, max: 20, step: 0.2 };
     });
   }
 

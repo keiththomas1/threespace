@@ -93,8 +93,8 @@ export default class Text3DComponent extends BaseComponent {
     super.setupEditorProperties(() => {
       this.editorProperties[this.DISPLAY_NAME] = { value: this.textProperties.text, type: "String" };
       this.editorProperties[this.FONT_FAMILY] = { value: this.textProperties.type, type: "Enum", enumType: fontOptions };
-      this.editorProperties[this.FONT_SIZE] = { value: this.textProperties.size, type: "Number", min: 2, max: 128 };
-      this.editorProperties[this.FONT_THICKNESS] = { value: this.textProperties.thickness, type: "Number", min: 0, max: 16 };
+      this.editorProperties[this.FONT_SIZE] = { value: this.textProperties.size, type: "Number", min: 2, max: 128, step: 1 };
+      this.editorProperties[this.FONT_THICKNESS] = { value: this.textProperties.thickness, type: "Number", min: 0, max: 16, step: 0.25 };
       this.editorProperties[this.FRONT_COLOR] = { value: this.textProperties.frontColor, type: "Color" };
       this.editorProperties[this.BACK_COLOR] = { value: this.textProperties.sideColor, type: "Color" };
     });

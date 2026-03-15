@@ -17,8 +17,9 @@ export interface ComponentProperty {
   value: any;
   type: string;
   enumType?: any;
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
+  step?: number;
 }
 export interface TransformProperty {
   position: ComponentProperty,

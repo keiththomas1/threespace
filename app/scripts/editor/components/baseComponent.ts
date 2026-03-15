@@ -256,10 +256,10 @@ export default class BaseComponent extends THREE.Object3D {
 
   protected createActionsProperty = (componentAction: ComponentAction) => {
     const actionProperty = {
-      actionType: { value: componentAction.actionType, type: "ActionType", min: 0, max: 0 },
-      hyperlinkURL: { value: componentAction.hyperlinkURL, type: "String", min: 0, max: 0 },
-      zoomCameraMatrix: { value: this.handleZoomCameraMatrixSet, type: "Transform", min: 0, max: 0 },
-      eventName: { value: componentAction.eventName, type: "String", min: 0, max: 0 },
+      actionType: { value: componentAction.actionType, type: "ActionType" },
+      hyperlinkURL: { value: componentAction.hyperlinkURL, type: "String" },
+      zoomCameraMatrix: { value: this.handleZoomCameraMatrixSet, type: "Transform" },
+      eventName: { value: componentAction.eventName, type: "String" },
     };
     this.editorProperties[BaseComponent.ACTION_TYPE] = { value: actionProperty, type: "Action" };
   }
@@ -272,10 +272,10 @@ export default class BaseComponent extends THREE.Object3D {
       : (this.ComponentProperties.filepath ?? "");
 
     const urlProperty: UrlProperty = {
-      pathType: { value: pathType, type: "Enum", enumType: UrlPathType, min: 0, max: 0 },
-      path: { value: path, type: "String", min: 0, max: 0 },
+      pathType: { value: pathType, type: "Enum", enumType: UrlPathType },
+      path: { value: path, type: "String" },
     };
-    this.editorProperties[BaseComponent.URL_TYPE] = { value: urlProperty, type: "Url", min: 0, max: 0 };
+    this.editorProperties[BaseComponent.URL_TYPE] = { value: urlProperty, type: "Url" };
   }
 
   protected createCreditProperty = (credit: CreditInfo) => {

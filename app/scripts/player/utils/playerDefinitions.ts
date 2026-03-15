@@ -14,6 +14,8 @@ export interface SceneProperties {
   backgroundColorType: BackgroundColorType, // Whether the background is a single color or a gradient.
   colorOne: SerializableColor,
   colorTwo: SerializableColor,
+  gridEnabled?: boolean,
+  gridSize?: number,
 }
 
 /**
@@ -223,4 +225,6 @@ export const DEFAULT_SCENE_PROPERTIES: SceneProperties = {
   backgroundColorType: BackgroundColorType.Gradient,
   colorOne: { r: 0, g: 1, b: 1 },
   colorTwo: { r: 0.5, g: 0, b: 0.5 },
+  gridEnabled: false,
+  gridSize: 1,
 };

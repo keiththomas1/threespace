@@ -37,6 +37,11 @@ export class ProjectView {
     this.render();
   }
 
+  public reset(): void {
+    this.root.children.clear();
+    this.render();
+  }
+
   public registerAsset(fullPath: string): void {
     const segments = this.parsePath(fullPath);
     if (segments.length === 0) return;

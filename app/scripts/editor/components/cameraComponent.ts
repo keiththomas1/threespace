@@ -132,7 +132,7 @@ export default class CameraComponent extends BaseComponent {
       tooltip: "Moves this camera to same rotation and position as the current editor view." };
     switch (cameraType) {
       case CameraType.PERSPECTIVE:
-        this.editorProperties[this.CAMERA_FOV] = { value: this.cameraProperties.fov, type: "Number", min: 5, max: 180 };
+        this.editorProperties[this.CAMERA_FOV] = { value: this.cameraProperties.fov, type: "Number", min: 5, max: 180, step: 1 };
         break;
       case CameraType.ORTHOGRAPHIC:
         break;

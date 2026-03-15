@@ -61,6 +61,9 @@ export default class LightComponent extends BaseComponent {
     switch (propertyName) {
       case this.LIGHT_TYPE:
         if (this.light) {
+          if (this.light instanceof THREE.DirectionalLight) {
+            this.remove(this.light.target);
+          }
           this.remove(this.light);
           this.light.dispose();
         }
@@ -93,7 +96,7 @@ export default class LightComponent extends BaseComponent {
       this.editorProperties[this.DISPLAY_NAME] = { value: "Light", type: "String" };
       this.editorProperties[this.LIGHT_TYPE] = { value: this.lightProperties.type, type: "Enum", enumType: LightType };
       this.editorProperties[this.LIGHT_INTENSITY] =
-        { value: this.lightProperties.intensity * this.INTENSITY_MULTIPLIER, type: "Number", min: 0, max: 5 * this.INTENSITY_MULTIPLIER };
+        { value: this.lightProperties.intensity * this.INTENSITY_MULTIPLIER, type: "Number", min: 0, max: 5 * this.INTENSITY_MULTIPLIER, step: 1 };
       this.editorProperties[this.LIGHT_COLOR] = { value: this.lightProperties.color, type: "Color" };
     });
   }
@@ -115,6 +118,8 @@ export default class LightComponent extends BaseComponent {
         this.add(this.light);
         this.light.position.set(0, 0, 0);
         this.light.rotation.set(0, 0, 0);
+        (this.light as THREE.DirectionalLight).target.position.set(0, 0, -1);
+        this.add((this.light as THREE.DirectionalLight).target);
         this.lightModelSrc = `${assetBasePath}/models/spotlight/spotlight.glb`;
         this.lightModelScale.set(10, 10, 5);
         break;

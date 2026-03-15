@@ -493,7 +493,7 @@ export class ThreeSpaceEditor {
     }
 
     this.controls.update();
-    this.componentManager.update(deltaTime);
+    this.componentManager.Update(deltaTime);
     this.postProcessingManager.Update();
     if (this.userCamera) this.userCamera.update(deltaTime);
   }
@@ -664,9 +664,9 @@ export class ThreeSpaceEditor {
   }
 
   private componentAdded = (component: BaseComponent, selectComponent: boolean = true) => {
-    this.componentManager.addComponent(component);
+    this.componentManager.AddComponent(component);
     if (selectComponent) {
-      this.componentManager.setSelectedComponent(component);
+      this.componentManager.SetSelectedComponent(component);
       this.uiController.ShowPropertiesWindow(component);
     }
   }
@@ -695,7 +695,7 @@ export class ThreeSpaceEditor {
   }
 
   private clearScene = () => {
-    this.componentManager.disposeAll();
+    this.componentManager.DisposeAll();
   }
 
   private setSceneSettings = (sceneProperties: SceneProperties) => {
@@ -709,6 +709,9 @@ export class ThreeSpaceEditor {
           colorOne, PlayerUtils.GetColorFromSerializableColor(sceneProperties.colorTwo));
         break;
     }
+
+    const snapSize = sceneProperties.gridEnabled ? (sceneProperties.gridSize ?? 1) : null;
+    this.componentManager.SetTranslationSnap(snapSize);
   }
 
   private setupDefaultScene = () => {
@@ -788,16 +791,16 @@ export class ThreeSpaceEditor {
       this.getBaseComponentParent(this.raycastResults[0].object, baseComponents);
 
       if (baseComponents.length > 0) {
-        this.componentManager.setSelectedComponent(baseComponents[0]);
+        this.componentManager.SetSelectedComponent(baseComponents[0]);
         this.uiController.Show3DToolsWindow();
         this.uiController.ShowPropertiesWindow(baseComponents[0]);
       } else {
-        this.componentManager.setSelectedComponent(null);
+        this.componentManager.SetSelectedComponent(null);
         this.uiController.Hide3DToolsWindow();
         this.uiController.HidePropertiesWindow();
       }
     } else {
-      this.componentManager.setSelectedComponent(null);
+      this.componentManager.SetSelectedComponent(null);
       this.uiController.Hide3DToolsWindow();
       this.uiController.HidePropertiesWindow();
     }

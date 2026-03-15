@@ -210,6 +210,7 @@ export default class PropertiesWindow {
     slider.type = "range";
     slider.min = componentProperty.min.toString();
     slider.max = componentProperty.max.toString();
+    slider.step = componentProperty.step.toString();
     slider.value = componentProperty.value;
     slider.className = EditorClasses.slider;
     slider.oninput = () => {

@@ -18,8 +18,9 @@ export default class SettingsComponent extends BaseComponent {
 
   private settingsChanged: () => any;
   private resetScene: () => any;
+  private gridModeUpdated: (enabled: boolean, size: number) => any;
 
-  constructor(sceneProperties: SceneProperties, settingsChanged: () => any, resetScene: () => any) {
+  constructor(sceneProperties: SceneProperties, settingsChanged: () => any, resetScene: () => any, gridModeUpdated: (enabled: boolean, size: number) => any) {
     super("Scene Settings", null, { hasActions: false, hasCredit: false, hasTransform: false});
 
     this.componentType = ComponentType.Settings;
@@ -28,6 +29,7 @@ export default class SettingsComponent extends BaseComponent {
 
     this.settingsChanged = settingsChanged;
     this.resetScene = resetScene;
+    this.gridModeUpdated = gridModeUpdated;
   }
 
   public get ComponentType(): string {
@@ -86,9 +88,11 @@ export default class SettingsComponent extends BaseComponent {
         break;
       case this.GRID_ENABLED:
         this.settingsProperties.gridEnabled = property.value;
+        this.gridModeUpdated(this.settingsProperties.gridEnabled, this.settingsProperties.gridSize);
         break;
       case this.GRID_SIZE:
         this.settingsProperties.gridSize = property.value;
+        this.gridModeUpdated(this.settingsProperties.gridEnabled, this.settingsProperties.gridSize);
         break;
     }
 

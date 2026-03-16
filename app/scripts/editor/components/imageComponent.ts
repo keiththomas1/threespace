@@ -22,7 +22,7 @@ export default class ImageComponent extends BaseComponent {
     renderTarget: THREE.WebGLCubeRenderTarget | null,
     editorCamera: THREE.Camera,
     dataURL: string = "") {
-    super("ImageComponent", editorCamera, { hasActions: true, hasCredit: true, hasTransform: true, hasUrl: true });
+    super("ImageComponent", editorCamera, { hasActions: true, hasCredit: true, hasTransform: true, hasUrl: true, hasDuplicate: true });
     this.renderTarget = renderTarget;
 
     this.componentType = ComponentType.Image;

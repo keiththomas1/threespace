@@ -26,7 +26,7 @@ export default class LightComponent extends BaseComponent {
   private lightModelScale: THREE.Vector3 = new THREE.Vector3();
 
   constructor(lightProperties: LightProperties) {
-    super("LightComponent", null, { hasActions: false, hasCredit: false, hasTransform: true});
+    super("LightComponent", null, { hasActions: false, hasCredit: false, hasTransform: true, hasDuplicate: true });
 
     this.componentType = ComponentType.Light;
 

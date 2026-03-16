@@ -216,7 +216,7 @@ export default class PropertiesWindow {
     slider.oninput = () => {
       try {
         sliderNumber.innerHTML = slider.value;
-        componentProperty.value = parseInt(slider.value);
+        componentProperty.value = Number(slider.value);
         baseComponent.PropertyChanged(propertyName, componentProperty);
       } catch (e) {
         console.warn(e);

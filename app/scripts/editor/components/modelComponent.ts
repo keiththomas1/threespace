@@ -18,7 +18,7 @@ export default class ModelComponent extends BaseComponent {
   constructor(
     modelProperties: ModelProperties, editorCamera: THREE.Camera,
     onLoaded:(component: ModelComponent)=>any = ()=>{}, dataURL: string = "") {
-    super("MeshComponent", editorCamera, { hasActions: true, hasCredit: true, hasTransform: true, hasUrl: true });
+    super("MeshComponent", editorCamera, { hasActions: true, hasCredit: true, hasTransform: true, hasUrl: true, hasDuplicate: true });
 
     this.componentType = ComponentType.Model;
     this.onLoaded = onLoaded;

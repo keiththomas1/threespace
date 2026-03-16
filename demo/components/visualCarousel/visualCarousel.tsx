@@ -8,14 +8,10 @@ import HomeJSON from '../../public/scenes/Home/Home.json';
 import HomeThumb from '../../public/scenes/Home/Home.png';
 import LabJSON from '../../public/scenes/Lab/Lab.json';
 import LabThumb from '../../public/scenes/Lab/Lab.jpg';
-import RainyHutJSON from '../../public/scenes/RainyHut/RainyHut.json';
-import RainyHutThumb from '../../public/scenes/RainyHut/RainyHut.jpg';
-import WinterWarmthJSON from '../../public/scenes/WinterWarmth/WinterWarmth.json';
-import WinterWarmthThumb from '../../public/scenes/WinterWarmth/WinterWarmth.jpg';
-import UnderwaterJSON from '../../public/scenes/Underwater/Underwater.json';
-import UnderwaterThumb from '../../public/scenes/Underwater/Underwater.jpg';
-import MoonLanderJSON from '../../public/scenes/MoonLander/MoonLander.json';
-import MoonLanderThumb from '../../public/scenes/MoonLander/MoonLander.jpg';
+import HexLowPolyJSON from '../../public/scenes/HexLowPoly/HexLowPoly.json';
+import HexLowPolyThumb from '../../public/scenes/HexLowPoly/HexLowPoly.jpg';
+import EmptyJSON from '../../public/scenes/Empty/Empty.json';
+import EmptyThumb from '../../public/scenes/Empty/Empty.jpg';
 
 export interface VisualCarouselData {
   path: string,
@@ -31,6 +27,10 @@ interface SceneEntry {
 
 export const SCENES: SceneEntry[] = [
   {
+    data: { thumbnailURL: EmptyThumb.src, path: '/scenes/Empty', tooltip: 'Empty Scene', value: 'Empty' },
+    properties: EmptyJSON as PlayerProperties,
+  },
+  {
     data: { thumbnailURL: HomeThumb.src, path: '/scenes/Home', tooltip: 'Home Page', value: 'Home' },
     properties: HomeJSON as PlayerProperties,
   },
@@ -39,25 +39,13 @@ export const SCENES: SceneEntry[] = [
     properties: LabJSON as PlayerProperties,
   },
   {
-    data: { thumbnailURL: RainyHutThumb.src, path: '/scenes/RainyHut', tooltip: 'Rainy Hut', value: 'RainyHut' },
-    properties: RainyHutJSON as PlayerProperties,
-  },
-  {
-    data: { thumbnailURL: WinterWarmthThumb.src, path: '/scenes/WinterWarmth', tooltip: 'Winter Warmth', value: 'WinterWarmth' },
-    properties: WinterWarmthJSON as PlayerProperties,
-  },
-  {
-    data: { thumbnailURL: UnderwaterThumb.src, path: '/scenes/Underwater', tooltip: 'Underwater', value: 'Underwater' },
-    properties: UnderwaterJSON as PlayerProperties,
-  },
-  {
-    data: { thumbnailURL: MoonLanderThumb.src, path: '/scenes/MoonLander', tooltip: 'Moon Lander', value: 'MoonLander' },
-    properties: MoonLanderJSON as PlayerProperties,
+    data: { thumbnailURL: HexLowPolyThumb.src, path: '/scenes/HexLowPoly', tooltip: 'Hex Low Poly', value: 'HexLowPoly' },
+    properties: HexLowPolyJSON as PlayerProperties,
   },
 ];
 
-export function VisualCarousel({ onSceneSelected }: { onSceneSelected: (path: string, properties: PlayerProperties) => void }) {
-  const [isOpen, setIsOpen] = useState(true);
+export function VisualCarousel({ onSceneSelected, initiallyOpen = true }: { onSceneSelected: (path: string, properties: PlayerProperties) => void, initiallyOpen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   function handleItemSelected(value: string) {

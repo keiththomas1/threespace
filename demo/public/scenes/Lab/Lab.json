@@ -4,14 +4,14 @@
     "componentType": "SETTINGS",
     "backgroundColorType": "GRADIENT",
     "colorOne": {
-      "r": 0,
-      "g": 1,
-      "b": 1
+      "r": 0.3411764705882353,
+      "g": 0.9019607843137255,
+      "b": 0.9019607843137255
     },
     "colorTwo": {
-      "r": 0.5019607843137255,
-      "g": 0,
-      "b": 0.5019607843137255
+      "r": 0.2823529411764706,
+      "g": 0.5019607843137255,
+      "b": 0
     }
   },
   "components": [
@@ -24,16 +24,16 @@
         0,
         0,
         0,
-        0.7071067811865475,
-        -0.7071067811865477,
+        0.9165726609565387,
+        -0.3998681747614456,
         0,
         0,
-        0.7071067811865477,
-        0.7071067811865475,
+        0.3998681747614456,
+        0.9165726609565387,
         0,
         0,
-        5,
-        5,
+        5.90321309432038,
+        3.8545824810721347,
         1
       ],
       "action": {
@@ -52,8 +52,8 @@
       "url": "",
       "target": {
         "x": 0,
-        "y": 0,
-        "z": 0
+        "y": 2,
+        "z": -2
       },
       "type": "Perspective",
       "fov": 75
@@ -94,10 +94,10 @@
       },
       "url": "",
       "type": "Ambient",
-      "intensity": 1,
+      "intensity": 0.63,
       "color": {
-        "r": 1,
-        "g": 1,
+        "r": 0.8509803921568627,
+        "g": 0.996078431372549,
         "b": 1
       }
     },
@@ -105,21 +105,21 @@
       "componentName": "",
       "componentType": "LIGHT",
       "transformMatrix": [
-        0.7071067811865472,
-        -1.6653345369377348e-16,
-        0.7071067811865477,
+        -0.054188600173014516,
+        -0.6501853452186458,
+        0.7578407566726663,
         0,
-        -0.577350269189626,
-        0.5773502691896255,
-        0.577350269189626,
+        0.9340795505585473,
+        -0.30125879861603355,
+        -0.19167297536368205,
         0,
-        -0.408248290463863,
-        -0.8164965809277261,
-        0.4082482904638625,
+        0.35292915555339394,
+        0.6974970631617988,
+        0.6236496276283934,
         0,
-        5,
+        4.202132952895333,
         10,
-        -5,
+        5.164347763641398,
         1
       ],
       "action": {
@@ -145,24 +145,24 @@
       }
     },
     {
-      "componentName": "",
-      "componentType": "VFX",
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
       "transformMatrix": [
-        1,
+        -0.04999390052496986,
+        0,
+        0.0007809675405663015,
         0,
         0,
+        0.05,
         0,
         0,
-        1,
+        -0.0007809675405663015,
+        0,
+        -0.04999390052496986,
         0,
         0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
+        1.6051380611695523,
+        -2.082474017183824,
         1
       ],
       "action": {
@@ -179,18 +179,321 @@
         "locked": false
       },
       "url": "",
-      "type": "BASIC",
-      "textureSrc": "",
-      "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999453967083259,
+        0,
+        0.0007389202267814857,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007389202267814857,
+        0,
+        -0.04999453967083259,
+        0,
+        3.098538691127824,
+        1.6165221862843415,
+        -2.114114228120473,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
       },
-      "speed": 0.1,
-      "size": 0.7,
-      "count": 60,
-      "lifetimeMin": 7,
-      "lifetimeMax": 9
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_2_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999751437739044,
+        0,
+        0.0004985539916927298,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0004985539916927298,
+        0,
+        -0.04999751437739044,
+        0,
+        -3.0953124367128866,
+        1.587384222071512,
+        -2.0511193126722054,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_4_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        4.098269173164567,
+        4.313349120913022,
+        -3.6218419435068396,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_plastic_bottle_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        2.2851615366114535,
+        3.60228887131355,
+        -2.6999167643382664,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_glassware_reagent_bottle_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        -4.05770465040303,
+        3.5692812947758554,
+        -3.3139567956645593,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/machine_desiccator.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        3.819930291056715,
+        -3.6925772741077765,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/misc_scale.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.027133793572633336,
+        0,
+        -0.041997109976255775,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0.041997109976255775,
+        0,
+        -0.027133793572633336,
+        0,
+        4.04364270823929,
+        3.401936319360029,
+        -2.1740341631472813,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/machine_microscope.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        2.8650587827292435,
+        3.3699588673280267,
+        -1.4470482785234848,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/dish_petridish.glb"
     }
   ]
 }

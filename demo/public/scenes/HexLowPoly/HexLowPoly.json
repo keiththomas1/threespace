@@ -1,0 +1,852 @@
+{
+  "schemaVersion": 1,
+  "sceneProperties": {
+    "componentType": "SETTINGS",
+    "backgroundColorType": "GRADIENT",
+    "colorOne": {
+      "r": 0.2784313725490196,
+      "g": 0.7176470588235294,
+      "b": 0.5725490196078431
+    },
+    "colorTwo": {
+      "r": 1,
+      "g": 0.9058823529411765,
+      "b": 0.043137254901960784
+    },
+    "gridEnabled": true,
+    "gridSize": 0.1
+  },
+  "components": [
+    {
+      "componentName": "",
+      "componentType": "CAMERA",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.7071067811865474,
+        -0.7071067811865477,
+        0,
+        0,
+        0.7071067811865477,
+        0.7071067811865474,
+        0,
+        -1.4000000000000001,
+        11.100000000000001,
+        6.5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "target": {
+        "x": -1.7,
+        "y": 5,
+        "z": 1
+      },
+      "type": "Perspective",
+      "fov": 75
+    },
+    {
+      "componentName": "",
+      "componentType": "LIGHT",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        7.5,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "type": "Ambient",
+      "intensity": 1,
+      "color": {
+        "r": 0.9647058823529412,
+        "g": 1,
+        "b": 0.6235294117647059
+      }
+    },
+    {
+      "componentName": "",
+      "componentType": "LIGHT",
+      "transformMatrix": [
+        0.9940288174871668,
+        -0.04415488060813092,
+        0.09978505160366628,
+        0,
+        -0.08909436946318808,
+        0.19954469291749719,
+        0.9758299589879471,
+        0,
+        -0.06299923281296031,
+        -0.97889338645582,
+        0.19441922389011587,
+        0,
+        5,
+        10,
+        -5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "type": "Directional",
+      "intensity": 1,
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      }
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -3.2,
+        5,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/water.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        5,
+        -0.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallStone.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -0.2,
+        3,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/ground.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        5,
+        0.9,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/groundEarth.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        4,
+        0.9,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/groundMud.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -3.2,
+        4,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallBrick.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -0.2,
+        4,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/ground.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -0.2,
+        2,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/ground.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        3,
+        0.9,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/groundMud.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        2,
+        0.9,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/groundMud.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -3.2,
+        3,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallBrick.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -3.2,
+        2,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallBrick.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        4,
+        -0.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallStone.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        3,
+        -0.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallStone.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        2,
+        -0.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallStone.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -0.2,
+        2,
+        1.7000000000000002,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/groundMud.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -1.7000000000000002,
+        2,
+        2.6,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/groundMud.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        -3.2,
+        2,
+        1.7000000000000002,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/HexLowPoly/wallBrick.glb"
+    }
+  ]
+}

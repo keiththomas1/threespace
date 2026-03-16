@@ -34,7 +34,7 @@ export default class HomePage extends Component<{}, State> {
       { name: 'Roboto',    path: '/fonts/Roboto/Roboto-Regular.ttf' },
     ];
 
-    this.state = { playerSettings: SCENES[0].properties };
+    this.state = { playerSettings: SCENES[1].properties };
   }
 
   playerComponentSelected = (eventName: string) => {
@@ -60,7 +60,7 @@ export default class HomePage extends Component<{}, State> {
               playerSettings={this.state.playerSettings}
               playerComponentSelected={this.playerComponentSelected}
             />
-            <VisualCarousel onSceneSelected={this.handleSceneSelected} />
+            <VisualCarousel onSceneSelected={this.handleSceneSelected} initiallyOpen={false} />
           </div>
         </main>
       </div>

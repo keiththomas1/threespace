@@ -1,6 +1,6 @@
 {
   "name": "threespace",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "author": "Keith Thomas",
   "license": "MIT",
   "bugs": {
@@ -39,8 +39,12 @@
   },
   "typesVersions": {
     "*": {
-      "player": ["./dist/player/index.d.ts"],
-      "editor": ["./dist/editor/index.d.ts"]
+      "player": [
+        "./dist/player/index.d.ts"
+      ],
+      "editor": [
+        "./dist/editor/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -54,8 +58,12 @@
     "dom-to-image": "^2.6.0"
   },
   "peerDependenciesMeta": {
-    "a-color-picker": { "optional": true },
-    "dom-to-image": { "optional": true }
+    "a-color-picker": {
+      "optional": true
+    },
+    "dom-to-image": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/dom-to-image": "^2.6.4",

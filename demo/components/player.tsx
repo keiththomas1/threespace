@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Image from 'next/image';
-import { AssetManager, ComponentType, ThreeSpacePlayer } from "threespace";
+import { AssetManager, ThreeSpacePlayer } from "threespace";
 import styles from '../styles/Player.module.css';
 
 export default class Player extends Component {
@@ -96,9 +96,7 @@ export default class Player extends Component {
   render() {
     const muteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_31.png`;
     const unmuteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_27.png`;
-    const hasAudio = this.props["playerSettings"]?.components?.some(
-      (c: any) => c.componentType === ComponentType.Audio
-    ) ?? false;
+    const hasAudio = this.player?.HasAudio;
     return (
       <div id={styles.playerParent}>
         {hasAudio && <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >

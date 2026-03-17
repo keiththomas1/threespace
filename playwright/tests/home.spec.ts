@@ -24,24 +24,18 @@ test.describe('Home page', () => {
     await expect(canvas).toBeVisible({ timeout: 10_000 });
   });
 
-  test('renders the scene carousel open by default', async ({ page }) => {
+  test('can open and close the scene gallery', async ({ page }) => {
     await page.goto('/');
-    // isOpen defaults to true — the gallery div is immediately visible
-    const carouselItem = page.locator('[class*="visualCarouselItem"]').first();
-    await expect(carouselItem).toBeVisible({ timeout: 10_000 });
-  });
-
-  test('can close and reopen the scene gallery', async ({ page }) => {
-    await page.goto('/');
-    // Close the gallery with the ✕ button
-    const closeButton = page.getByRole('button', { name: '✕' });
-    await closeButton.click();
     // "Demo Scenes" button should appear
     const scenesButton = page.getByRole('button', { name: 'Demo Scenes' });
     await expect(scenesButton).toBeVisible({ timeout: 5_000 });
-    // Reopen it
     await scenesButton.click();
+    // Close the gallery with the ✕ button
     const carouselItem = page.locator('[class*="visualCarouselItem"]').first();
     await expect(carouselItem).toBeVisible({ timeout: 5_000 });
+    const closeButton = page.getByRole('button', { name: '✕' });
+    await closeButton.click();
+    // Reopen it
+    await expect(scenesButton).toBeVisible({ timeout: 5_000 });
   });
 });

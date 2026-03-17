@@ -17,7 +17,7 @@ export default class AudioComponent extends BaseComponent {
   protected audioProperties: AudioProperties = AudioComponent.DefaultProperties;
 
   constructor(audioProperties: AudioProperties, camera: THREE.Camera, dataURL: string = "") {
-    super("Audio", null, { hasActions: false, hasCredit: true, hasTransform: true, hasUrl: true });
+    super("Audio", null, { hasActions: false, hasCredit: true, hasTransform: true, hasUrl: true, hasDuplicate: true });
 
     this.componentType = ComponentType.Audio;
     this.assignProperties(audioProperties);

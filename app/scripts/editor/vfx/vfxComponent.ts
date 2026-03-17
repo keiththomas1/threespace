@@ -35,7 +35,7 @@ export default class VFXComponent extends BaseComponent {
   private vfxObject: VFXObject;
 
   constructor(vfxProperties: VFXProperties, vfxData: VFXData) {
-    super("VFX", null, { hasActions: false, hasCredit: false, hasTransform: true});
+    super("VFX", null, { hasActions: false, hasCredit: false, hasTransform: true, hasDuplicate: true });
 
     this.particleCount = vfxProperties.count;
 

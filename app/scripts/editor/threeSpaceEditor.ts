@@ -165,6 +165,9 @@ export class ThreeSpaceEditor {
       },
       () => {
         this.uiController.SetResetScenePopupVisibility("visible");
+      },
+      (enabled: boolean, size: number) => {
+        this.componentManager.SetTranslationSnap(enabled ? size : null);
       }
     );
 
@@ -665,11 +668,21 @@ export class ThreeSpaceEditor {
   }
 
   private componentAdded = (component: BaseComponent, selectComponent: boolean = true) => {
+    component.OnDuplicate = () => this.duplicateComponent(component);
     this.componentManager.AddComponent(component);
     if (selectComponent) {
       this.componentManager.SetSelectedComponent(component);
       this.uiController.ShowPropertiesWindow(component);
     }
+  }
+
+  /* Creates a new component in the scene with the same properties and values as the source component. */
+  private duplicateComponent = (source: BaseComponent) => {
+    const props: ComponentProperties = JSON.parse(JSON.stringify(source.ComponentProperties));
+    const json = source.toJSON();
+    props.transformMatrix = json.object.matrix;
+
+    this.addComponent(props);
   }
 
   private togglePreview = (inPreviewMode: boolean) => {

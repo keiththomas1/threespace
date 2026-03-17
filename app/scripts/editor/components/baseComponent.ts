@@ -10,6 +10,7 @@ export interface ComponentEditorOptions {
   hasActions?: boolean;
   hasCredit?: boolean;
   hasUrl?: boolean;
+  hasDuplicate?: boolean;
 }
 
 export default class BaseComponent extends THREE.Object3D {
@@ -55,6 +56,7 @@ export default class BaseComponent extends THREE.Object3D {
   protected componentType: string = "";
   protected canDelete: boolean = true;
   private onTransformChanged: (baseComponent: BaseComponent) => any = () => {};
+  private onDuplicate: (() => void) | null = null;
   private cachedLocalMatrix: THREE.Matrix4 | null = null;
   private dontUpdatePropertyWindow: boolean = false;
 
@@ -119,8 +121,14 @@ export default class BaseComponent extends THREE.Object3D {
     return this.editorOptions;
   }
 
+  /** Sets the callback for when the component's transform is changed */
   public set OnTransformChanged(newCallback: (baseComponent: BaseComponent)=>any) {
     this.onTransformChanged = newCallback;
+  }
+
+  /** Called when the component is duplicated */
+  public set OnDuplicate(newCallback: () => void) {
+    this.onDuplicate = newCallback;
   }
 
   public PropertyChanged(propertyName: string, property: ComponentProperty) : void {
@@ -217,6 +225,10 @@ export default class BaseComponent extends THREE.Object3D {
 
   protected setupEditorProperties(insertAfterName: ()=>any = ()=>{}) {
     this.editorProperties[this.NAME_PROPERTY] = { value: this.ComponentProperties.componentName, type: "String" };
+
+    if (this.editorOptions.hasDuplicate) {
+      this.editorProperties["Duplicate"] = { value: () => this.onDuplicate?.(), type: "Button", tooltip: "Duplicate this object." };
+    }
 
     insertAfterName();
 

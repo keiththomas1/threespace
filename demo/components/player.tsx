@@ -96,14 +96,15 @@ export default class Player extends Component {
   render() {
     const muteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_31.png`;
     const unmuteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_27.png`;
+    const hasAudio = this.player?.HasAudio;
     return (
       <div id={styles.playerParent}>
-        <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >
+        {hasAudio && <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >
           <Image src={muteSrc} alt="Mute" width={16} height={16}></Image>
-        </button>
-        <button id={styles.unmuteButton} onClick={this.unmuted} className={styles.tooltipButton} >
+        </button>}
+        {hasAudio && <button id={styles.unmuteButton} onClick={this.unmuted} className={styles.tooltipButton} >
           <Image src={unmuteSrc} alt="Un-mute" width={16} height={16}></Image>
-        </button>
+        </button>}
         <div id={styles.referenceSection}>
           <p id={styles.referencePieceName} className={styles.referenceLine}></p>
           <p id={styles.referenceAuthorName} className={styles.referenceLine}></p>

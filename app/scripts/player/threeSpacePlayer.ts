@@ -150,6 +150,11 @@ export class ThreeSpacePlayer {
     }
   }
 
+  /** Whether the player has any audio components. */
+  public get HasAudio() {
+    return this.sounds.length > 0;
+  }
+
   public Dispose() {
     for (let i = 0; i < this.sounds.length; i++) {
       if (this.sounds[i].isPlaying) {

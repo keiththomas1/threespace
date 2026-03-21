@@ -9,7 +9,7 @@ import { SharedUtils } from "../../shared/sharedUtils";
 
 export default class AudioComponent extends BaseComponent {
   private readonly TOGGLE_PLAY = "Play/Pause";
-  private readonly CREDITS_BUTTON_ENABLED = "Credits Button Enabled";
+  private readonly CREDITS_BUTTON_ENABLED = "Show Music Credit Info";
 
   private listener: THREE.AudioListener;
   private audioLoader: THREE.AudioLoader;

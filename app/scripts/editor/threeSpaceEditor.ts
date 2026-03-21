@@ -37,6 +37,7 @@ import { SharedData } from "../shared/sharedData";
 import { ProjectView } from "./ui/projectView";
 import { SharedUtils } from "../shared/sharedUtils";
 
+/** Configuration options and callbacks for the ThreeSpace editor. */
 export interface EditorConfig {
   playerProperties?:         PlayerProperties;
   onSave?:        (scene: PlayerProperties) => void;

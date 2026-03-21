@@ -4,7 +4,6 @@ import { ComponentFactory } from "./components/componentFactory";
 import { ActionType, CameraProperties, ComponentProperties, AnimationBehaviorType,
   ComponentType, ModelInfo, ModelProperties, PlayerProperties, Text3DProperties,
   BackgroundColorType, SceneProperties, VideoProperties, AudioProperties, LightProperties, LightType, VFXProperties, ImageProperties,
-  SCHEMA_VERSION, DEFAULT_SCENE_PROPERTIES,
   SceneLoadInfo, CreditInfo
   } from "./utils/playerDefinitions";
 import anime from 'animejs';
@@ -360,14 +359,22 @@ export class ThreeSpacePlayer {
     this.components.push(playerComponent);
   }
 
-  /** Creates the top-right toolbar and populates it with mute and credit buttons as needed. */
-  private SetupToolbar = (componentProperties: ComponentProperties[]) => {
+  /** Creates the top-right toolbar and populates it with buttons as needed. */
+  private SetupToolbar(componentProperties: ComponentProperties[]) {
+    this.SetupAudioButtons(componentProperties);
+  }
+
+  /** Sets up the mute and audio credit buttons in the toolbar */
+  private SetupAudioButtons(componentProperties: ComponentProperties[]) {
     const hasAudio = this.HasAudio;
+    
+    if (!hasAudio) return;
+
     const credits = componentProperties
       .filter(c => c.componentType === ComponentType.Audio && (c as AudioProperties).showCreditButton)
       .map(c => c.credit);
 
-    if (!hasAudio && credits.length === 0) return;
+    if (credits.length === 0) return;
 
     this.playerToolbar = document.createElement('div');
     this.playerToolbar.style.cssText = [
@@ -391,7 +398,7 @@ export class ThreeSpacePlayer {
         console.warn("ThreeSpace: An audio component has credits enabled but no credit information was found.");
       }
 
-      this.creditPopup = this.BuildCreditPopup(credits);
+      this.creditPopup = this.CreateCreditPopup(credits);
       this.canvasParent.appendChild(this.creditPopup);
 
       const creditButton = this.CreateToolbarButton('♪', 'Music credit info', () => {
@@ -417,7 +424,8 @@ export class ThreeSpacePlayer {
     return button;
   }
 
-  private BuildCreditPopup = (credits: CreditInfo[]): HTMLElement => {
+  /** Creates the credit popup and populates it with credit information */
+  private CreateCreditPopup = (credits: CreditInfo[]): HTMLElement => {
     const popup = document.createElement('div');
     popup.style.cssText = [
       'display:none', 'position:absolute', 'top:calc(2% + 36px)', 'right:2%',

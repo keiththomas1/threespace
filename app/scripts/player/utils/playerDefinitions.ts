@@ -18,6 +18,7 @@ export interface SceneProperties {
   gridSize?: number,
 }
 
+/** Information only available after loading the scene */
 export interface SceneLoadInfo {
   hasAudio: boolean
 }

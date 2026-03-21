@@ -1,5 +1,4 @@
 import { Component } from "react";
-import Image from 'next/image';
 import { AssetManager, ThreeSpacePlayer, SceneLoadInfo } from "threespace";
 import styles from '../styles/Player.module.css';
 
@@ -12,8 +11,6 @@ export default class Player extends Component {
   private creditAuthorName: HTMLElement | null = null;
   private creditSiteName: HTMLElement | null = null;
   private creditLicenseName: HTMLElement | null = null;
-
-  state = { hasAudio: false };
 
   constructor(props: any) {
     super(props);
@@ -35,7 +32,6 @@ export default class Player extends Component {
     if (prevProps.playerSettings !== this.props.playerSettings && this.player) {
       this.player.Dispose();
       this.player = null;
-      this.setState({ hasAudio: false });
     }
     this.setupPlayer();
   }
@@ -53,8 +49,7 @@ export default class Player extends Component {
   }
 
   /** Called when the ThreeSpace player has finished loading the scene */
-  sceneLoaded = (sceneLoadInfo: SceneLoadInfo) =>{
-    this.setState({ hasAudio: sceneLoadInfo.hasAudio });
+  sceneLoaded = (sceneLoadInfo: SceneLoadInfo) => {
   }
 
   setCreditInfo = (pieceName: string, artistName: string, siteName: string, licenseName: string) => {
@@ -70,44 +65,9 @@ export default class Player extends Component {
     }
   }
 
-  muted = () => {
-    const muteButton = document.getElementById(styles.muteButton);
-    const unmuteButton = document.getElementById(styles.unmuteButton);
-    if (muteButton) {
-      muteButton.style.visibility = "hidden";
-    }
-    if (unmuteButton) {
-      unmuteButton.style.visibility = "visible";
-    }
-
-    this.player.Muted = true;
-  }
-
-  unmuted = () => {
-    const muteButton = document.getElementById(styles.muteButton);
-    const unmuteButton = document.getElementById(styles.unmuteButton);
-    if (muteButton) {
-      muteButton.style.visibility = "visible";
-    }
-    if (unmuteButton) {
-      unmuteButton.style.visibility = "hidden";
-    }
-
-    this.player.Muted = false;
-  }
-  
   render() {
-    const muteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_31.png`;
-    const unmuteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_27.png`;
-    const { hasAudio } = this.state;
     return (
       <div id={styles.playerParent}>
-        {hasAudio && <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >
-          <Image src={muteSrc} alt="Mute" width={16} height={16}></Image>
-        </button>}
-        {hasAudio && <button id={styles.unmuteButton} onClick={this.unmuted} className={styles.tooltipButton} >
-          <Image src={unmuteSrc} alt="Un-mute" width={16} height={16}></Image>
-        </button>}
         <div id={styles.referenceSection}>
           <p id={styles.referencePieceName} className={styles.referenceLine}></p>
           <p id={styles.referenceAuthorName} className={styles.referenceLine}></p>

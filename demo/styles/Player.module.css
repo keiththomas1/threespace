@@ -10,20 +10,6 @@
   pointer-events: all;
 }
 
-#muteButton, #unmuteButton {
-  position: absolute;
-  top: 2%;
-  right: 2%;
-  z-index: 900;
-}
-
-#muteButton {
-  visibility: visible;
-}
-#unmuteButton {
-  visibility: hidden;
-}
-
 #referenceSection {
   visibility: hidden;
   position: absolute;

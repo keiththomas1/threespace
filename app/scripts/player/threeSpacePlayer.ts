@@ -5,7 +5,7 @@ import { ActionType, CameraProperties, ComponentProperties, AnimationBehaviorTyp
   ComponentType, ModelInfo, ModelProperties, PlayerProperties, Text3DProperties,
   BackgroundColorType, SceneProperties, VideoProperties, AudioProperties, LightProperties, LightType, VFXProperties, ImageProperties,
   SCHEMA_VERSION, DEFAULT_SCENE_PROPERTIES,
-  SceneLoadInfo
+  SceneLoadInfo, CreditInfo
   } from "./utils/playerDefinitions";
 import anime from 'animejs';
 
@@ -60,7 +60,10 @@ export class ThreeSpacePlayer {
   private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
   private inViewMode: boolean = false;
   private startDrag: THREE.Vector2 = new THREE.Vector2();
-  private creditOverlayElement: HTMLElement | null = null;
+  private playerToolbar: HTMLElement | null = null;
+  private creditPopup: HTMLElement | null = null;
+  private muteButtonEl: HTMLElement | null = null;
+  private unmuteButtonEl: HTMLElement | null = null;
 
   /* Callbacks */
   private componentSelected: (eventName: string) => any = () => {};
@@ -159,6 +162,8 @@ export class ThreeSpacePlayer {
     for (let i = 0; i < this.sounds.length; i++) {
       this.sounds[i].setVolume(muted ? 0 : 1);
     }
+    if (this.muteButtonEl) this.muteButtonEl.style.display = muted ? 'none' : 'flex';
+    if (this.unmuteButtonEl) this.unmuteButtonEl.style.display = muted ? 'flex' : 'none';
   }
 
 
@@ -175,9 +180,14 @@ export class ThreeSpacePlayer {
       this.resizeObserver = null;
     }
 
-    if (this.creditOverlayElement) {
-      this.creditOverlayElement.remove();
-      this.creditOverlayElement = null;
+    if (this.playerToolbar) {
+      this.playerToolbar.remove();
+      this.playerToolbar = null;
+    }
+
+    if (this.creditPopup) {
+      this.creditPopup.remove();
+      this.creditPopup = null;
     }
 
     this.Canvas.remove();
@@ -307,7 +317,7 @@ export class ThreeSpacePlayer {
 
   private CheckFinishedLoading() {
     if (this.assetsLoaded == this.playerProperties.components.length) {
-      this.SetupCreditButton(this.playerProperties.components);
+      this.SetupToolbar(this.playerProperties.components);
       this.sceneLoadInfo = { hasAudio: this.HasAudio };
       this.sceneLoaded(this.sceneLoadInfo);
     }
@@ -350,42 +360,67 @@ export class ThreeSpacePlayer {
     this.components.push(playerComponent);
   }
 
-  /**
-   * Sets up the credit button if any audio components have credits enabled. If multiple audio components have credits enabled, their credits will be combined into a single list and shown together when the button is clicked.
-   * @param componentProperties
-   */
-  private SetupCreditButton = (componentProperties: ComponentProperties[]) => {
+  /** Creates the top-right toolbar and populates it with mute and credit buttons as needed. */
+  private SetupToolbar = (componentProperties: ComponentProperties[]) => {
+    const hasAudio = this.HasAudio;
     const credits = componentProperties
       .filter(c => c.componentType === ComponentType.Audio && (c as AudioProperties).showCreditButton)
       .map(c => c.credit);
 
-    if (credits.length === 0) return;
+    if (!hasAudio && credits.length === 0) return;
 
-    const creditList = credits.filter(credit => credit && (credit.pieceName || credit.authorName));
+    this.playerToolbar = document.createElement('div');
+    this.playerToolbar.style.cssText = [
+      'position:absolute', 'top:2%', 'right:2%',
+      'z-index:900', 'display:flex', 'gap:8px',
+      'align-items:center', 'pointer-events:none',
+    ].join(';');
+    this.canvasParent.appendChild(this.playerToolbar);
 
-    if (credits.length > 0 && creditList.length === 0) {
-      console.warn("ThreeSpace: An audio component has credits enabled but no credit information was found.");
+    if (hasAudio) {
+      this.muteButtonEl = this.CreateToolbarButton('🔊', 'Mute audio', () => { this.Muted = true; });
+      this.unmuteButtonEl = this.CreateToolbarButton('🔇', 'Unmute audio', () => { this.Muted = false; });
+      this.unmuteButtonEl.style.display = 'none';
+      this.playerToolbar.appendChild(this.muteButtonEl);
+      this.playerToolbar.appendChild(this.unmuteButtonEl);
     }
 
-    const container = document.createElement('div');
-    container.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:900;';
+    if (credits.length > 0) {
+      const creditList = credits.filter(credit => credit && (credit.pieceName || credit.authorName));
+      if (creditList.length === 0) {
+        console.warn("ThreeSpace: An audio component has credits enabled but no credit information was found.");
+      }
 
+      this.creditPopup = this.BuildCreditPopup(credits);
+      this.canvasParent.appendChild(this.creditPopup);
+
+      const creditButton = this.CreateToolbarButton('♪', 'Music credit info', () => {
+        this.creditPopup.style.display = this.creditPopup.style.display === 'none' ? 'block' : 'none';
+      });
+      this.playerToolbar.appendChild(creditButton);
+    }
+  }
+
+  private CreateToolbarButton = (label: string, ariaLabel: string, onClick: () => void): HTMLElement => {
     const button = document.createElement('button');
-    button.textContent = '♪';
-    button.setAttribute('aria-label', 'Music credit info');
-    button.setAttribute('title', 'Music credit info');
+    button.textContent = label;
+    button.setAttribute('aria-label', ariaLabel);
+    button.setAttribute('title', ariaLabel);
     button.style.cssText = [
-      'position:absolute', 'top:2%', 'left:2%',
       'pointer-events:all',
       'background:rgba(30,38,61,0.75)', 'border:none',
       'border-radius:50%', 'width:28px', 'height:28px',
       'color:#fff', 'font-size:14px', 'cursor:pointer',
       'display:flex', 'align-items:center', 'justify-content:center',
     ].join(';');
+    button.addEventListener('click', onClick);
+    return button;
+  }
 
+  private BuildCreditPopup = (credits: CreditInfo[]): HTMLElement => {
     const popup = document.createElement('div');
     popup.style.cssText = [
-      'display:none', 'position:absolute', 'top:calc(2% + 36px)', 'left:2%',
+      'display:none', 'position:absolute', 'top:calc(2% + 36px)', 'right:2%',
       'pointer-events:all',
       'background:rgba(30,38,61,0.9)', 'border-radius:6px',
       'padding:10px 14px', 'min-width:180px', 'max-width:260px',
@@ -426,14 +461,7 @@ export class ThreeSpacePlayer {
       }
     });
 
-    button.addEventListener('click', () => {
-      popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
-    });
-
-    container.appendChild(button);
-    container.appendChild(popup);
-    this.canvasParent.appendChild(container);
-    this.creditOverlayElement = container;
+    return popup;
   }
 
   private SetupXR = () => {

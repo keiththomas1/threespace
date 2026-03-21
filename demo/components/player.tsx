@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Image from 'next/image';
-import { AssetManager, ThreeSpacePlayer } from "threespace";
+import { AssetManager, ThreeSpacePlayer, SceneLoadInfo } from "threespace";
 import styles from '../styles/Player.module.css';
 
 export default class Player extends Component {
@@ -12,6 +12,8 @@ export default class Player extends Component {
   private creditAuthorName: HTMLElement | null = null;
   private creditSiteName: HTMLElement | null = null;
   private creditLicenseName: HTMLElement | null = null;
+
+  state = { hasAudio: false };
 
   constructor(props: any) {
     super(props);
@@ -33,6 +35,7 @@ export default class Player extends Component {
     if (prevProps.playerSettings !== this.props.playerSettings && this.player) {
       this.player.Dispose();
       this.player = null;
+      this.setState({ hasAudio: false });
     }
     this.setupPlayer();
   }
@@ -43,15 +46,15 @@ export default class Player extends Component {
       const playerParent = document.getElementById(styles.playerParent);
       if (playerParent) {
         AssetManager.AssetBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-        this.player = new ThreeSpacePlayer(playerParent, playerSettings, null);
-        this.player.OnSceneLoaded = this.sceneLoaded;
+        this.player = new ThreeSpacePlayer(playerParent, playerSettings, null, this.sceneLoaded);
         this.player.OnComponentSelected = this.playerComponentSelected;
       }
     }
   }
 
-  sceneLoaded = () => {
-    this.forceUpdate();
+  /** Called when the ThreeSpace player has finished loading the scene */
+  sceneLoaded = (sceneLoadInfo: SceneLoadInfo) =>{
+    this.setState({ hasAudio: sceneLoadInfo.hasAudio });
   }
 
   setCreditInfo = (pieceName: string, artistName: string, siteName: string, licenseName: string) => {
@@ -96,7 +99,7 @@ export default class Player extends Component {
   render() {
     const muteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_31.png`;
     const unmuteSrc = `${AssetManager.AssetBasePath}/images/32x/icon_27.png`;
-    const hasAudio = this.player?.HasAudio;
+    const { hasAudio } = this.state;
     return (
       <div id={styles.playerParent}>
         {hasAudio && <button id={styles.muteButton} onClick={this.muted} className={styles.tooltipButton} >

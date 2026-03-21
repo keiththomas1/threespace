@@ -9,10 +9,12 @@ import { SharedUtils } from "../../shared/sharedUtils";
 
 export default class AudioComponent extends BaseComponent {
   private readonly TOGGLE_PLAY = "Play/Pause";
+  private readonly CREDITS_BUTTON_ENABLED = "Show Music Credit Info";
 
   private listener: THREE.AudioListener;
   private audioLoader: THREE.AudioLoader;
   private sound: THREE.Audio = null;
+  private wasPlayingBeforeHide = false;
 
   protected audioProperties: AudioProperties = AudioComponent.DefaultProperties;
 
@@ -31,6 +33,12 @@ export default class AudioComponent extends BaseComponent {
     this.addMusic(dataURL === "" ? SharedUtils.GetURLFromComponentProperties(this.audioProperties) : dataURL, 1);
 
     this.createMusicModelRepresentation();
+
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+  }
+
+  public get ComponentProperties(): AudioProperties {
+    return this.audioProperties;
   }
 
   public static get DefaultProperties() : AudioProperties {
@@ -43,6 +51,9 @@ export default class AudioComponent extends BaseComponent {
     super.PropertyChanged(propertyName, property);
 
     switch (propertyName) {
+      case this.CREDITS_BUTTON_ENABLED:
+        this.audioProperties.showCreditButton = property.value;
+        break;
     }
   }
 
@@ -68,7 +79,27 @@ export default class AudioComponent extends BaseComponent {
         value: this.toggleMusicPlaying,
         type: "Button",
         tooltip: "Toggles playing of music." };
+      this.editorProperties[this.CREDITS_BUTTON_ENABLED] = {
+        value: this.audioProperties.showCreditButton ?? false,
+        type: "Boolean" };
     });
+  }
+
+  private handleVisibilityChange = () => {
+    if (!this.sound) return;
+    if (document.hidden) {
+      this.wasPlayingBeforeHide = this.sound.isPlaying;
+      if (this.sound.isPlaying) this.sound.pause();
+    } else {
+      if (this.wasPlayingBeforeHide) this.sound.play();
+      this.wasPlayingBeforeHide = false;
+    }
+  }
+
+  public dispose(): void {
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    if (this.sound?.isPlaying) this.sound.stop();
+    super.dispose();
   }
 
   private toggleMusicPlaying = () => {

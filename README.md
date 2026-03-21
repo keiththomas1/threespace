@@ -181,6 +181,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards, architecture guidel
 
 ---
 
+## Other Tools
+
+The [official three.js editor](https://threejs.org/editor/) is quite good, if you prefer their interface. Also open source.
+
+---
+
 ## License
 
 [MIT](LICENSE) — Copyright (c) 2026 Keith Thomas

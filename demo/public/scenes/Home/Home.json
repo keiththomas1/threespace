@@ -12,7 +12,9 @@
       "r": 0.5019607843137255,
       "g": 0,
       "b": 0.5019607843137255
-    }
+    },
+    "gridEnabled": false,
+    "gridSize": 1
   },
   "components": [
     {
@@ -32,8 +34,8 @@
         0.7071067811865474,
         0,
         -0.1741731634295398,
-        7.156937522461626,
-        7.550984152173246,
+        7.9650779129586295,
+        8.26208403791141,
         1
       ],
       "action": {
@@ -298,7 +300,7 @@
         0.00005513881994704834,
         0.0001378031457235975,
         0,
-        0.000020015743985829683,
+        0.00002001574398582969,
         0.021746464293714664,
         -0.012332513535049779,
         0,
@@ -340,6 +342,81 @@
         "b": 0.10980392156862745
       },
       "type": "Audiowide"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "AUDIO",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        6.270387462927583,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "Ethereal Relaxation",
+        "authorName": "Kevin MacLeod",
+        "websiteName": "incompetech.com",
+        "licenseName": "Creative Commons: By Attribution 4.0",
+        "locked": false
+      },
+      "url": "",
+      "filepath": "/scenes/Home/Ethereal Relaxation.mp3",
+      "showCreditButton": true
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "VIDEO",
+      "transformMatrix": [
+        3.1,
+        0,
+        0,
+        0,
+        0,
+        1.699059281911472,
+        -0.8504102283900832,
+        0,
+        0,
+        0.8504102283900832,
+        1.699059281911472,
+        0,
+        -3.563932682302302,
+        1.8345245766885587,
+        0.702863050986656,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "filepath": "scenes/Home/TimelapseFrontPage.mp4"
     }
   ]
 }

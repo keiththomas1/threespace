@@ -18,6 +18,11 @@ export interface SceneProperties {
   gridSize?: number,
 }
 
+/** Information only available after loading the scene */
+export interface SceneLoadInfo {
+  hasAudio: boolean
+}
+
 /**
  * Properties for a component in the scene such as a camera, light, model, etc. Each component has its own specific properties but they all share these common properties.
  */
@@ -209,6 +214,7 @@ export interface VideoProperties extends ComponentProperties {
 /* Start Audio */
 
 export interface AudioProperties extends ComponentProperties {
+  showCreditButton?: boolean;
 }
 
 /* End Audio */

@@ -4,7 +4,7 @@ import { ComponentFactory } from "./components/componentFactory";
 import { ActionType, CameraProperties, ComponentProperties, AnimationBehaviorType,
   ComponentType, ModelInfo, ModelProperties, PlayerProperties, Text3DProperties,
   BackgroundColorType, SceneProperties, VideoProperties, AudioProperties, LightProperties, LightType, VFXProperties, ImageProperties,
-  SCHEMA_VERSION, DEFAULT_SCENE_PROPERTIES
+  SceneLoadInfo, CreditInfo
   } from "./utils/playerDefinitions";
 import anime from 'animejs';
 
@@ -27,6 +27,8 @@ export class ThreeSpacePlayer {
   /* Managers and core objects */
   private canvas: HTMLCanvasElement;
   private canvasParent: HTMLElement;
+  private playerProperties: PlayerProperties;
+  private sceneLoadInfo: SceneLoadInfo = null;
   private controls: OrbitControls | null = null;
   private loadingManager: THREE.LoadingManager;
   private modelLoader: ModelLoader;
@@ -49,6 +51,7 @@ export class ThreeSpacePlayer {
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
   private outlineObjects: THREE.Object3D[] = [];
   private animationMixers: THREE.AnimationMixer[] = [];
+  private assetsLoaded: number = 0;
   private sounds: THREE.Audio[] = [];
   private clickTimer: number = 0;
   private components: PlayerComponent[] = [];
@@ -56,22 +59,29 @@ export class ThreeSpacePlayer {
   private previousCameraRotation: THREE.Quaternion = new THREE.Quaternion();
   private inViewMode: boolean = false;
   private startDrag: THREE.Vector2 = new THREE.Vector2();
+  private playerToolbar: HTMLElement | null = null;
+  private creditPopup: HTMLElement | null = null;
+  private muteButtonEl: HTMLElement | null = null;
+  private unmuteButtonEl: HTMLElement | null = null;
 
   /* Callbacks */
   private componentSelected: (eventName: string) => any = () => {};
-  private sceneLoaded: () => any = () => {};
+  private sceneLoaded: (sceneLoadInfo: SceneLoadInfo) => any = () => {};
   private setCreditInfo: (piece: string, author: string, site: string, license: string) => any = () => {};
 
   /**
    * @param canvasParent The parent element that the player's canvas will be added to. The canvas will be sized to fill this parent element.
-   * @param playerSettings The settings for the player, including scene properties and component properties.
+   * @param playerProperties The settings for the player, including scene properties and component properties.
    * @param canvas An optional canvas element to use for rendering. If not provided, a new canvas element will be created and added to the canvasParent.
    */
   public constructor(
     canvasParent: HTMLElement,
-    playerSettings: PlayerProperties,
-    canvas: HTMLCanvasElement = null) {
+    playerProperties: PlayerProperties,
+    canvas: HTMLCanvasElement = null,
+    sceneLoaded: (sceneLoadInfo: SceneLoadInfo) => any = () => {}) {
     this.scene = new THREE.Scene();
+    this.sceneLoaded = sceneLoaded;
+    this.playerProperties = playerProperties;
 
     this.renderer = new THREE.WebGLRenderer();
     if (canvas) {
@@ -92,9 +102,7 @@ export class ThreeSpacePlayer {
     canvasParent.onmouseup = this.CanvasMouseUp;
 
     this.clock = new THREE.Clock(true);
-    this.loadingManager = new THREE.LoadingManager(() => {
-      this.sceneLoaded();
-    });
+    this.skybox = new SkyBox(this.scene);
 
     if (!PlayerUtils.IsMobile(navigator)) {
       window.addEventListener("resize", this.Resize);
@@ -105,10 +113,12 @@ export class ThreeSpacePlayer {
       this.resizeObserver.observe(canvasParent);
     }
 
-    this.skybox = new SkyBox(this.scene);
+    this.loadingManager = new THREE.LoadingManager();
     this.modelLoader = new ModelLoader(this.loadingManager);
-    this.AddComponents(playerSettings.components);
-    this.SetSceneSettings(playerSettings.sceneProperties);
+    this.assetsLoaded = 0;
+    this.AddComponents(playerProperties.components);
+
+    this.SetSceneSettings(playerProperties.sceneProperties);
 
     if (this.camera) {
       this.postProcessingManager = new PostProcessingManager(
@@ -121,16 +131,14 @@ export class ThreeSpacePlayer {
     this.SetupXR();
     this.Resize();
     this.Update();
+    
+    // In the case that there are no assets to load, we are done here
+    this.CheckFinishedLoading();
   }
   
   /** Sets the callback function to be called when a component is selected. */
   public set OnComponentSelected(callback: (eventName: string) => any) {
     this.componentSelected = callback;
-  }
-
-  /** Sets the callback function to be called when the scene is loaded. */
-  public set OnSceneLoaded(callback: () => any) {
-    this.sceneLoaded = callback;
   }
 
   /** Sets the callback function to be called when credit information is to be displayed. */
@@ -143,17 +151,20 @@ export class ThreeSpacePlayer {
     return this.canvas;
   }
 
+  /** Returns true if the scene contains at least one audio component. */
+  public get HasAudio(): boolean {
+    return this.sounds.length > 0;
+  }
+
   /** Sets whether the player is muted. */
   public set Muted(muted: boolean) {
     for (let i = 0; i < this.sounds.length; i++) {
       this.sounds[i].setVolume(muted ? 0 : 1);
     }
+    if (this.muteButtonEl) this.muteButtonEl.style.display = muted ? 'none' : 'flex';
+    if (this.unmuteButtonEl) this.unmuteButtonEl.style.display = muted ? 'flex' : 'none';
   }
 
-  /** Whether the player has any audio components. */
-  public get HasAudio() {
-    return this.sounds.length > 0;
-  }
 
   public Dispose() {
     for (let i = 0; i < this.sounds.length; i++) {
@@ -166,6 +177,16 @@ export class ThreeSpacePlayer {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
+    }
+
+    if (this.playerToolbar) {
+      this.playerToolbar.remove();
+      this.playerToolbar = null;
+    }
+
+    if (this.creditPopup) {
+      this.creditPopup.remove();
+      this.creditPopup = null;
     }
 
     this.Canvas.remove();
@@ -193,6 +214,8 @@ export class ThreeSpacePlayer {
               this.controls.update();
             }
           }
+
+          this.AssetLoaded();
           break;
         case ComponentType.Light:
           const lightProperties = componentProperties[i] as LightProperties;
@@ -220,6 +243,8 @@ export class ThreeSpacePlayer {
               this.scene.add(light.target);
             }
           }
+
+          this.AssetLoaded();
           break;
         case ComponentType.Text3D:
           ComponentFactory.Create3DTextMesh(componentProperties[i] as Text3DProperties, this.scene).then(
@@ -227,6 +252,7 @@ export class ThreeSpacePlayer {
               const playerComponent = this.CreatePlayerComponent(textMesh, componentProperties[i]);
 
               this.components.push(playerComponent);
+              this.AssetLoaded();
             }
           );
           break;
@@ -239,12 +265,15 @@ export class ThreeSpacePlayer {
           };
 
           this.components.push(playerComponent);
+          this.AssetLoaded();
           break;
         case ComponentType.Video:
           this.CreateVideoComponent(SharedUtils.GetURLFromComponentProperties(componentProperties[i]), componentProperties[i]);
+          this.AssetLoaded();
           break;
         case ComponentType.Image:
           this.CreateImageComponent(SharedUtils.GetURLFromComponentProperties(componentProperties[i]), componentProperties[i]);
+          this.AssetLoaded();
           break;
         case ComponentType.Model:
           const modelProperties = componentProperties[i] as ModelProperties;
@@ -253,6 +282,7 @@ export class ThreeSpacePlayer {
               if (modelInfo) {
                 this.LoadModel(modelInfo, modelProperties);
               }
+              this.AssetLoaded();
             }
           );
           break;
@@ -272,9 +302,23 @@ export class ThreeSpacePlayer {
               console.warn('ThreeSpace: failed to load audio at', url, err);
             });
             this.sounds.push(sound);
+            this.AssetLoaded();
           });
           break;
       }
+    }
+  }
+
+  private AssetLoaded() {
+    this.assetsLoaded++;
+    this.CheckFinishedLoading();
+  }
+
+  private CheckFinishedLoading() {
+    if (this.assetsLoaded == this.playerProperties.components.length) {
+      this.SetupToolbar(this.playerProperties.components);
+      this.sceneLoadInfo = { hasAudio: this.HasAudio };
+      this.sceneLoaded(this.sceneLoadInfo);
     }
   }
 
@@ -313,6 +357,119 @@ export class ThreeSpacePlayer {
     }
 
     this.components.push(playerComponent);
+  }
+
+  /** Creates the top-right toolbar and populates it with buttons as needed. */
+  private SetupToolbar(componentProperties: ComponentProperties[]) {
+    this.SetupAudioButtons(componentProperties);
+  }
+
+  /** Sets up the mute and audio credit buttons in the toolbar */
+  private SetupAudioButtons(componentProperties: ComponentProperties[]) {
+    const hasAudio = this.HasAudio;
+    
+    if (!hasAudio) return;
+
+    const credits = componentProperties
+      .filter(c => c.componentType === ComponentType.Audio && (c as AudioProperties).showCreditButton)
+      .map(c => c.credit);
+
+    if (credits.length === 0) return;
+
+    this.playerToolbar = document.createElement('div');
+    this.playerToolbar.style.cssText = [
+      'position:absolute', 'top:2%', 'right:2%',
+      'z-index:900', 'display:flex', 'gap:8px',
+      'align-items:center', 'pointer-events:none',
+    ].join(';');
+    this.canvasParent.appendChild(this.playerToolbar);
+
+    if (hasAudio) {
+      this.muteButtonEl = this.CreateToolbarButton('🔊', 'Mute audio', () => { this.Muted = true; });
+      this.unmuteButtonEl = this.CreateToolbarButton('🔇', 'Unmute audio', () => { this.Muted = false; });
+      this.unmuteButtonEl.style.display = 'none';
+      this.playerToolbar.appendChild(this.muteButtonEl);
+      this.playerToolbar.appendChild(this.unmuteButtonEl);
+    }
+
+    if (credits.length > 0) {
+      const creditList = credits.filter(credit => credit && (credit.pieceName || credit.authorName));
+      if (creditList.length === 0) {
+        console.warn("ThreeSpace: An audio component has credits enabled but no credit information was found.");
+      }
+
+      this.creditPopup = this.CreateCreditPopup(credits);
+      this.canvasParent.appendChild(this.creditPopup);
+
+      const creditButton = this.CreateToolbarButton('♪', 'Music credit info', () => {
+        this.creditPopup.style.display = this.creditPopup.style.display === 'none' ? 'block' : 'none';
+      });
+      this.playerToolbar.appendChild(creditButton);
+    }
+  }
+
+  private CreateToolbarButton = (label: string, ariaLabel: string, onClick: () => void): HTMLElement => {
+    const button = document.createElement('button');
+    button.textContent = label;
+    button.setAttribute('aria-label', ariaLabel);
+    button.setAttribute('title', ariaLabel);
+    button.style.cssText = [
+      'pointer-events:all',
+      'background:rgba(30,38,61,0.75)', 'border:none',
+      'border-radius:50%', 'width:28px', 'height:28px',
+      'color:#fff', 'font-size:14px', 'cursor:pointer',
+      'display:flex', 'align-items:center', 'justify-content:center',
+    ].join(';');
+    button.addEventListener('click', onClick);
+    return button;
+  }
+
+  /** Creates the credit popup and populates it with credit information */
+  private CreateCreditPopup = (credits: CreditInfo[]): HTMLElement => {
+    const popup = document.createElement('div');
+    popup.style.cssText = [
+      'display:none', 'position:absolute', 'top:calc(2% + 36px)', 'right:2%',
+      'pointer-events:all',
+      'background:rgba(30,38,61,0.9)', 'border-radius:6px',
+      'padding:10px 14px', 'min-width:180px', 'max-width:260px',
+      'color:#fff', 'font-size:12px', 'line-height:1.6',
+    ].join(';');
+
+    credits.forEach((credit, i) => {
+      if (i > 0) {
+        const sep = document.createElement('hr');
+        sep.style.cssText = 'border:none;border-top:1px solid rgba(255,255,255,0.2);margin:6px 0;';
+        popup.appendChild(sep);
+      }
+      if (credit.pieceName) {
+        const title = document.createElement('p');
+        title.style.cssText = 'margin:0;font-weight:bold;';
+        title.textContent = credit.pieceName;
+        popup.appendChild(title);
+      }
+      const artistLine = document.createElement('p');
+      artistLine.style.cssText = 'margin:0;opacity:0.85;';
+      if (credit.websiteName) {
+        const link = document.createElement('a');
+        link.href = credit.websiteName;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.style.cssText = 'color:#90c8ff;text-decoration:none;';
+        link.textContent = credit.authorName;
+        artistLine.appendChild(link);
+      } else {
+        artistLine.textContent = credit.authorName;
+      }
+      popup.appendChild(artistLine);
+      if (credit.licenseName) {
+        const license = document.createElement('p');
+        license.style.cssText = 'margin:0;opacity:0.85;';
+        license.textContent = credit.licenseName;
+        popup.appendChild(license);
+      }
+    });
+
+    return popup;
   }
 
   private SetupXR = () => {

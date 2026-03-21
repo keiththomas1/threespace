@@ -45,6 +45,7 @@ jobs:
         run: npm install && npm run build
         env:
           DEPLOY_GITHUB_PAGES: true
+          NEXT_PUBLIC_BASE_PATH: threespace
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

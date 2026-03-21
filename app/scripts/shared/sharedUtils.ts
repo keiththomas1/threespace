@@ -17,6 +17,6 @@ export class SharedUtils {
   /** Prepends AssetBasePath to root-relative paths. Absolute URLs (http/https) are returned as-is. */
   private static ResolveURL(url: string): string {
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return AssetManager.AssetBasePath + url;
+    return `${AssetManager.AssetBasePath}/${url}`;
   }
 }

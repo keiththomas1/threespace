@@ -291,7 +291,7 @@ export class ThreeSpaceEditor {
     let placed = 0;
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const defaultPath = AssetManager.AssetBasePath + file.name;
+      const defaultPath = `${AssetManager.AssetBasePath}/${file.name}`;
       const exportUrl = await this.showPathConfirmPopup(file.name, defaultPath);
       if (!exportUrl) continue;
 

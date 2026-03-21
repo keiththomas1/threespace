@@ -5,7 +5,14 @@ All notable changes to the `threespace` npm package will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 3/15/26
+## [1.2.0] - 2026-03-21
+
+### Added
+- In-player mute/unmute button and credit popup button
+- Audio pauses when the browser tab is hidden and resumes on return
+- Updated demo scenes
+
+## [1.1.0] - 2026-03-15
 
 ### Added
 - URL / filepath property editor for asset-based components (Model, Image, Video, Audio) — includes a "Relative Server Path" / "Internet URL" dropdown that sets the correct underlying field and clears the other

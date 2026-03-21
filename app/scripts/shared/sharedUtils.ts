@@ -14,9 +14,12 @@ export class SharedUtils {
     return "";
   }
 
-  /** Prepends AssetBasePath to root-relative paths. Absolute URLs (http/https) are returned as-is. */
+  /** Prepends AssetBasePath to root-relative paths and validates them. Absolute URLs (http/https) are returned as-is. */
   private static ResolveURL(url: string): string {
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return `${AssetManager.AssetBasePath}/${url}`;
+    
+    const base = AssetManager.AssetBasePath.replace(/\/+$/, ''); // Remove leading and trailing slashes
+    const path = url.startsWith('/') ? url : '/' + url; // Add a path separator if not present
+    return `${base}${path}`;
   }
 }

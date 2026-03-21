@@ -6,7 +6,7 @@ import { SCENES, VisualCarousel } from '../components/visualCarousel/visualCarou
 import { Component } from 'react';
 import { PlayerProperties, AssetManager } from 'threespace';
 import EditorPage from './editor';
-import Utils from './utils';
+import Utils from '../lib/utils';
 
 interface State {
   playerSettings: PlayerProperties;

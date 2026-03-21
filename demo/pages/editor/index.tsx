@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { Component } from 'react';
 import { ThreeSpaceEditor, PlayerProperties, EditorConfig, AssetManager } from 'threespace';
 import { SCENES, VisualCarousel } from '../../components/visualCarousel/visualCarousel';
-import Utils from 'pages/utils';
+import Utils from '../../lib/utils';
 
 export default class EditorPage extends Component {
   private container: HTMLDivElement | null = null;

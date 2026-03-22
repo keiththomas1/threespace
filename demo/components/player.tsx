@@ -2,7 +2,11 @@ import { Component } from "react";
 import { AssetManager, ThreeSpacePlayer, SceneLoadInfo } from "threespace";
 import styles from '../styles/Player.module.css';
 
-export default class Player extends Component {
+interface State {
+  showAudioPrompt: boolean;
+}
+
+export default class Player extends Component<{}, State> {
   private player: ThreeSpacePlayer | null = null;
   private playerComponentSelected: () => {};
 
@@ -11,6 +15,8 @@ export default class Player extends Component {
   private creditAuthorName: HTMLElement | null = null;
   private creditSiteName: HTMLElement | null = null;
   private creditLicenseName: HTMLElement | null = null;
+
+  state: State = { showAudioPrompt: false };
 
   constructor(props: any) {
     super(props);
@@ -32,6 +38,7 @@ export default class Player extends Component {
     if (prevProps.playerSettings !== this.props.playerSettings && this.player) {
       this.player.Dispose();
       this.player = null;
+      this.setState({ showAudioPrompt: false });
     }
     this.setupPlayer();
   }
@@ -50,6 +57,11 @@ export default class Player extends Component {
 
   /** Called when the ThreeSpace player has finished loading the scene */
   sceneLoaded = (sceneLoadInfo: SceneLoadInfo) => {
+    this.setState({ showAudioPrompt: sceneLoadInfo.hasAudio && navigator.userActivation.hasBeenActive === false });
+  }
+
+  playerClicked = () => {
+    this.setState({ showAudioPrompt: false });
   }
 
   setCreditInfo = (pieceName: string, artistName: string, siteName: string, licenseName: string) => {
@@ -66,8 +78,14 @@ export default class Player extends Component {
   }
 
   render() {
+    const { showAudioPrompt } = this.state;
     return (
-      <div id={styles.playerParent}>
+      <div id={styles.playerParent} onClick={this.playerClicked}>
+        {showAudioPrompt && (
+          <div className={styles.audioPrompt}>
+            Click anywhere to play audio
+          </div>
+        )}
         <div id={styles.referenceSection}>
           <p id={styles.referencePieceName} className={styles.referenceLine}></p>
           <p id={styles.referenceAuthorName} className={styles.referenceLine}></p>

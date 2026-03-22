@@ -20,7 +20,7 @@ export interface SceneProperties {
 
 /** Information only available after loading the scene */
 export interface SceneLoadInfo {
-  hasAudio: boolean
+  hasAudio: boolean;
 }
 
 /**

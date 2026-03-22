@@ -20,7 +20,7 @@ import VRButton from './vrButton';
 import { SharedUtils } from "../shared/sharedUtils";
 
 /**
- * The ThreeSpace player. Loads player properties (the JSON exported from the editor) and renders the scene accordingly. 
+ * The ThreeSpace player. Loads player properties (the JSON exported from the editor) and renders the scene accordingly.
  * Also handles user interactions and component actions.
  */
 export class ThreeSpacePlayer {
@@ -63,6 +63,7 @@ export class ThreeSpacePlayer {
   private creditPopup: HTMLElement | null = null;
   private muteButtonEl: HTMLElement | null = null;
   private unmuteButtonEl: HTMLElement | null = null;
+  private audioClickHandler: (() => void) | null = null;
 
   /* Callbacks */
   private componentSelected: (eventName: string) => any = () => {};
@@ -189,6 +190,11 @@ export class ThreeSpacePlayer {
       this.creditPopup = null;
     }
 
+    if (this.audioClickHandler) {
+      this.canvasParent.removeEventListener('click', this.audioClickHandler);
+      this.audioClickHandler = null;
+    }
+
     this.Canvas.remove();
   }
 
@@ -297,12 +303,11 @@ export class ThreeSpacePlayer {
               sound.setBuffer( buffer );
               sound.setLoop( true );
               sound.setVolume( 1 );
-              sound.play();
+              this.AssetLoaded();
             }, undefined, (err) => {
               console.warn('ThreeSpace: failed to load audio at', url, err);
             });
             this.sounds.push(sound);
-            this.AssetLoaded();
           });
           break;
       }
@@ -316,9 +321,33 @@ export class ThreeSpacePlayer {
 
   private CheckFinishedLoading() {
     if (this.assetsLoaded == this.playerProperties.components.length) {
+      this.SetupAudio();
       this.SetupToolbar(this.playerProperties.components);
-      this.sceneLoadInfo = { hasAudio: this.HasAudio };
+
+      this.sceneLoadInfo = {
+        hasAudio: this.HasAudio
+      };
       this.sceneLoaded(this.sceneLoadInfo);
+    }
+  }
+
+  private SetupAudio() {
+    if (!this.HasAudio) return;
+
+    if (navigator.userActivation.hasBeenActive) {
+      this.PlayAllSounds();
+    } else {
+      this.audioClickHandler = () => {
+        this.PlayAllSounds();
+        this.audioClickHandler = null;
+      };
+      this.canvasParent.addEventListener('click', this.audioClickHandler, { once: true });
+    }
+  }
+
+  private PlayAllSounds() {
+    for (const sound of this.sounds) {
+      if (!sound.isPlaying) sound.play();
     }
   }
 

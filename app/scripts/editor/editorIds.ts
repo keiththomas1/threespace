@@ -45,6 +45,7 @@ export const EditorIds = {
   resetSceneNoButton:        'ts-reset-scene-no-button',
   pathConfirmPopupParent:    'ts-path-confirm-popup-parent',
   pathConfirmPopupLabel:     'ts-path-confirm-popup-label',
+  pathConfirmPathInput:      'ts-path-confirm-path-input',
   pathConfirmInput:          'ts-path-confirm-input',
   pathConfirmCancelButton:   'ts-path-confirm-cancel-button',
   savePopupParent:           'ts-save-popup-parent',

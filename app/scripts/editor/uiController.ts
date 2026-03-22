@@ -65,14 +65,14 @@ export default class UiController {
           componentProperty.value.b * 255];
         this.colorPicker.rgb = color;
 
-        const oldProperty = JSON.parse(JSON.stringify(componentProperty));
+        const previousProperty = JSON.parse(JSON.stringify(componentProperty));
 
         this.ShowColorPicker();
         this.colorPickerChanged = (_: any, color: any) => {
           const rgb = color.match(/\d+/g);
           componentProperty.value = new THREE.Color(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
           const newProperty = JSON.parse(JSON.stringify(componentProperty));
-          this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, oldProperty, newProperty));
+          this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousProperty, newProperty));
         };
       },
       undoManager

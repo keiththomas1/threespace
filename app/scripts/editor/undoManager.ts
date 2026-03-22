@@ -17,13 +17,13 @@ export interface ICommand {
 export class PropertyChangedCommand implements ICommand {
   private component: BaseComponent;
   private propertyName: string;
-  private oldProperty: any;
+  private previousProperty: any;
   private newProperty: any;
 
-  constructor(component: BaseComponent, propertyName: string, oldProperty: any, newProperty: any) {
+  constructor(component: BaseComponent, propertyName: string, previousProperty: any, newProperty: any) {
     this.component = component;
     this.propertyName = propertyName;
-    this.oldProperty = oldProperty;
+    this.previousProperty = previousProperty;
     this.newProperty = newProperty;
   }
 
@@ -32,7 +32,7 @@ export class PropertyChangedCommand implements ICommand {
   }
 
   public Undo(): void {
-    this.component.PropertyChanged(this.propertyName, this.oldProperty);
+    this.component.PropertyChanged(this.propertyName, this.previousProperty);
   }
 }
 

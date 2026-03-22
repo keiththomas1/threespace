@@ -350,10 +350,10 @@ export default class PropertiesWindow {
     input.id = propertyName;
     input.checked = componentProperty.value;
     input.addEventListener("click", () => {
-      const oldProperty = JSON.parse(JSON.stringify(componentProperty));
+      const previousProperty = JSON.parse(JSON.stringify(componentProperty));
       componentProperty.value = input.checked;
       this.undoManager.Execute(
-        new PropertyChangedCommand(baseComponent, propertyName, oldProperty, JSON.parse(JSON.stringify(componentProperty)))
+        new PropertyChangedCommand(baseComponent, propertyName, previousProperty, JSON.parse(JSON.stringify(componentProperty)))
       );
       selectedCallback(input.checked);
     });
@@ -390,10 +390,10 @@ export default class PropertiesWindow {
     }
     select.value = componentProperty.value;
     select.onchange = (e: Event) => {
-      const oldProperty = JSON.parse(JSON.stringify(componentProperty));
+      const previousProperty = JSON.parse(JSON.stringify(componentProperty));
       componentProperty.value = select.value;
       this.undoManager.Execute(
-        new PropertyChangedCommand(baseComponent, propertyName, oldProperty, JSON.parse(JSON.stringify(componentProperty)))
+        new PropertyChangedCommand(baseComponent, propertyName, previousProperty, JSON.parse(JSON.stringify(componentProperty)))
       );
       this.showPropertiesWindow(baseComponent);
     };

@@ -608,7 +608,7 @@ export class ThreeSpaceEditor {
     return { component, path };
   }
 
-  private addComponent = (componentProperties: ComponentProperties) => {
+  private addComponent = (componentProperties: ComponentProperties) : BaseComponent => {
     const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
     const { component, path } = this.createComponentFromProperties(componentProperties);
 
@@ -620,6 +620,8 @@ export class ThreeSpaceEditor {
       this.componentManager.AddComponent(component);
       if (path) this.projectView.registerAsset(path);
     }
+
+    return component;
   }
 
   private setBackgroundColorSolid = (color: THREE.Color) => {
@@ -748,34 +750,21 @@ export class ThreeSpaceEditor {
   private setupDefaultScene = () => {
     this.setSceneSettings(SettingsComponent.DefaultProperties);
     this.settingsComponent.SettingsProperties = SettingsComponent.DefaultProperties;
-
-    this.userCamera = new CameraComponent(
-      this.scene,
-      CameraComponent.DefaultProperties as CameraProperties,
-      this.editorCamera,
-      this.alignUserCameraWithView);
-    this.roomGroup.add(this.userCamera);
+    
+    this.userCamera = this.addComponent(CameraComponent.DefaultProperties) as CameraComponent;
     this.userCamera.position.set(0, 5, 5);
     this.userCamera.lookAt(new THREE.Vector3(0, 10, 10));
-    this.userCamera.OnDuplicate = () => this.duplicateComponent(this.userCamera!);
-    this.componentManager.AddComponent(this.userCamera);
-
+    
     const ambientLightProperties = LightComponent.DefaultProperties;
     ambientLightProperties.type = LightType.AMBIENT;
-    const ambientLight = new LightComponent(ambientLightProperties as LightProperties);
-    this.roomGroup.add(ambientLight);
+    const ambientLight = this.addComponent(ambientLightProperties);
     ambientLight.position.set(0, 7.5, 0);
-    ambientLight.OnDuplicate = () => this.duplicateComponent(ambientLight);
-    this.componentManager.AddComponent(ambientLight);
-
+    
     const directionalLightProperties = LightComponent.DefaultProperties;
     directionalLightProperties.type = LightType.DIRECTIONAL;
-    const directionalLight = new LightComponent(directionalLightProperties as LightProperties);
-    this.roomGroup.add(directionalLight);
+    const directionalLight = this.addComponent(directionalLightProperties);
     directionalLight.position.set(5, 10, -5);
     directionalLight.lookAt(new THREE.Vector3(0, 0, 0));
-    directionalLight.OnDuplicate = () => this.duplicateComponent(directionalLight);
-    this.componentManager.AddComponent(directionalLight);
 
     this.undoManager.Clear();
   }

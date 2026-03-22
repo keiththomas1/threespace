@@ -166,20 +166,21 @@ export default class PropertiesWindow {
     input.value = componentProperty.value;
     input.id = propertyName;
 
-    let oldVal: any = null;
-    input.addEventListener('focus', () => {
-      oldVal = JSON.parse(JSON.stringify(componentProperty));
-    });
     input.oninput = (e: Event) => {
       componentProperty.value = input.value;
       baseComponent.PropertyChanged(propertyName, componentProperty);
     };
+    
+    let previousValue: any = null;
+    input.addEventListener('focus', () => {
+      previousValue = JSON.parse(JSON.stringify(componentProperty));
+    });
     input.addEventListener('blur', () => {
-      if (oldVal !== null && componentProperty.value !== oldVal.value) {
-        this.undoManager.execute(
-          new PropertyChangedCommand(baseComponent, propertyName, oldVal, JSON.parse(JSON.stringify(componentProperty)))
+      if (previousValue !== null && componentProperty.value !== previousValue.value) {
+        this.undoManager.Execute(
+          new PropertyChangedCommand(baseComponent, propertyName, previousValue, JSON.parse(JSON.stringify(componentProperty)))
         );
-        oldVal = null;
+        previousValue = null;
       }
     });
 
@@ -244,10 +245,10 @@ export default class PropertiesWindow {
         console.warn(e);
       }
     };
-    slider.addEventListener('mouseup', () => {
+    slider.addEventListener('change', () => {
       const newProp = JSON.parse(JSON.stringify(componentProperty));
       if (newProp.value !== dragStart.value) {
-        this.undoManager.execute(
+        this.undoManager.Execute(
           new PropertyChangedCommand(baseComponent, propertyName, dragStart, newProp)
         );
         dragStart = newProp;
@@ -272,14 +273,14 @@ export default class PropertiesWindow {
   private createVector3Section(baseComponent: BaseComponent, propertyName: string, componentProperty: ComponentProperty) : HTMLElement {
     const propertySection = this.createPropertySection(propertyName);
 
-    let oldValX: any = JSON.parse(JSON.stringify(componentProperty));
-    let oldValY: any = JSON.parse(JSON.stringify(componentProperty));
-    let oldValZ: any = JSON.parse(JSON.stringify(componentProperty));
+    let previousValueX: any = JSON.parse(JSON.stringify(componentProperty));
+    let previousValueY: any = JSON.parse(JSON.stringify(componentProperty));
+    let previousValueZ: any = JSON.parse(JSON.stringify(componentProperty));
 
     const xInput = document.createElement("input");
     xInput.setAttribute("type", "text");
     xInput.value = componentProperty.value.x;
-    xInput.addEventListener('focus', () => { oldValX = JSON.parse(JSON.stringify(componentProperty)); });
+    xInput.addEventListener('focus', () => { previousValueX = JSON.parse(JSON.stringify(componentProperty)); });
     xInput.oninput = (e: Event) => {
       const x = this.getNumberValueFromInput(xInput.value);
       if (x !== -1) {
@@ -289,9 +290,9 @@ export default class PropertiesWindow {
     };
     xInput.addEventListener('blur', () => {
       const newProp = JSON.parse(JSON.stringify(componentProperty));
-      if (newProp.value.x !== oldValX.value.x) {
-        this.undoManager.execute(new PropertyChangedCommand(baseComponent, propertyName, oldValX, newProp));
-        oldValX = newProp;
+      if (newProp.value.x !== previousValueX.value.x) {
+        this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousValueX, newProp));
+        previousValueX = newProp;
       }
     });
     propertySection.appendChild(xInput);
@@ -299,7 +300,7 @@ export default class PropertiesWindow {
     const yInput = document.createElement("input");
     yInput.setAttribute("type", "text");
     yInput.value = componentProperty.value.y;
-    yInput.addEventListener('focus', () => { oldValY = JSON.parse(JSON.stringify(componentProperty)); });
+    yInput.addEventListener('focus', () => { previousValueY = JSON.parse(JSON.stringify(componentProperty)); });
     yInput.oninput = (e: Event) => {
       const y = this.getNumberValueFromInput(yInput.value);
       if (y !== -1) {
@@ -309,9 +310,9 @@ export default class PropertiesWindow {
     };
     yInput.addEventListener('blur', () => {
       const newProp = JSON.parse(JSON.stringify(componentProperty));
-      if (newProp.value.y !== oldValY.value.y) {
-        this.undoManager.execute(new PropertyChangedCommand(baseComponent, propertyName, oldValY, newProp));
-        oldValY = newProp;
+      if (newProp.value.y !== previousValueY.value.y) {
+        this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousValueY, newProp));
+        previousValueY = newProp;
       }
     });
     propertySection.appendChild(yInput);
@@ -319,7 +320,7 @@ export default class PropertiesWindow {
     const zInput = document.createElement("input");
     zInput.setAttribute("type", "text");
     zInput.value = componentProperty.value.z;
-    zInput.addEventListener('focus', () => { oldValZ = JSON.parse(JSON.stringify(componentProperty)); });
+    zInput.addEventListener('focus', () => { previousValueZ = JSON.parse(JSON.stringify(componentProperty)); });
     zInput.oninput = (e: Event) => {
       const z = this.getNumberValueFromInput(zInput.value);
       if (z !== -1) {
@@ -329,9 +330,9 @@ export default class PropertiesWindow {
     };
     zInput.addEventListener('blur', () => {
       const newProp = JSON.parse(JSON.stringify(componentProperty));
-      if (newProp.value.z !== oldValZ.value.z) {
-        this.undoManager.execute(new PropertyChangedCommand(baseComponent, propertyName, oldValZ, newProp));
-        oldValZ = newProp;
+      if (newProp.value.z !== previousValueZ.value.z) {
+        this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousValueZ, newProp));
+        previousValueZ = newProp;
       }
     });
     propertySection.appendChild(zInput);
@@ -351,7 +352,7 @@ export default class PropertiesWindow {
     input.addEventListener("click", () => {
       const oldProperty = JSON.parse(JSON.stringify(componentProperty));
       componentProperty.value = input.checked;
-      this.undoManager.execute(
+      this.undoManager.Execute(
         new PropertyChangedCommand(baseComponent, propertyName, oldProperty, JSON.parse(JSON.stringify(componentProperty)))
       );
       selectedCallback(input.checked);
@@ -391,7 +392,7 @@ export default class PropertiesWindow {
     select.onchange = (e: Event) => {
       const oldProperty = JSON.parse(JSON.stringify(componentProperty));
       componentProperty.value = select.value;
-      this.undoManager.execute(
+      this.undoManager.Execute(
         new PropertyChangedCommand(baseComponent, propertyName, oldProperty, JSON.parse(JSON.stringify(componentProperty)))
       );
       this.showPropertiesWindow(baseComponent);

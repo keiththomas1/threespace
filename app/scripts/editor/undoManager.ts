@@ -1,16 +1,19 @@
 import * as THREE from "three";
 import BaseComponent from "./components/baseComponent";
+import ComponentManager from "./componentManager";
 
-interface IComponentManagerCommands {
-  AddComponent(component: BaseComponent): void;
-  RemoveComponentFromScene(component: BaseComponent): void;
-}
-
+/**
+ * Implements the Command pattern for undo/redo functionality in the editor. Each command encapsulates an action (e.g. property change, transform change, component addition/removal) 
+ * and knows how to execute and undo that action. 
+ */
 export interface ICommand {
-  execute(): void;
-  undo(): void;
+  Execute(): void;
+  Undo(): void;
 }
 
+/** 
+ * Command for property changes on components. Stores the component, property name, old value, and new value. On execute, applies the new value; on undo, reverts to the old value.
+ */
 export class PropertyChangedCommand implements ICommand {
   private component: BaseComponent;
   private propertyName: string;
@@ -24,15 +27,19 @@ export class PropertyChangedCommand implements ICommand {
     this.newProperty = newProperty;
   }
 
-  execute(): void {
+  public Execute(): void {
     this.component.PropertyChanged(this.propertyName, this.newProperty);
   }
 
-  undo(): void {
+  public Undo(): void {
     this.component.PropertyChanged(this.propertyName, this.oldProperty);
   }
 }
 
+/**
+ * Command for transform changes on components. Stores the component, its matrix before the change, and its matrix after the change. 
+ * On execute, applies the after matrix; on undo, reverts to the before matrix.
+ */
 export class TransformChangedCommand implements ICommand {
   private component: BaseComponent;
   private matrixBefore: number[];
@@ -44,11 +51,11 @@ export class TransformChangedCommand implements ICommand {
     this.matrixAfter = matrixAfter;
   }
 
-  execute(): void {
+  public Execute(): void {
     this.applyMatrix(this.matrixAfter);
   }
 
-  undo(): void {
+  public Undo(): void {
     this.applyMatrix(this.matrixBefore);
   }
 
@@ -64,16 +71,20 @@ export class TransformChangedCommand implements ICommand {
   }
 }
 
+/**
+ * Command for adding a component to the scene. Stores the component, the room group to which it is added, the component manager, and a callback to select the component after adding. 
+ * On execute, adds the component to the scene and selects it; on undo, removes the component from the scene.
+ */
 export class AddComponentCommand implements ICommand {
   private component: BaseComponent;
   private roomGroup: THREE.Group;
-  private componentManager: IComponentManagerCommands;
+  private componentManager: ComponentManager;
   private selectCallback: () => void;
 
   constructor(
     component: BaseComponent,
     roomGroup: THREE.Group,
-    componentManager: IComponentManagerCommands,
+    componentManager: ComponentManager,
     selectCallback: () => void
   ) {
     this.component = component;
@@ -82,28 +93,32 @@ export class AddComponentCommand implements ICommand {
     this.selectCallback = selectCallback;
   }
 
-  execute(): void {
+  public Execute(): void {
     this.roomGroup.add(this.component);
     this.componentManager.AddComponent(this.component);
     this.selectCallback();
   }
 
-  undo(): void {
+  public Undo(): void {
     this.componentManager.RemoveComponentFromScene(this.component);
     this.roomGroup.remove(this.component);
   }
 }
 
+/**
+ * Command for removing a component from the scene. Stores the component, the room group from which it is removed, the component manager, and a callback to select the component after undoing. 
+ * On execute, removes the component from the scene; on undo, adds the component back to the scene and selects it. Also includes a method to dispose of the component when it is evicted from the undo stack.
+ */
 export class RemoveComponentCommand implements ICommand {
   private component: BaseComponent;
   private roomGroup: THREE.Group;
-  private componentManager: IComponentManagerCommands;
+  private componentManager: ComponentManager;
   private undoCallback: () => void;
 
   constructor(
     component: BaseComponent,
     roomGroup: THREE.Group,
-    componentManager: IComponentManagerCommands,
+    componentManager: ComponentManager,
     undoCallback: () => void = () => {}
   ) {
     this.component = component;
@@ -112,64 +127,69 @@ export class RemoveComponentCommand implements ICommand {
     this.undoCallback = undoCallback;
   }
 
-  execute(): void {
+  public Execute(): void {
     this.componentManager.RemoveComponentFromScene(this.component);
     this.roomGroup.remove(this.component);
   }
 
-  undo(): void {
+  public Undo(): void {
     this.roomGroup.add(this.component);
     this.componentManager.AddComponent(this.component);
     this.undoCallback();
   }
 
-  public disposeComponent(): void {
+  public DisposeComponent(): void {
     this.component.dispose();
   }
 }
 
+/**
+ * Manages the undo and redo stacks for the editor. Provides methods to execute a command, undo the last command, redo the last undone command, and clear the history.
+ */
 export class UndoManager {
   private undoStack: ICommand[] = [];
   private redoStack: ICommand[] = [];
   readonly maxSize: number;
   private onChanged?: () => void;
 
-  constructor(maxSize = 25, onChanged?: () => void) {
-    this.maxSize = maxSize;
+  private readonly MAX_SIZE = 25;
+
+  constructor(onChanged?: () => void) {
+    this.maxSize = this.MAX_SIZE;
     this.onChanged = onChanged;
   }
 
-  execute(command: ICommand): void {
-    command.execute();
+  public Execute(command: ICommand): void {
+    command.Execute();
     this.undoStack.push(command);
     if (this.undoStack.length > this.maxSize) {
       const evicted = this.undoStack.shift();
-      if (evicted instanceof RemoveComponentCommand) evicted.disposeComponent();
+      if (evicted instanceof RemoveComponentCommand) evicted.DisposeComponent();
     }
     this.redoStack = [];
   }
 
-  undo(): void {
+  public Undo(): void {
     const cmd = this.undoStack.pop();
     if (cmd) {
-      cmd.undo();
+      cmd.Undo();
       this.redoStack.push(cmd);
       this.onChanged?.();
     }
   }
 
-  redo(): void {
+  public Redo(): void {
     const cmd = this.redoStack.pop();
     if (cmd) {
-      cmd.execute();
+      cmd.Execute();
       this.undoStack.push(cmd);
       this.onChanged?.();
     }
   }
 
-  clear(): void {
+  public Clear(): void {
     [...this.undoStack, ...this.redoStack]
-      .forEach(c => { if (c instanceof RemoveComponentCommand) c.disposeComponent(); });
+      .forEach(c => { if (c instanceof RemoveComponentCommand) c.DisposeComponent(); });
     this.undoStack = [];
     this.redoStack = [];
   }

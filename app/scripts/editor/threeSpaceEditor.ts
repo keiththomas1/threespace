@@ -130,7 +130,7 @@ export class ThreeSpaceEditor {
     this.roomGroup = new THREE.Group();
     this.scene.add(this.roomGroup);
 
-    this.undoManager = new UndoManager(25, () => {
+    this.undoManager = new UndoManager(() => {
       const current = this.componentManager?.CurrentComponent;
       if (current) this.uiController?.ShowPropertiesWindow(current);
     });
@@ -250,7 +250,7 @@ export class ThreeSpaceEditor {
       this.AddComponents(playerProperties.components);
       this.setSceneSettings(playerProperties.sceneProperties);
       this.settingsComponent.SettingsProperties = playerProperties.sceneProperties;
-      this.undoManager.clear();
+      this.undoManager.Clear();
     }
   }
 
@@ -672,7 +672,7 @@ export class ThreeSpaceEditor {
   }
 
   private componentAdded = (component: BaseComponent) => {
-    this.undoManager.execute(
+    this.undoManager.Execute(
       new AddComponentCommand(component, this.roomGroup, this.componentManager, () => {
         component.OnDuplicate = () => this.duplicateComponent(component);
         this.componentManager.SetSelectedComponent(component);
@@ -765,7 +765,7 @@ export class ThreeSpaceEditor {
     directionalLight.OnDuplicate = () => this.duplicateComponent(directionalLight);
     this.componentManager.AddComponent(directionalLight);
 
-    this.undoManager.clear();
+    this.undoManager.Clear();
   }
 
   private alignUserCameraWithView = () => {

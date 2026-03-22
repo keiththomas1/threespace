@@ -48,7 +48,7 @@ export default class UiController {
 
     this.propertiesWindow = new PropertiesWindow(
       (component: BaseComponent) => {
-        this.undoManager.execute(
+        this.undoManager.Execute(
           new RemoveComponentCommand(component, this.roomGroup, componentManager, () => {
             componentManager.SetSelectedComponent(component);
             this.propertiesWindow.showPropertiesWindow(component);
@@ -72,7 +72,7 @@ export default class UiController {
           const rgb = color.match(/\d+/g);
           componentProperty.value = new THREE.Color(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
           const newProperty = JSON.parse(JSON.stringify(componentProperty));
-          this.undoManager.execute(new PropertyChangedCommand(baseComponent, propertyName, oldProperty, newProperty));
+          this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, oldProperty, newProperty));
         };
       },
       undoManager

@@ -32,22 +32,22 @@ export default class ComponentManager {
     this.controls.setScaleSnap(0.1);
     this.undoManager = undoManager;
 
-    let matrixBefore: number[] | null = null;
+    let previousMatrix: number[] | null = null;
     this.controls.addEventListener('dragging-changed', (event: any) => {
       orbitControls.enabled = !event.value;
       if (event.value) {
         if (this.currentComponent) {
           this.currentComponent.updateMatrix();
-          matrixBefore = Array.from(this.currentComponent.matrix.elements);
+          previousMatrix = Array.from(this.currentComponent.matrix.elements);
         }
       } else {
-        if (this.currentComponent && matrixBefore) {
+        if (this.currentComponent && previousMatrix) {
           this.currentComponent.updateMatrix();
           const matrixAfter = Array.from(this.currentComponent.matrix.elements);
-          this.undoManager.execute(
-            new TransformChangedCommand(this.currentComponent, matrixBefore, matrixAfter)
+          this.undoManager.Execute(
+            new TransformChangedCommand(this.currentComponent, previousMatrix, matrixAfter)
           );
-          matrixBefore = null;
+          previousMatrix = null;
         }
       }
     });
@@ -161,13 +161,13 @@ export default class ComponentManager {
 
   private setupControls() {
     window.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey) {
+        if (event.key === 'z') { event.preventDefault(); this.undoManager.Undo(); return; }
+        if (event.key === 'y') { event.preventDefault(); this.undoManager.Redo(); return; }
+      }
+
       const tag = (event.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-
-      if (event.ctrlKey || event.metaKey) {
-        if (event.key === 'z') { event.preventDefault(); this.undoManager.undo(); return; }
-        if (event.key === 'y') { event.preventDefault(); this.undoManager.redo(); return; }
-      }
 
       switch (event.key) {
         case 'f': case 'F': if (this.currentComponent) this.focusComponent(this.currentComponent); break;

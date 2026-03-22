@@ -334,7 +334,7 @@ export class ThreeSpacePlayer {
   private SetupAudio() {
     if (!this.HasAudio) return;
 
-    if (navigator.userActivation.hasBeenActive) {
+    if ((navigator as any).userActivation?.hasBeenActive) {
       this.PlayAllSounds();
     } else {
       this.audioClickHandler = () => {
@@ -396,14 +396,11 @@ export class ThreeSpacePlayer {
   /** Sets up the mute and audio credit buttons in the toolbar */
   private SetupAudioButtons(componentProperties: ComponentProperties[]) {
     const hasAudio = this.HasAudio;
-    
-    if (!hasAudio) return;
-
     const credits = componentProperties
       .filter(c => c.componentType === ComponentType.Audio && (c as AudioProperties).showCreditButton)
       .map(c => c.credit);
 
-    if (credits.length === 0) return;
+    if (!hasAudio && credits.length === 0) return;
 
     this.playerToolbar = document.createElement('div');
     this.playerToolbar.style.cssText = [
@@ -476,20 +473,24 @@ export class ThreeSpacePlayer {
         title.textContent = credit.pieceName;
         popup.appendChild(title);
       }
-      const artistLine = document.createElement('p');
-      artistLine.style.cssText = 'margin:0;opacity:0.85;';
-      if (credit.websiteName) {
-        const link = document.createElement('a');
-        link.href = credit.websiteName;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.style.cssText = 'color:#90c8ff;text-decoration:none;';
-        link.textContent = credit.authorName;
-        artistLine.appendChild(link);
-      } else {
+
+      if (credit.authorName) {
+        const artistLine = document.createElement('p');
+        artistLine.style.cssText = 'margin:0;font-weight:bold;';
         artistLine.textContent = credit.authorName;
+        popup.appendChild(artistLine);
       }
-      popup.appendChild(artistLine);
+      
+      if (credit.websiteName) {
+        const websiteLine = document.createElement('a');
+        websiteLine.href = credit.websiteName;
+        websiteLine.target = '_blank';
+        websiteLine.rel = 'noopener noreferrer';
+        websiteLine.style.cssText = 'margin:0;color:#90c8ff;text-decoration:none;';
+        websiteLine.textContent = credit.websiteName;
+        popup.appendChild(websiteLine);
+      }
+
       if (credit.licenseName) {
         const license = document.createElement('p');
         license.style.cssText = 'margin:0;opacity:0.85;';

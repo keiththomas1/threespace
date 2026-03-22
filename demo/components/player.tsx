@@ -57,7 +57,7 @@ export default class Player extends Component<{}, State> {
 
   /** Called when the ThreeSpace player has finished loading the scene */
   sceneLoaded = (sceneLoadInfo: SceneLoadInfo) => {
-    this.setState({ showAudioPrompt: sceneLoadInfo.hasAudio && navigator.userActivation.hasBeenActive === false });
+    this.setState({ showAudioPrompt: sceneLoadInfo.hasAudio && (navigator as any).userActivation?.hasBeenActive === false });
   }
 
   playerClicked = () => {

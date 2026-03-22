@@ -549,8 +549,7 @@ export class ThreeSpaceEditor {
     if (this.config.onSave) this.config.onSave(sceneProperties);
   }
 
-  private addComponent = (componentProperties: ComponentProperties) => {
-    const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
+  private createComponentFromProperties = (componentProperties: ComponentProperties): { component: BaseComponent | null, path: string } => {
     let path = "";
     if ([ComponentType.Camera, ComponentType.Light, ComponentType.Text3D, ComponentType.Settings, ComponentType.VFX].indexOf(componentProperties.componentType as ComponentType) === -1) {
       path = SharedUtils.GetURLFromComponentProperties(componentProperties);
@@ -605,6 +604,13 @@ export class ThreeSpaceEditor {
       case ComponentType.Webpage:
         break;
     }
+
+    return { component, path };
+  }
+
+  private addComponent = (componentProperties: ComponentProperties) => {
+    const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
+    const { component, path } = this.createComponentFromProperties(componentProperties);
 
     if (component) {
       this.roomGroup.add(component);
@@ -687,7 +693,13 @@ export class ThreeSpaceEditor {
     const json = source.toJSON();
     props.transformMatrix = json.object.matrix;
 
-    this.addComponent(props);
+    const { component, path } = this.createComponentFromProperties(props);
+    if (component) {
+      const matrix = new THREE.Matrix4().fromArray(props.transformMatrix);
+      component.applyMatrix4(matrix);
+      if (path) this.projectView.registerAsset(path);
+      this.componentAdded(component);
+    }
   }
 
   private togglePreview = (inPreviewMode: boolean) => {

@@ -12,28 +12,30 @@
       "r": 0.2823529411764706,
       "g": 0.5019607843137255,
       "b": 0
-    }
+    },
+    "gridEnabled": true,
+    "gridSize": 0.1
   },
   "components": [
     {
       "componentName": "",
       "componentType": "CAMERA",
       "transformMatrix": [
-        1,
+        0.8650982195129755,
+        -1.249000902703301e-16,
+        -0.5016025025809575,
         0,
+        -0.20364018903834247,
+        0.9138823113141553,
+        -0.3512118939835685,
         0,
+        0.4584056544196501,
+        0.4059792126046569,
+        0.7905979603622786,
         0,
-        0,
-        0.9165726609565387,
-        -0.3998681747614456,
-        0,
-        0,
-        0.3998681747614456,
-        0.9165726609565387,
-        0,
-        0,
-        5.90321309432038,
-        3.8545824810721347,
+        5.1796955416186305,
+        9.328579349033378,
+        6.581224399258094,
         1
       ],
       "action": {
@@ -105,17 +107,17 @@
       "componentName": "",
       "componentType": "LIGHT",
       "transformMatrix": [
-        -0.054188600173014516,
-        -0.6501853452186458,
-        0.7578407566726663,
+        -0.05418860017301452,
+        -0.6501853452186457,
+        0.7578407566726665,
         0,
-        0.9340795505585473,
-        -0.30125879861603355,
-        -0.19167297536368205,
+        0.9340795505585471,
+        -0.3012587986160338,
+        -0.1916729753636821,
         0,
-        0.35292915555339394,
+        0.35292915555339405,
         0.6974970631617988,
-        0.6236496276283934,
+        0.6236496276283933,
         0,
         4.202132952895333,
         10,
@@ -226,7 +228,7 @@
       "componentName": "BaseComponent",
       "componentType": "MODEL",
       "transformMatrix": [
-        -0.04999751437739044,
+        -0.0499975143773904,
         0,
         0.0004985539916927298,
         0,
@@ -236,7 +238,7 @@
         0,
         -0.0004985539916927298,
         0,
-        -0.04999751437739044,
+        -0.0499975143773904,
         0,
         -3.0953124367128866,
         1.587384222071512,
@@ -494,6 +496,1668 @@
       "animationBehaviorType": "PlayOnStart",
       "currentAnimationName": "",
       "filepath": "/scenes/Lab/assets/dish_petridish.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.8161082669186168,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -10,
+        -0.8161082669186168,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        10,
+        -0.8161082669186168,
+        0,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -10,
+        -0.8161082669186168,
+        10,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.8161082669186168,
+        10,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        10,
+        -0.8161082669186168,
+        10,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -10,
+        -0.8161082669186168,
+        -10,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.8161082669186168,
+        -9.9,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        10,
+        -0.8161082669186168,
+        -10,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -0.8161082669186168,
+        -19.900000000000002,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -10,
+        -0.8161082669186168,
+        -20,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        10,
+        -0.8161082669186168,
+        -19.900000000000002,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999390052496986,
+        0,
+        0.0007809675405663015,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007809675405663015,
+        0,
+        -0.04999390052496986,
+        0,
+        -8.700000000000001,
+        1.6051380611695523,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999751437739036,
+        0,
+        0.0004985539916927297,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0004985539916927297,
+        0,
+        -0.04999751437739036,
+        0,
+        -5.6000000000000005,
+        1.587384222071512,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_4_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999751437739035,
+        0,
+        0.0004985539916927297,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0004985539916927297,
+        0,
+        -0.04999751437739035,
+        0,
+        -2.5,
+        1.587384222071512,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_4_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999453967083259,
+        0,
+        0.0007389202267814857,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007389202267814857,
+        0,
+        -0.04999453967083259,
+        0,
+        0.6000000000000001,
+        1.6165221862843415,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_2_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999390052496986,
+        0,
+        0.0007809675405663015,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007809675405663015,
+        0,
+        -0.04999390052496986,
+        0,
+        6.7,
+        1.6,
+        -13.5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0.1,
+        0,
+        7.2,
+        4.2,
+        -14.200000000000001,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_glassware_beaker_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999453967083259,
+        0,
+        0.0007389202267814857,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007389202267814857,
+        0,
+        -0.04999453967083259,
+        0,
+        0.6000000000000001,
+        8.4,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_2_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -2.2204460492503136e-16,
+        1.0000000000000002,
+        0,
+        0,
+        -1.0000000000000002,
+        -2.2204460492503136e-16,
+        0,
+        0,
+        4.1000000000000005,
+        -16.1,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -2.2204460492503136e-16,
+        1.0000000000000002,
+        0,
+        0,
+        -1.0000000000000002,
+        -2.2204460492503136e-16,
+        0,
+        10,
+        4.1000000000000005,
+        -16.1,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -2.2204460492503136e-16,
+        1.0000000000000002,
+        0,
+        0,
+        -1.0000000000000002,
+        -2.2204460492503136e-16,
+        0,
+        -10,
+        4.1000000000000005,
+        -16.1,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -2.2204460492503136e-16,
+        1.0000000000000002,
+        0,
+        0,
+        -1.0000000000000002,
+        -2.2204460492503136e-16,
+        0,
+        0,
+        14.100000000000001,
+        -16.1,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -2.2204460492503136e-16,
+        1.0000000000000002,
+        0,
+        0,
+        -1.0000000000000002,
+        -2.2204460492503136e-16,
+        0,
+        10,
+        14.100000000000001,
+        -16.1,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        -2.2204460492503136e-16,
+        1.0000000000000002,
+        0,
+        0,
+        -1.0000000000000002,
+        -2.2204460492503136e-16,
+        0,
+        -10,
+        14.100000000000001,
+        -16.1,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999453967083259,
+        0,
+        0.0007389202267814857,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007389202267814857,
+        0,
+        -0.04999453967083259,
+        0,
+        -2.5,
+        8.4,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_2_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999453967083259,
+        0,
+        0.0007389202267814857,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007389202267814857,
+        0,
+        -0.04999453967083259,
+        0,
+        -8.5,
+        8.4,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_2_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.04999453967083259,
+        0,
+        0.0007389202267814857,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        -0.0007389202267814857,
+        0,
+        -0.04999453967083259,
+        0,
+        6.800000000000001,
+        8.4,
+        -13.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_2_shelves.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        7,
+        -14.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_glassware_reagent_bottle_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        -2.7,
+        8.8,
+        -14.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_glassware_reagent_bottle_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        -3.8000000000000003,
+        4.313349120913022,
+        -14.600000000000001,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_plastic_bottle_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0.1,
+        0,
+        -5.6000000000000005,
+        3.8000000000000003,
+        -14.4,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/bottle_glassware_florence_flask_large.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -0.05,
+        6.123233995736766e-18,
+        7.498798913309288e-34,
+        0,
+        6.123233995736766e-18,
+        0.05,
+        6.123233995736766e-18,
+        0,
+        0,
+        6.123233995736766e-18,
+        -0.05,
+        0,
+        3.7,
+        1.6,
+        -13.5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/counter_counter_sink.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0,
+        0,
+        0,
+        0.05,
+        0,
+        0.6000000000000001,
+        1.9000000000000001,
+        -12.9,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets/ppe_lab_gown_folded.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        -2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1.1,
+        0,
+        -15.200000000000001,
+        4.1000000000000005,
+        -10.5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        -2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -15.200000000000001,
+        4.1000000000000005,
+        -0.2,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        -2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -15.200000000000001,
+        4.1000000000000005,
+        9.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        -2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1.1,
+        0,
+        -15.200000000000001,
+        14.100000000000001,
+        -10.5,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        -2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -15.200000000000001,
+        14.100000000000001,
+        -0.2,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "MODEL",
+      "transformMatrix": [
+        -2.220446049250313e-16,
+        -1,
+        0,
+        0,
+        1,
+        -2.220446049250313e-16,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -15.200000000000001,
+        14.100000000000001,
+        9.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "animationBehaviorType": "PlayOnStart",
+      "currentAnimationName": "",
+      "filepath": "/scenes/Lab/assets//Ground_Plate_2.glb"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        -5.5511151231257846e-18,
+        0,
+        -0.02500000000000001,
+        0,
+        0,
+        0.025,
+        0,
+        0,
+        0.02500000000000001,
+        0,
+        -5.5511151231257846e-18,
+        0,
+        -14.600000000000001,
+        7.1000000000000005,
+        -8.8,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "Assets by",
+      "size": 21,
+      "thickness": 4,
+      "height": 4,
+      "frontColor": {
+        "r": 0.403921568627451,
+        "g": 0.6196078431372549,
+        "b": 0.6196078431372549
+      },
+      "sideColor": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+      },
+      "type": "Indie Flower"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        -5.5511151231257846e-18,
+        0,
+        -0.02500000000000001,
+        0,
+        0,
+        0.025,
+        0,
+        0,
+        0.02500000000000001,
+        0,
+        -5.5511151231257846e-18,
+        0,
+        -14.600000000000001,
+        5.7,
+        -7.300000000000001,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "MilkAndBanana",
+      "size": 29,
+      "thickness": 4,
+      "height": 4,
+      "frontColor": {
+        "r": 0.4980392156862745,
+        "g": 0.8156862745098039,
+        "b": 0.8156862745098039
+      },
+      "sideColor": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+      },
+      "type": "Indie Flower"
     }
   ]
 }

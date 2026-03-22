@@ -78,6 +78,7 @@ export class ThreeSpaceEditor {
 
   /* State */
   private config: EditorConfig;
+  private cachedImportPath: string = '';
   private inPreviewMode: boolean = false;
   private clickTimer: number = 0;
   private mousePosition: THREE.Vector2 = new THREE.Vector2();
@@ -261,30 +262,48 @@ export class ThreeSpaceEditor {
     }
   }
 
-  private showPathConfirmPopup(filename: string, defaultPath: string): Promise<string | null> {
+  private guessImportPath(): string {
+    for (const component of this.componentManager.Components) {
+      const filepath = component.ComponentProperties?.filepath;
+      if (filepath) {
+        const lastSlash = filepath.lastIndexOf('/');
+        if (lastSlash > 0) return filepath.substring(0, lastSlash);
+      }
+    }
+    return AssetManager.AssetBasePath;
+  }
+
+  private showPathConfirmPopup(filename: string): Promise<string | null> {
     return new Promise((resolve) => {
       const overlay = document.getElementById(EditorIds.pathConfirmPopupParent);
-      const input = document.getElementById(EditorIds.pathConfirmInput) as HTMLInputElement;
-      if (!overlay || !input) { resolve(defaultPath); return; }
-
-      const label = document.getElementById(EditorIds.pathConfirmPopupLabel);
-      if (label) {
-        label.textContent = `Note: Edit the path below if the file lives in a subfolder.`;
+      const pathInput = document.getElementById(EditorIds.pathConfirmPathInput) as HTMLInputElement;
+      const fileInput = document.getElementById(EditorIds.pathConfirmInput) as HTMLInputElement;
+      if (!overlay || !pathInput || !fileInput) {
+        resolve(`${AssetManager.AssetBasePath}/${filename}`);
+        return;
       }
 
-      input.value = defaultPath;
-      overlay.style.visibility = 'visible';
-      input.focus();
-      input.select();
+      const label = document.getElementById(EditorIds.pathConfirmPopupLabel);
+      if (label) label.textContent = 'Set the folder path (left) and filename (right).';
 
-      const form = input.closest('form');
+      pathInput.value = this.cachedImportPath || this.guessImportPath();
+      fileInput.value = filename;
+      overlay.style.visibility = 'visible';
+      pathInput.focus();
+      pathInput.select();
+
+      const form = pathInput.closest('form');
       const cancelBtn = document.getElementById(EditorIds.pathConfirmCancelButton);
       const cleanup = () => { overlay.style.visibility = 'hidden'; };
 
       const onSubmit = (e: Event) => {
         e.preventDefault();
         cleanup();
-        resolve(input.value || null);
+        const path = pathInput.value.replace(/\/+$/, '');
+        const file = fileInput.value.trim();
+        if (!file) { resolve(null); return; }
+        this.cachedImportPath = path;
+        resolve(path ? `${path}/${file}` : file);
       };
       const onCancel = () => {
         cleanup();
@@ -300,8 +319,7 @@ export class ThreeSpaceEditor {
     let placed = 0;
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const defaultPath = `${AssetManager.AssetBasePath}/${file.name}`;
-      const exportUrl = await this.showPathConfirmPopup(file.name, defaultPath);
+      const exportUrl = await this.showPathConfirmPopup(file.name);
       if (!exportUrl) continue;
 
       const position = new THREE.Vector3(placed * 3, 5, 0);

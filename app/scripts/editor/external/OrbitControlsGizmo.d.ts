@@ -1,4 +1,4 @@
-import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import type { OrbitControlsGizmo } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export declare class OrbitControlsGizmo {
   domElement: HTMLElement;

@@ -10,6 +10,22 @@
   pointer-events: all;
 }
 
+.audioPrompt {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 901;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: all;
+}
+
 #referenceSection {
   visibility: hidden;
   position: absolute;

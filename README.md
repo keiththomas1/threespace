@@ -2,8 +2,6 @@
 
 **A self-contained 3D scene editor and player built on [Three.js](https://threejs.org).**
 
-https://github.com/user-attachments/assets/0b985784-45a0-48a6-8b06-28329e73cac8
-
 ThreeSpace provides you an editor for three.js scenes, and a player to load those into your application. Scenes are serialized as plain JSON, so they are trivial to store, fetch, and share.
 
 [![npm version](https://img.shields.io/npm/v/threespace)](https://www.npmjs.com/package/threespace)
@@ -16,6 +14,8 @@ ThreeSpace provides you an editor for three.js scenes, and a player to load thos
 [Player](https://keiththomas1.github.io/threespace)
 
 [Editor](https://keiththomas1.github.io/threespace/editor)
+
+https://github.com/user-attachments/assets/0b985784-45a0-48a6-8b06-28329e73cac8
 
 ---
 

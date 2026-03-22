@@ -15,7 +15,7 @@ ThreeSpace provides you an editor for three.js scenes, and a player to load thos
 
 [Editor](https://keiththomas1.github.io/threespace/editor)
 
-https://github.com/user-attachments/assets/0b985784-45a0-48a6-8b06-28329e73cac8
+https://github.com/user-attachments/assets/581b3b13-8a80-4d1b-8f87-6243aa9f90e0
 
 ---
 

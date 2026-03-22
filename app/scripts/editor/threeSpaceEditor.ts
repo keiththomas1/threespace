@@ -9,6 +9,7 @@ import GridRenderer from "./gridRenderer";
 import UiController from "./uiController";
 import BaseComponent from "./components/baseComponent";
 import ComponentManager from "./componentManager";
+import { UndoManager, AddComponentCommand } from "./undoManager";
 import { ThreeSpacePlayer } from "../player/threeSpacePlayer";
 import { AudioProperties, BackgroundColorType, CameraProperties, ComponentProperties,
   ComponentType, ImageProperties, LightProperties, LightType,
@@ -69,6 +70,7 @@ export class ThreeSpaceEditor {
   private vfx: VFXDust[] = [];
 
   /* UI and Utils */
+  private undoManager: UndoManager;
   private settingsComponent: SettingsComponent;
   private projectView!: ProjectView;
   private clock: THREE.Clock;
@@ -128,8 +130,13 @@ export class ThreeSpaceEditor {
     this.roomGroup = new THREE.Group();
     this.scene.add(this.roomGroup);
 
+    this.undoManager = new UndoManager(() => {
+      const current = this.componentManager?.CurrentComponent;
+      if (current) this.uiController?.ShowPropertiesWindow(current);
+    });
+
     this.componentManager = new ComponentManager(
-      this.scene, this.editorCamera, canvas, this.controls, this.focusCamera);
+      this.scene, this.editorCamera, canvas, this.controls, this.focusCamera, this.undoManager);
 
     this.postProcessingManager = new PostProcessingManager(
       this.renderer, this.scene, this.editorCamera);
@@ -152,7 +159,8 @@ export class ThreeSpaceEditor {
       this.componentAdded,
       this.togglePreview,
       this.resetScene,
-      this.saveScene);
+      this.saveScene,
+      this.undoManager);
 
     this.raycaster = new THREE.Raycaster();
     this.raycaster.layers.enableAll();
@@ -242,6 +250,7 @@ export class ThreeSpaceEditor {
       this.AddComponents(playerProperties.components);
       this.setSceneSettings(playerProperties.sceneProperties);
       this.settingsComponent.SettingsProperties = playerProperties.sceneProperties;
+      this.undoManager.Clear();
     }
   }
 
@@ -301,7 +310,6 @@ export class ThreeSpaceEditor {
       reader.onload = (event) => {
         if (typeof event.target?.result === 'string') {
           const component = createComponent(event.target.result, exportUrl);
-          this.roomGroup.add(component);
           component.position.copy(position);
           this.componentAdded(component);
           this.focusCamera(component);
@@ -326,7 +334,6 @@ export class ThreeSpaceEditor {
     const imageProperties = ImageComponent.DefaultProperties;
     imageProperties.url = url;
     const imageComponent = new ImageComponent(imageProperties, null, this.editorCamera)
-    this.roomGroup.add(imageComponent);
     this.componentAdded(imageComponent);
     this.projectView.registerAsset(url);
   }
@@ -346,7 +353,6 @@ export class ThreeSpaceEditor {
     properties.url = url;
 
     const videoComponent = new VideoComponent(properties, this.editorCamera)
-    this.roomGroup.add(videoComponent);
     this.componentAdded(videoComponent);
     this.projectView.registerAsset(url);
   }
@@ -365,7 +371,6 @@ export class ThreeSpaceEditor {
     const modelProperties = ModelComponent.DefaultProperties;
     modelProperties.url = url;
     const modelComponent = new ModelComponent(modelProperties, this.editorCamera, ()=>{});
-    this.roomGroup.add(modelComponent);
     this.componentAdded(modelComponent);
     this.projectView.registerAsset(url);
   }
@@ -375,7 +380,6 @@ export class ThreeSpaceEditor {
     const audioProperties = AudioComponent.DefaultProperties;
     audioProperties.url = url;
     const component = new AudioComponent(audioProperties, this.editorCamera, url);
-    this.roomGroup.add(component);
     this.componentAdded(component);
     this.projectView.registerAsset(url);
   }
@@ -407,7 +411,6 @@ export class ThreeSpaceEditor {
   public addLight = () => {
     const lightProperties = LightComponent.DefaultProperties;
     const lightComponent = new LightComponent(lightProperties);
-    this.roomGroup.add(lightComponent);
     this.componentAdded(lightComponent);
   }
 
@@ -438,7 +441,6 @@ export class ThreeSpaceEditor {
     }
 
     if (vfx) {
-      this.roomGroup.add(vfx);
       this.componentAdded(vfx);
       this.vfx.push(vfx);
     }
@@ -547,8 +549,7 @@ export class ThreeSpaceEditor {
     if (this.config.onSave) this.config.onSave(sceneProperties);
   }
 
-  private addComponent = (componentProperties: ComponentProperties) => {
-    const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
+  private createComponentFromProperties = (componentProperties: ComponentProperties): { component: BaseComponent | null, path: string } => {
     let path = "";
     if ([ComponentType.Camera, ComponentType.Light, ComponentType.Text3D, ComponentType.Settings, ComponentType.VFX].indexOf(componentProperties.componentType as ComponentType) === -1) {
       path = SharedUtils.GetURLFromComponentProperties(componentProperties);
@@ -604,13 +605,23 @@ export class ThreeSpaceEditor {
         break;
     }
 
+    return { component, path };
+  }
+
+  private addComponent = (componentProperties: ComponentProperties) : BaseComponent => {
+    const matrix = new THREE.Matrix4().fromArray(componentProperties.transformMatrix);
+    const { component, path } = this.createComponentFromProperties(componentProperties);
+
     if (component) {
       this.roomGroup.add(component);
       component.applyMatrix4(matrix);
 
-      this.componentAdded(component, false);
+      component.OnDuplicate = () => this.duplicateComponent(component);
+      this.componentManager.AddComponent(component);
       if (path) this.projectView.registerAsset(path);
     }
+
+    return component;
   }
 
   private setBackgroundColorSolid = (color: THREE.Color) => {
@@ -668,13 +679,14 @@ export class ThreeSpaceEditor {
     });
   }
 
-  private componentAdded = (component: BaseComponent, selectComponent: boolean = true) => {
-    component.OnDuplicate = () => this.duplicateComponent(component);
-    this.componentManager.AddComponent(component);
-    if (selectComponent) {
-      this.componentManager.SetSelectedComponent(component);
-      this.uiController.ShowPropertiesWindow(component);
-    }
+  private componentAdded = (component: BaseComponent) => {
+    this.undoManager.Execute(
+      new AddComponentCommand(component, this.roomGroup, this.componentManager, () => {
+        component.OnDuplicate = () => this.duplicateComponent(component);
+        this.componentManager.SetSelectedComponent(component);
+        this.uiController.ShowPropertiesWindow(component);
+      })
+    );
   }
 
   /* Creates a new component in the scene with the same properties and values as the source component. */
@@ -683,7 +695,13 @@ export class ThreeSpaceEditor {
     const json = source.toJSON();
     props.transformMatrix = json.object.matrix;
 
-    this.addComponent(props);
+    const { component, path } = this.createComponentFromProperties(props);
+    if (component) {
+      const matrix = new THREE.Matrix4().fromArray(props.transformMatrix);
+      component.applyMatrix4(matrix);
+      if (path) this.projectView.registerAsset(path);
+      this.componentAdded(component);
+    }
   }
 
   private togglePreview = (inPreviewMode: boolean) => {
@@ -732,31 +750,23 @@ export class ThreeSpaceEditor {
   private setupDefaultScene = () => {
     this.setSceneSettings(SettingsComponent.DefaultProperties);
     this.settingsComponent.SettingsProperties = SettingsComponent.DefaultProperties;
-
-    this.userCamera = new CameraComponent(
-      this.scene,
-      CameraComponent.DefaultProperties as CameraProperties,
-      this.editorCamera,
-      this.alignUserCameraWithView);
-    this.roomGroup.add(this.userCamera);
+    
+    this.userCamera = this.addComponent(CameraComponent.DefaultProperties) as CameraComponent;
     this.userCamera.position.set(0, 5, 5);
     this.userCamera.lookAt(new THREE.Vector3(0, 10, 10));
-    this.componentAdded(this.userCamera, false);
-
+    
     const ambientLightProperties = LightComponent.DefaultProperties;
     ambientLightProperties.type = LightType.AMBIENT;
-    const ambientLight = new LightComponent(ambientLightProperties as LightProperties);
-    this.roomGroup.add(ambientLight);
+    const ambientLight = this.addComponent(ambientLightProperties);
     ambientLight.position.set(0, 7.5, 0);
-    this.componentAdded(ambientLight, false);
-
+    
     const directionalLightProperties = LightComponent.DefaultProperties;
     directionalLightProperties.type = LightType.DIRECTIONAL;
-    const directionalLight = new LightComponent(directionalLightProperties as LightProperties);
-    this.roomGroup.add(directionalLight);
+    const directionalLight = this.addComponent(directionalLightProperties);
     directionalLight.position.set(5, 10, -5);
     directionalLight.lookAt(new THREE.Vector3(0, 0, 0));
-    this.componentAdded(directionalLight, false);
+
+    this.undoManager.Clear();
   }
 
   private alignUserCameraWithView = () => {

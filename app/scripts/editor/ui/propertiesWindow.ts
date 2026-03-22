@@ -3,6 +3,7 @@ import { ActionType, AnimationBehaviorType, BackgroundColorType, CameraType, Lig
 import BaseComponent from "../components/baseComponent";
 import { ActionProperty, ComponentProperty, CreditProperty, TransformProperty, UrlPathType, UrlProperty } from "../utils/constants";
 import { AssetManager } from '../..';
+import { UndoManager, PropertyChangedCommand } from "../undoManager";
 
 export default class PropertiesWindow {
   private readonly ALTERNATE_COLOR_ONE = "#222";
@@ -13,15 +14,18 @@ export default class PropertiesWindow {
   private alternatingOn: boolean = true;
   private currentTransformSection: HTMLElement = null;
   private currentComponent: BaseComponent = null;
+  private undoManager: UndoManager;
 
   public onComponentDeleted: (baseComponent: BaseComponent) => any;
   public onShowColorPicker: (baseComponent: BaseComponent, componentProperty: ComponentProperty, propertyName: string) => any;
 
   constructor(
     onComponentDeleted: (baseComponent: BaseComponent) => any,
-    onShowColorPicker: (baseComponent: BaseComponent, componentProperty: ComponentProperty, propertyName: string) => any) {
+    onShowColorPicker: (baseComponent: BaseComponent, componentProperty: ComponentProperty, propertyName: string) => any,
+    undoManager: UndoManager) {
     this.onComponentDeleted = onComponentDeleted;
     this.onShowColorPicker = onShowColorPicker;
+    this.undoManager = undoManager;
 
     this.propertiesWindow = document.getElementById(EditorIds.propertiesWindow);
   }
@@ -161,10 +165,24 @@ export default class PropertiesWindow {
     input.setAttribute("type", "textbox");
     input.value = componentProperty.value;
     input.id = propertyName;
+
     input.oninput = (e: Event) => {
       componentProperty.value = input.value;
       baseComponent.PropertyChanged(propertyName, componentProperty);
-    }
+    };
+    
+    let previousValue: any = null;
+    input.addEventListener('focus', () => {
+      previousValue = JSON.parse(JSON.stringify(componentProperty));
+    });
+    input.addEventListener('blur', () => {
+      if (previousValue !== null && componentProperty.value !== previousValue.value) {
+        this.undoManager.Execute(
+          new PropertyChangedCommand(baseComponent, propertyName, previousValue, JSON.parse(JSON.stringify(componentProperty)))
+        );
+        previousValue = null;
+      }
+    });
 
     propertySection.appendChild(input);
     return propertySection;
@@ -213,6 +231,11 @@ export default class PropertiesWindow {
     slider.step = componentProperty.step.toString();
     slider.value = componentProperty.value;
     slider.className = EditorClasses.slider;
+
+    let dragStart: any = JSON.parse(JSON.stringify(componentProperty));
+    slider.addEventListener('mousedown', () => {
+      dragStart = JSON.parse(JSON.stringify(componentProperty));
+    });
     slider.oninput = () => {
       try {
         sliderNumber.innerHTML = slider.value;
@@ -221,7 +244,16 @@ export default class PropertiesWindow {
       } catch (e) {
         console.warn(e);
       }
-    }
+    };
+    slider.addEventListener('change', () => {
+      const newProp = JSON.parse(JSON.stringify(componentProperty));
+      if (newProp.value !== dragStart.value) {
+        this.undoManager.Execute(
+          new PropertyChangedCommand(baseComponent, propertyName, dragStart, newProp)
+        );
+        dragStart = newProp;
+      }
+    });
 
     sliderParent.appendChild(slider);
     sliderParent.appendChild(sliderNumber);
@@ -241,40 +273,68 @@ export default class PropertiesWindow {
   private createVector3Section(baseComponent: BaseComponent, propertyName: string, componentProperty: ComponentProperty) : HTMLElement {
     const propertySection = this.createPropertySection(propertyName);
 
+    let previousValueX: any = JSON.parse(JSON.stringify(componentProperty));
+    let previousValueY: any = JSON.parse(JSON.stringify(componentProperty));
+    let previousValueZ: any = JSON.parse(JSON.stringify(componentProperty));
+
     const xInput = document.createElement("input");
     xInput.setAttribute("type", "text");
     xInput.value = componentProperty.value.x;
+    xInput.addEventListener('focus', () => { previousValueX = JSON.parse(JSON.stringify(componentProperty)); });
     xInput.oninput = (e: Event) => {
       const x = this.getNumberValueFromInput(xInput.value);
       if (x !== -1) {
         componentProperty.value.x = x;
         baseComponent.PropertyChanged(propertyName, componentProperty);
       }
-    }
+    };
+    xInput.addEventListener('blur', () => {
+      const newProp = JSON.parse(JSON.stringify(componentProperty));
+      if (newProp.value.x !== previousValueX.value.x) {
+        this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousValueX, newProp));
+        previousValueX = newProp;
+      }
+    });
     propertySection.appendChild(xInput);
 
     const yInput = document.createElement("input");
     yInput.setAttribute("type", "text");
     yInput.value = componentProperty.value.y;
+    yInput.addEventListener('focus', () => { previousValueY = JSON.parse(JSON.stringify(componentProperty)); });
     yInput.oninput = (e: Event) => {
       const y = this.getNumberValueFromInput(yInput.value);
       if (y !== -1) {
         componentProperty.value.y = y;
         baseComponent.PropertyChanged(propertyName, componentProperty);
       }
-    }
+    };
+    yInput.addEventListener('blur', () => {
+      const newProp = JSON.parse(JSON.stringify(componentProperty));
+      if (newProp.value.y !== previousValueY.value.y) {
+        this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousValueY, newProp));
+        previousValueY = newProp;
+      }
+    });
     propertySection.appendChild(yInput);
 
     const zInput = document.createElement("input");
     zInput.setAttribute("type", "text");
     zInput.value = componentProperty.value.z;
+    zInput.addEventListener('focus', () => { previousValueZ = JSON.parse(JSON.stringify(componentProperty)); });
     zInput.oninput = (e: Event) => {
       const z = this.getNumberValueFromInput(zInput.value);
       if (z !== -1) {
         componentProperty.value.z = z;
         baseComponent.PropertyChanged(propertyName, componentProperty);
       }
-    }
+    };
+    zInput.addEventListener('blur', () => {
+      const newProp = JSON.parse(JSON.stringify(componentProperty));
+      if (newProp.value.z !== previousValueZ.value.z) {
+        this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousValueZ, newProp));
+        previousValueZ = newProp;
+      }
+    });
     propertySection.appendChild(zInput);
 
     return propertySection;
@@ -290,9 +350,11 @@ export default class PropertiesWindow {
     input.id = propertyName;
     input.checked = componentProperty.value;
     input.addEventListener("click", () => {
+      const previousProperty = JSON.parse(JSON.stringify(componentProperty));
       componentProperty.value = input.checked;
-      baseComponent.PropertyChanged(propertyName, componentProperty);
-      // this.showPropertiesWindow(baseComponent);
+      this.undoManager.Execute(
+        new PropertyChangedCommand(baseComponent, propertyName, previousProperty, JSON.parse(JSON.stringify(componentProperty)))
+      );
       selectedCallback(input.checked);
     });
     propertySection.appendChild(input);
@@ -328,8 +390,11 @@ export default class PropertiesWindow {
     }
     select.value = componentProperty.value;
     select.onchange = (e: Event) => {
+      const previousProperty = JSON.parse(JSON.stringify(componentProperty));
       componentProperty.value = select.value;
-      baseComponent.PropertyChanged(propertyName, componentProperty);
+      this.undoManager.Execute(
+        new PropertyChangedCommand(baseComponent, propertyName, previousProperty, JSON.parse(JSON.stringify(componentProperty)))
+      );
       this.showPropertiesWindow(baseComponent);
     };
 

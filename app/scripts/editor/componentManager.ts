@@ -2,6 +2,7 @@ import * as THREE from "three";
 import BaseComponent from "./components/baseComponent";
 import { TransformControls } from "./external/TransformControls.js";
 import { OrbitControls } from "./external/OrbitControls.js";
+import { UndoManager, TransformChangedCommand } from "./undoManager";
 
 export enum TransformControlMode {
   Translate = "translate",
@@ -18,18 +19,38 @@ export default class ComponentManager {
   private currentMode: string = "";
   private currentComponent: BaseComponent | null = null;
   private focusComponent: (component: BaseComponent) => any;
+  private undoManager: UndoManager;
 
   constructor(
     scene: THREE.Scene,
     camera: THREE.Camera,
     canvas: HTMLElement,
     orbitControls: OrbitControls,
-    focusComponent: (component: BaseComponent) => any) {
+    focusComponent: (component: BaseComponent) => any,
+    undoManager: UndoManager) {
     this.controls = new TransformControls( camera, canvas );
     this.controls.setScaleSnap(0.1);
-    this.controls.addEventListener( 'dragging-changed', function ( event ) {
-      orbitControls.enabled = ! event.value;
-    } );
+    this.undoManager = undoManager;
+
+    let previousMatrix: number[] | null = null;
+    this.controls.addEventListener('dragging-changed', (event: any) => {
+      orbitControls.enabled = !event.value;
+      if (event.value) {
+        if (this.currentComponent) {
+          this.currentComponent.updateMatrix();
+          previousMatrix = Array.from(this.currentComponent.matrix.elements);
+        }
+      } else {
+        if (this.currentComponent && previousMatrix) {
+          this.currentComponent.updateMatrix();
+          const matrixAfter = Array.from(this.currentComponent.matrix.elements);
+          this.undoManager.Execute(
+            new TransformChangedCommand(this.currentComponent, previousMatrix, matrixAfter)
+          );
+          previousMatrix = null;
+        }
+      }
+    });
     this.controls.renderOrder = 10;
     scene.add(this.controls);
 
@@ -46,6 +67,11 @@ export default class ComponentManager {
   /** Returns the list of all meshes in the scene */
   public get Meshes() {
     return this.meshes;
+  }
+
+  /** Returns the currently selected component */
+  public get CurrentComponent(): BaseComponent | null {
+    return this.currentComponent;
   }
 
   public AddComponent = (component: BaseComponent) => {
@@ -71,6 +97,16 @@ export default class ComponentManager {
 
     this.controls.detach();
     component.dispose();
+  }
+
+  /** Removes a component from the scene without disposing it (used for undo/redo) */
+  public RemoveComponentFromScene = (component: BaseComponent) => {
+    this.meshes = this.meshes.filter(m => m !== component.Mesh);
+    this.components = this.components.filter(c => c !== component);
+    if (this.currentComponent === component) {
+      this.currentComponent = null;
+      this.controls.detach();
+    }
   }
 
   public DisposeAll() {
@@ -124,26 +160,21 @@ export default class ComponentManager {
   }
 
   private setupControls() {
-    const self = this;
-    window.addEventListener( 'keydown', function ( event ) {
-      switch ( event.keyCode ) {
-        case 70: // F
-          if (self.currentComponent) {
-            self.focusComponent(self.currentComponent);
-          }
-          break;
-        case 81: // Q
-          self.SetMode(TransformControlMode.None);
-          break;
-        case 87: // W
-          self.SetMode(TransformControlMode.Translate);
-          break;
-        case 69: // E
-          self.SetMode(TransformControlMode.Rotate);
-          break;
-        case 82: // R
-          self.SetMode(TransformControlMode.Scale);
-          break;
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey) {
+        if (event.key === 'z') { event.preventDefault(); this.undoManager.Undo(); return; }
+        if (event.key === 'y') { event.preventDefault(); this.undoManager.Redo(); return; }
+      }
+
+      const tag = (event.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      switch (event.key) {
+        case 'f': case 'F': if (this.currentComponent) this.focusComponent(this.currentComponent); break;
+        case 'q': case 'Q': this.SetMode(TransformControlMode.None); break;
+        case 'w': case 'W': this.SetMode(TransformControlMode.Translate); break;
+        case 'e': case 'E': this.SetMode(TransformControlMode.Rotate); break;
+        case 'r': case 'R': this.SetMode(TransformControlMode.Scale); break;
       }
     });
   }

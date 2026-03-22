@@ -8,6 +8,8 @@ import ComponentManager, { TransformControlMode } from "./componentManager";
 import PropertiesWindow from "./ui/propertiesWindow";
 import { ComponentProperty } from "./utils/constants";
 import WebpageComponent from "./components/webpageComponent";
+import { UndoManager, RemoveComponentCommand, PropertyChangedCommand } from "./undoManager";
+
 export default class UiController {
   private propertiesWindow: PropertiesWindow;
 
@@ -17,6 +19,7 @@ export default class UiController {
   private roomGroup: THREE.Group;
   private editorCamera: THREE.Camera;
   private colorPicker: any;
+  private undoManager: UndoManager;
 
   private componentAdded: (component: BaseComponent) => any;
   private togglePreviewMode: (inPreview: boolean) => any;
@@ -31,9 +34,11 @@ export default class UiController {
     componentAdded: (component: BaseComponent) => any,
     togglePreviewMode: (inPreview: boolean) => any,
     sceneCleared: () => any,
-    sceneSaved: () => any) {
+    sceneSaved: () => any,
+    undoManager: UndoManager) {
     this.roomGroup = roomGroup;
     this.editorCamera = editorCamera;
+    this.undoManager = undoManager;
 
     this.colorPickerParent = document.getElementById(EditorIds.colorPickerParent);
     this.componentAdded = componentAdded;
@@ -43,7 +48,12 @@ export default class UiController {
 
     this.propertiesWindow = new PropertiesWindow(
       (component: BaseComponent) => {
-        componentManager.RemoveComponent(component);
+        this.undoManager.Execute(
+          new RemoveComponentCommand(component, this.roomGroup, componentManager, () => {
+            componentManager.SetSelectedComponent(component);
+            this.propertiesWindow.showPropertiesWindow(component);
+          })
+        );
       },
       (baseComponent: BaseComponent, componentProperty: ComponentProperty, propertyName: string) => {
         // Need to reset the following so as not to affect last callback.
@@ -55,13 +65,17 @@ export default class UiController {
           componentProperty.value.b * 255];
         this.colorPicker.rgb = color;
 
+        const previousProperty = JSON.parse(JSON.stringify(componentProperty));
+
         this.ShowColorPicker();
         this.colorPickerChanged = (_: any, color: any) => {
           const rgb = color.match(/\d+/g);
           componentProperty.value = new THREE.Color(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
-          baseComponent.PropertyChanged(propertyName, componentProperty);
+          const newProperty = JSON.parse(JSON.stringify(componentProperty));
+          this.undoManager.Execute(new PropertyChangedCommand(baseComponent, propertyName, previousProperty, newProperty));
         };
-      }
+      },
+      undoManager
     );
     this.objectToolbar = document.getElementById(EditorIds.objectToolbar);
 
@@ -214,14 +228,12 @@ export default class UiController {
     textProperties.text = text;
     const textComponent = new Text3DComponent(textProperties, this.editorCamera);
     textComponent.scale.set(0.025, 0.025, 0.025);
-    this.roomGroup.add(textComponent);
     this.componentAdded(textComponent);
   }
 
   private CreateWebpageComponent = () => {
     const properties = WebpageComponent.DefaultProperties;
     const webpageComponent = new WebpageComponent(properties, this.editorCamera);
-    this.roomGroup.add(webpageComponent);
     this.componentAdded(webpageComponent);
   }
 

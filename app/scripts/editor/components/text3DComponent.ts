@@ -29,7 +29,7 @@ export default class Text3DComponent extends BaseComponent {
   private currentPromises: Promise<THREE.Mesh>[] = [];
 
   constructor(textProperties: Text3DProperties, editorCamera: THREE.Camera) {
-    super("Text3DComponent", editorCamera, { hasActions: true, hasCredit: false, hasTransform: true});
+    super("Text3DComponent", editorCamera, { hasActions: true, hasCredit: false, hasTransform: true, hasDuplicate: true });
 
     this.componentType = ComponentType.Text3D;
     this.assignProperties(textProperties);

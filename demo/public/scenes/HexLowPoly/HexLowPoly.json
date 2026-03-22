@@ -21,21 +21,21 @@
       "componentName": "",
       "componentType": "CAMERA",
       "transformMatrix": [
-        0.9981024705047747,
+        0.9143632669435308,
+        1.3877787807814457e-17,
+        -0.4048948209897893,
         0,
-        -0.061574819303553234,
+        -0.11311650805136782,
+        0.9601827770241443,
+        -0.2554480188070896,
         0,
-        -0.024311211707933107,
-        0.9187568067357239,
-        -0.39407473283892197,
+        0.3887730336206697,
+        0.2793725732891516,
+        0.8779558608627084,
         0,
-        0.056572284358661774,
-        0.39482392287800355,
-        0.9170134385960039,
-        0,
-        -2.383186339725643,
-        7.825456157622883,
-        8.034422760233358,
+        1.1230626473812655,
+        6.122017288061089,
+        9.415149015934489,
         1
       ],
       "action": {
@@ -54,7 +54,7 @@
       "url": "",
       "target": {
         "x": -3.2,
-        "y": 5,
+        "y": 3,
         "z": 0
       },
       "type": "Perspective",
@@ -2804,13 +2804,13 @@
       "transformMatrix": [
         0.29606927989790455,
         0,
-        0.048404354150595366,
+        0.04840435415059537,
         0,
         0,
         0.3,
         0,
         0,
-        -0.048404354150595366,
+        -0.04840435415059537,
         0,
         0.29606927989790455,
         0,
@@ -3888,6 +3888,159 @@
       "url": "",
       "filepath": "/scenes/HexLowPoly/Nostalgia.mp3",
       "showCreditButton": true
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        0.009253984257438062,
+        0,
+        -0.0037899571716694257,
+        0,
+        0,
+        0.01,
+        0,
+        0,
+        0.0037899571716694257,
+        0,
+        0.009253984257438062,
+        0,
+        -1.1,
+        1.4000000000000001,
+        3.4000000000000004,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "Assets by",
+      "size": 43,
+      "thickness": 4,
+      "height": 0,
+      "frontColor": {
+        "r": 0.5254901960784314,
+        "g": 0.8196078431372549,
+        "b": 0.4627450980392157
+      },
+      "sideColor": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+      },
+      "type": "Amatic SC"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        0.009253984257438062,
+        0,
+        -0.0037899571716694257,
+        0,
+        0,
+        0.01,
+        0,
+        0,
+        0.0037899571716694257,
+        0,
+        0.009253984257438062,
+        0,
+        -1.2000000000000002,
+        0.8,
+        3.6,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "Ajay Karat",
+      "size": 43,
+      "thickness": 4,
+      "height": 0,
+      "frontColor": {
+        "r": 0.21568627450980393,
+        "g": 0.7803921568627451,
+        "b": 0.09803921568627451
+      },
+      "sideColor": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+      },
+      "type": "Amatic SC"
+    },
+    {
+      "componentName": "BaseComponent",
+      "componentType": "TEXT3D",
+      "transformMatrix": [
+        0.009253984257438062,
+        0,
+        -0.0037899571716694257,
+        0,
+        0,
+        0.01,
+        0,
+        0,
+        0.0037899571716694257,
+        0,
+        0.009253984257438062,
+        0,
+        -1.6,
+        0.2,
+        3.8000000000000003,
+        1
+      ],
+      "action": {
+        "actionType": "none",
+        "hyperlinkURL": "",
+        "zoomCameraMatrix": null,
+        "eventName": ""
+      },
+      "credit": {
+        "pieceName": "",
+        "authorName": "",
+        "websiteName": "",
+        "licenseName": "",
+        "locked": false
+      },
+      "url": "",
+      "text": "devilswork.shop",
+      "size": 43,
+      "thickness": 4,
+      "height": 0,
+      "frontColor": {
+        "r": 0.09803921568627451,
+        "g": 0.7843137254901961,
+        "b": 0.7607843137254902
+      },
+      "sideColor": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+      },
+      "type": "Amatic SC"
     }
   ]
 }

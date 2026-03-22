@@ -5,6 +5,19 @@ All notable changes to the `threespace` npm package will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-03-22
+
+### Added
+- Undo/redo support in the editor — property changes, component additions, and component deletions are all undoable via Ctrl+Z / Ctrl+Y
+- Pathing UI on asset import — shows a path confirmation popup with cached paths for previously imported assets
+- Text3D component can now be duplicated
+- Improved demo scenes: HexLowPoly (low-poly forest with ambient audio) and Lab (science lab environment)
+
+### Fixed
+- Multi-scene audio loading
+- Mute and credit buttons now appear correctly for scenes that have audio but no credit entries
+- Audio prompt ("Click anywhere to play audio") no longer shown for users who have already interacted with the page
+
 ## [1.2.0] - 2026-03-21
 
 ### Added

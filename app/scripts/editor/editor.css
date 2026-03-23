@@ -300,6 +300,16 @@
 }
 #ts-save-button:hover { background-color: #0a9383; }
 
+#ts-load-button {
+  background-color: #7a3a00;
+  font-size: 20px;
+  font-weight: bold;
+  width: 90px; height: 50px;
+  margin: 2px;
+  pointer-events: all;
+}
+#ts-load-button:hover { background-color: #c05f00; }
+
 #ts-scene-settings-button { background-color: #424d4d; }
 
 /* ── VFX selection ───────────────────────────────────── */
@@ -371,6 +381,81 @@
   border-radius: 4px;
 }
 #ts-save-popup-back-button:hover { background-color: #666; }
+
+/* ── Load popup ──────────────────────────────────────── */
+.ts-load-popup-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: #e0e0e0;
+}
+
+#ts-load-popup-textarea {
+  width: 100%;
+  height: 320px;
+  font-family: monospace;
+  font-size: 12px;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 8px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+#ts-load-popup-load-button {
+  background-color: #05544b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+#ts-load-popup-load-button:hover { background-color: #0a9383; }
+
+#ts-load-popup-back-button {
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+#ts-load-popup-back-button:hover { background-color: #666; }
+
+.ts-load-popup-file-row {
+  margin-bottom: 4px;
+}
+
+.ts-load-popup-file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ts-load-popup-file-label:hover { background-color: #4a4a4a; }
+.ts-load-popup-file-label input[type="file"] { display: none; }
+
+.ts-load-popup-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 8px 0 6px;
+  gap: 2px;
+}
+.ts-load-popup-divider hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #444;
+  margin: 0;
+}
+.ts-load-popup-divider span {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
 
 /* ── Color picker ────────────────────────────────────── */
 #ts-color-picker { width: 230px; }

@@ -25,6 +25,7 @@ export default class UiController {
   private togglePreviewMode: (inPreview: boolean) => any;
   private sceneCleared: () => any;
   private sceneSaved: () => any;
+  private sceneLoaded: () => any;
   private colorPickerChanged: (_: any, color: any) => any;
 
   constructor(
@@ -35,6 +36,7 @@ export default class UiController {
     togglePreviewMode: (inPreview: boolean) => any,
     sceneCleared: () => any,
     sceneSaved: () => any,
+    sceneLoaded: () => any,
     undoManager: UndoManager) {
     this.roomGroup = roomGroup;
     this.editorCamera = editorCamera;
@@ -45,6 +47,7 @@ export default class UiController {
     this.togglePreviewMode = togglePreviewMode;
     this.sceneCleared = sceneCleared;
     this.sceneSaved = sceneSaved;
+    this.sceneLoaded = sceneLoaded;
 
     this.propertiesWindow = new PropertiesWindow(
       (component: BaseComponent) => {
@@ -177,6 +180,23 @@ export default class UiController {
     const saveButton = document.getElementById(EditorIds.saveButton);
     if (saveButton) {
       saveButton.addEventListener("click", this.sceneSaved);
+    }
+
+    const loadButton = document.getElementById(EditorIds.loadButton);
+    if (loadButton) {
+      loadButton.addEventListener("click", () => {
+        const popup = document.getElementById(EditorIds.loadPopupParent);
+        const textarea = document.getElementById(EditorIds.loadPopupTextarea) as HTMLTextAreaElement;
+        const fileInput = document.getElementById(EditorIds.loadPopupFileInput) as HTMLInputElement;
+        if (textarea) textarea.value = '';
+        if (fileInput) fileInput.value = '';
+        if (popup) popup.style.visibility = 'visible';
+      });
+    }
+
+    const loadLoadButton = document.getElementById(EditorIds.loadPopupLoadButton);
+    if (loadLoadButton) {
+      loadLoadButton.addEventListener("click", this.sceneLoaded);
     }
   }
 

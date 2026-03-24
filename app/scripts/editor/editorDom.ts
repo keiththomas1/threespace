@@ -376,7 +376,10 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
   previewBtn.textContent = 'Preview';
   const saveBtn = el('button', { id: EditorIds.saveButton }, [EditorClasses.tooltipButton]);
   saveBtn.textContent = 'Save';
+  const loadBtn = el('button', { id: EditorIds.loadButton }, [EditorClasses.tooltipButton]);
+  loadBtn.textContent = 'Load';
   bottomBarUI.appendChild(previewBtn);
+  bottomBarUI.appendChild(loadBtn);
   bottomBarUI.appendChild(saveBtn);
   container.appendChild(bottomBarUI);
 
@@ -500,6 +503,66 @@ export function buildEditorDom(container: HTMLElement, callbacks: EditorToolbarC
   savePopupParent.addEventListener('click', () => { savePopupParent.style.visibility = 'hidden'; });
   savePopup.addEventListener('click', (e) => e.stopPropagation());
   container.appendChild(savePopupParent);
+
+  // ── Load popup ────────────────────────────────────────────────────────────
+  const loadPopupParent = el('div', { id: EditorIds.loadPopupParent }, [EditorClasses.modalUIParent, EditorClasses.secondUIDepth]);
+  const loadPopup = el('div', {}, [EditorClasses.thirdUIDepth]);
+  loadPopup.classList.add('ts-save-popup');
+
+  const loadTitle = el('h3');
+  loadTitle.textContent = 'Load Scene';
+  loadTitle.classList.add('ts-load-popup-title');
+
+  const loadFileRow = el('div');
+  loadFileRow.classList.add('ts-load-popup-file-row');
+  const loadFileLabel = el('label');
+  loadFileLabel.textContent = 'Choose file';
+  loadFileLabel.classList.add('ts-load-popup-file-label');
+  const loadFileInput = el('input', { type: 'file', id: EditorIds.loadPopupFileInput, accept: '.json' }) as HTMLInputElement;
+  loadFileInput.addEventListener('change', () => {
+    const file = loadFileInput.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const textarea = document.getElementById(EditorIds.loadPopupTextarea) as HTMLTextAreaElement;
+      if (textarea) textarea.value = (e.target?.result as string) ?? '';
+    };
+    reader.readAsText(file);
+  });
+  loadFileLabel.appendChild(loadFileInput);
+  loadFileRow.appendChild(loadFileLabel);
+
+  const loadDivider = el('div');
+  loadDivider.classList.add('ts-load-popup-divider');
+  const loadDividerLine = el('hr');
+  const loadDividerText = el('span');
+  loadDividerText.textContent = 'or paste JSON below';
+  loadDivider.appendChild(loadDividerLine);
+  loadDivider.appendChild(loadDividerText);
+
+  const loadTextarea = el('textarea', { id: EditorIds.loadPopupTextarea, placeholder: 'Paste scene JSON here…' });
+
+  const loadBtnRow = el('div');
+  loadBtnRow.classList.add('ts-save-popup-buttons');
+
+  const loadBackBtn = el('button', { id: EditorIds.loadPopupBackButton });
+  loadBackBtn.textContent = 'Back';
+  loadBackBtn.addEventListener('click', () => { loadPopupParent.style.visibility = 'hidden'; });
+
+  const loadLoadBtn = el('button', { id: EditorIds.loadPopupLoadButton });
+  loadLoadBtn.textContent = 'Load';
+
+  loadBtnRow.appendChild(loadBackBtn);
+  loadBtnRow.appendChild(loadLoadBtn);
+  loadPopup.appendChild(loadTitle);
+  loadPopup.appendChild(loadFileRow);
+  loadPopup.appendChild(loadDivider);
+  loadPopup.appendChild(loadTextarea);
+  loadPopup.appendChild(loadBtnRow);
+  loadPopupParent.appendChild(loadPopup);
+  loadPopupParent.addEventListener('click', () => { loadPopupParent.style.visibility = 'hidden'; });
+  loadPopup.addEventListener('click', (e) => e.stopPropagation());
+  container.appendChild(loadPopupParent);
 
   // ── Project view ─────────────────────────────────────────────────────────────
   const projectViewContainer = el('div', { id: EditorIds.projectViewContainer });

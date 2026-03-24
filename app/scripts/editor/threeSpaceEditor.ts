@@ -161,6 +161,7 @@ export class ThreeSpaceEditor {
       this.togglePreview,
       this.resetScene,
       this.saveScene,
+      this.loadScene,
       this.undoManager);
 
     this.raycaster = new THREE.Raycaster();
@@ -565,6 +566,24 @@ export class ThreeSpaceEditor {
     if (popup) popup.style.visibility = 'visible';
 
     if (this.config.onSave) this.config.onSave(sceneProperties);
+  }
+
+  private loadScene = () => {
+    const textarea = document.getElementById(EditorIds.loadPopupTextarea) as HTMLTextAreaElement;
+    if (!textarea) return;
+
+    let parsed: PlayerProperties;
+    try {
+      parsed = JSON.parse(textarea.value) as PlayerProperties;
+    } catch {
+      alert('Invalid JSON — please check the scene data and try again.');
+      return;
+    }
+
+    this.PlayerProperties = parsed;
+
+    const popup = document.getElementById(EditorIds.loadPopupParent);
+    if (popup) popup.style.visibility = 'hidden';
   }
 
   private createComponentFromProperties = (componentProperties: ComponentProperties): { component: BaseComponent | null, path: string } => {
